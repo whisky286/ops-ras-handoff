@@ -1,0 +1,48 @@
+diff --git a/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.h b/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.h
+index 34d9ff0..e3d7161 100644
+--- a/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.h
++++ b/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.h
+@@ -7,8 +7,8 @@
+  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+  * See LICENSE in the root of the software repository for the full text of the License.
+  */
+-#ifndef OP_API_INC_OBFUSCATION_CALCULATE_H_
+-#define OP_API_INC_OBFUSCATION_CALCULATE_H_
++#ifndef OP_API_INC_OBFUSCATION_CALCULATE_V2_H_
++#define OP_API_INC_OBFUSCATION_CALCULATE_V2_H_
+ 
+ #include "aclnn/aclnn_base.h"
+ #include "aclnn_util.h"
+diff --git a/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.h b/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.h
+index 77a5302..c28cd41 100644
+--- a/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.h
++++ b/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.h
+@@ -7,8 +7,8 @@
+  * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+  * See LICENSE in the root of the software repository for the full text of the License.
+  */
+-#ifndef OP_API_INC_OBFUSCATION_SETUP_H_
+-#define OP_API_INC_OBFUSCATION_SETUP_H_
++#ifndef OP_API_INC_OBFUSCATION_SETUP_V2_H_
++#define OP_API_INC_OBFUSCATION_SETUP_V2_H_
+ 
+ #include "aclnn/aclnn_base.h"
+ #include "aclnn_util.h"
+@@ -21,7 +21,7 @@ extern "C" {
+  * @domain aclnn_ops_infer
+  * 
+  * 算子功能： PMCC项目初始化。
+- * @param [in] fdToClose: host侧的int32_t，待关闭的socket连接符，cmd为3时填写本算子在cmd为1时返回的fd，否则填0。
++ * @param [in] fdToClose: host侧的int32_t，待关闭的socket连接符，cmd为16时填写本算子在cmd为1或2时返回的fd，否则填0。
+  * @param [in] dataType: host侧的int32_t，代表Tensor数据类型的编号，仅在cmd设置为1或2时需要填写有效值，否则填0。
+  * 昇腾310P AI处理器：在{0, 1}中选择，0表示ACL_FLOAT、1表示ACL_FLOAT16
+  * 昇腾910B AI处理器：在{0, 1, 2, 27}中选择，0表示ACL_FLOAT、1表示ACL_FLOAT16、2表示ACL_INT8、27表示ACL_BF16
+@@ -29,7 +29,7 @@ extern "C" {
+  * @param [in] tpRank: host侧的int32_t，TP Rank，仅在cmd设置为1或2时需要填写有效值，否则填0。
+  * @param [in] modelObfSeedId: host侧的int32_t，模型混淆因子id，用于TA从TEE KMC查询模型混淆因子，仅在cmd设置为1或2时需要填写有效值，否则填0。
+  * @param [in] dataObfSeedId: host侧的int32_t，数据混淆因子id，用于TA从TEE KMC查询数据混淆因子，仅在cmd设置为1或2时需要填写有效值，否则填0。
+- * @param [in] cmd: host侧的int32_t，setup指令编号，在{1, 2, 3}中选择，设置为1时进行普通模式资源初始化、为2时进行高精度模式资源初始化，设置为3时进行资源释放。
++ * @param [in] cmd: host侧的int32_t，setup指令编号，在{1, 2, 16}中选择，设置为1时进行普通模式资源初始化、为2时进行高精度模式资源初始化，设置为16时进行资源释放。
+  * @param [in] threadNum: host侧的int32_t，CA/TA进行混淆处理使用的线程数。在{1, 2, 3, 4, 5, 6}中选择，仅在cmd设置为1或2时需要填写有效值，否则填0。
+  * @param [in] obfCoefficient: host侧的float，混淆系数，用于对推理数据部分混淆的比例，仅在cmd设置为1或2时需要填写有效值，否则填0。
+  * @param [out] fd: npu device侧的aclTensor，表示socket连接符，在{1, 2, 16}中选择，设置为1时进行普通模式资源初始化、为2时进行高精度模式资源初始化，设置为16时进行资源释放。

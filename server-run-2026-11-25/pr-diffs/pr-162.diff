@@ -1,0 +1,217 @@
+diff --git a/scripts/util/gen_compile_option.sh b/scripts/util/gen_compile_option.sh
+index e635565c901c3f862e08cb2dcfac0537f1754552..4b61de8454202d63f0a6a6fb6e98193a827a77b4 100644
+--- a/scripts/util/gen_compile_option.sh
++++ b/scripts/util/gen_compile_option.sh
+@@ -9,7 +9,7 @@
+ # See LICENSE in the root of the software repository for the full text of the License.
+ # ----------------------------------------------------------------------------
+ 
+-FILE_NAME="$(basename $0)"
++FILE_NAME="$(basename "$0")"
+ 
+ call_write_scripts() {
+   local op_type="$1"
+@@ -114,18 +114,18 @@ function get_kernel_option_config_file() {
+ }
+ 
+ main() {
+-  echo "[INFO]excute file: $0 $*"
++  echo "[INFO]execute file: $0 $*"
+   local all_pairs=("$@")
+   if [ ${#all_pairs[@]} -eq 0 ]; then
+     echo "[WARNING] No op pairs provided"
+     exit 0
+   fi
+-  local workdir=$(cd "$(dirname $0)" && pwd)
+-  local topdir=$(readlink -f ${workdir}/../..)
++  local workdir=$(cd "$(dirname "$0")" && pwd)
++  local topdir=$(readlink -f "${workdir}/../..")
+   local binary_param_dir=${topdir}/build/tbe
+   for pair in "${all_pairs[@]}"; do
+     if [[ "$pair" != *:* ]]; then
+-      echo "[ERROR] Invaild format: '$pair'. Expected: op_type:compute_unit"
++      echo "[ERROR] Invalid format: '$pair'. Expected: op_type:compute_unit"
+       continue
+     fi
+     local op_type="${pair%%:*}"
+@@ -134,12 +134,12 @@ main() {
+ 
+     local ascendc_config_file="${topdir}/scripts/kernel/binary_config/ascendc_config.json"
+     local key_word_in_list="\"name\":\s*\"${op_type}\""
+-    local ascendc_op_conf=$(grep ${key_word_in_list} ${ascendc_config_file} | grep -w $soc_version_lower)
++    local ascendc_op_conf=$(grep "${key_word_in_list}" "${ascendc_config_file}" | grep -w "$soc_version_lower")
+ 
+     json_line=$(echo "$ascendc_op_conf" | tr -d '\n\r')
+ 
+-    local kernel_config_file=$(get_kernel_option_config_file ${workdir} ${soc_version_lower})
+-    local kernel_config_file_all=$(get_kernel_option_config_file ${workdir} "ALL")
++    local kernel_config_file=$(get_kernel_option_config_file "${workdir}" "${soc_version_lower}")
++    local kernel_config_file_all=$(get_kernel_option_config_file "${workdir}" "ALL")
+ 
+     local auto_sync=""
+     local compile_options=""
+@@ -190,7 +190,9 @@ main() {
+       }')
+     fi
+ 
+-    call_write_scripts "$op_type" "$soc_version_lower" "$auto_sync" "$compile_options"
++    if ! call_write_scripts "$op_type" "$soc_version_lower" "$auto_sync" "$compile_options"; then
++      return 1
++    fi
+   done
+   exit 0
+ }
+diff --git a/tests/ut/scripts/test_compile_option_shell.py b/tests/ut/scripts/test_compile_option_shell.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..e6d1ff29d3596d3281ebd8e4976a889f25ecd88c
+--- /dev/null
++++ b/tests/ut/scripts/test_compile_option_shell.py
+@@ -0,0 +1,148 @@
++#!/usr/bin/env python3
++# -*- coding: utf-8 -*-
++# ----------------------------------------------------------------------------
++# Copyright (c) 2026 gcw_Z57idahf
++# This program is free software, you can redistribute it and/or modify it under the terms and conditions of
++# CANN Open Software License Agreement Version 2.0 (the "License").
++# Please refer to the License for details. You may not use this file except in compliance with the License.
++# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED,
++# INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
++# See LICENSE in the root of the software repository for the full text of the License.
++# ----------------------------------------------------------------------------
++
++import ast
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import tempfile
++import unittest
++
++ROOT = Path(__file__).resolve().parents[3]
++BASH = shutil.which("bash")
++SCRIPT = ROOT / "scripts/util/gen_compile_option.sh"
++INI = (
++    "[FixtureOp]\ninput0.name=x\ninput0.paramType=required\ninput0.dtype=float32\n"
++    "input0.format=ND\noutput0.name=y\noutput0.paramType=required\noutput0.dtype=float32\n"
++    "output0.format=ND\nopFile.value=fixture_op\nopInterface.value=fixture_op\n"
++)
++
++
++@unittest.skipUnless(os.name == "posix" and BASH, "Linux Bash and Python required")
++class CompileOptionShellTests(unittest.TestCase):
++    def setUp(self):
++        temporary = tempfile.TemporaryDirectory(prefix="ras-options-", dir="/tmp")
++        self.addCleanup(temporary.cleanup)
++        self.temporary = Path(temporary.name)
++
++    def fixture(self, spaces=False):
++        root = self.temporary / ("project with spaces" if spaces else "project")
++        utilities = root / "scripts/util"
++        utilities.mkdir(parents=True)
++        for name in [
++            "gen_compile_option.sh",
++            "ascendc_impl_build.py",
++            "opdesc_parser.py",
++            "const_var.py",
++        ]:
++            shutil.copyfile(ROOT / "scripts/util" / name, utilities / name)
++        config = root / "scripts/kernel/binary_config"
++        config.mkdir(parents=True)
++        (config / "ascendc_config.json").write_text(
++            json.dumps({"ops": []}), encoding="utf-8"
++        )
++        kernel = root / "build/tbe/ascendc/fixture_op"
++        kernel.mkdir(parents=True)
++        (kernel / "fixture_op.cpp").write_text("// generator input\n", encoding="utf-8")
++        (root / "build/tbe/dynamic").mkdir()
++        autogen = root / "build/autogen"
++        autogen.mkdir()
++        (autogen / "custom_compile_options.ini").write_text("", encoding="utf-8")
++        (root / "build/tbe/config").mkdir()
++        return root
++
++    def configure(self, root, soc="ascend910b", invalid=False):
++        config = root / "build/tbe/config"
++        (config / f"aic-{soc}-ops-info.ini").write_text(INI, encoding="utf-8")
++        (config / f"kernel-options-{soc}.ini").write_text(
++            "[FixtureOp]\nauto_sync=true\noptions=-O2\n", encoding="utf-8"
++        )
++        if invalid:
++            output = root / "build/tbe/dynamic"
++            output.rmdir()
++            output.write_text("existing file blocks output directory", encoding="utf-8")
++
++    def invoke(self, root, *pairs):
++        env = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}
++        env.pop("BUILD_BUILTIN_OPP", None)
++        return subprocess.run(
++            [BASH, str(root / "scripts/util/gen_compile_option.sh"), *pairs],
++            env=env,
++            capture_output=True,
++            text=True,
++            timeout=45,
++        )
++
++    def output(self, root):
++        return root / "build/tbe/dynamic/fixture_op.py"
++
++    def verify_generated(self, root, result):
++        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
++        path = self.output(root)
++        self.assertTrue(path.is_file(), result.stdout + result.stderr)
++        ast.parse(path.read_text(encoding="utf-8"))
++
++    def test_ordinary_path_still_generates_adapter(self):
++        root = self.fixture()
++        self.configure(root)
++        self.verify_generated(root, self.invoke(root, "FixtureOp:ascend910b"))
++
++    def test_space_path_generates_adapter(self):
++        root = self.fixture(spaces=True)
++        self.configure(root)
++        self.verify_generated(root, self.invoke(root, "FixtureOp:ascend910b"))
++
++    def test_space_path_with_two_socs(self):
++        root = self.fixture(spaces=True)
++        self.configure(root)
++        self.configure(root, "ascend950")
++        self.verify_generated(
++            root, self.invoke(root, "FixtureOp:ascend910b", "FixtureOp:ascend950")
++        )
++
++    def test_missing_config_returns_failure(self):
++        root = self.fixture()
++        result = self.invoke(root, "FixtureOp:ascend910b")
++        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
++        self.assertIn("not found", result.stdout)
++
++    def test_output_directory_collision_returns_failure(self):
++        root = self.fixture()
++        self.configure(root, invalid=True)
++        result = self.invoke(root, "FixtureOp:ascend910b")
++        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
++        self.assertIn("NotADirectoryError", result.stderr)
++
++    def test_missing_first_config_stops_before_later_success(self):
++        root = self.fixture()
++        self.configure(root, "ascend950")
++        result = self.invoke(root, "FixtureOp:ascend910b", "FixtureOp:ascend950")
++        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
++        self.assertFalse(self.output(root).exists())
++
++    def test_output_failure_stops_before_later_pair(self):
++        root = self.fixture()
++        self.configure(root, invalid=True)
++        self.configure(root, "ascend950")
++        result = self.invoke(root, "FixtureOp:ascend910b", "FixtureOp:ascend950")
++        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
++        self.assertFalse(self.output(root).exists())
++
++    def test_no_pairs_remains_success(self):
++        root = self.fixture()
++        self.assertEqual(self.invoke(root).returncode, 0)
++
++
++if __name__ == "__main__":
++    unittest.main()

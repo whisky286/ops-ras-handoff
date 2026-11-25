@@ -1,0 +1,13 @@
+diff --git a/scripts/kernel/binary_script/build_binary_opc.sh b/scripts/kernel/binary_script/build_binary_opc.sh
+index a4c8ba0..d3f99f9 100644
+--- a/scripts/kernel/binary_script/build_binary_opc.sh
++++ b/scripts/kernel/binary_script/build_binary_opc.sh
+@@ -49,7 +49,7 @@ main() {
+     echo -e "[ERROR] [$op_type]build_binary_opc_gen_task failed with ErrorCode[$gen_res]."
+     echo -e "Command executed: build_binary_opc_gen_task.sh $op_type $soc_version $output_path $task_path $cmake_build_type $enable_oom $dump_cce $enable_mssanitizer bisheng_flags=$bisheng_flags kernel_template_input=$kernel_template_input"
+     echo -e "Error output: \n $result"
+-    return
++    return "$gen_res"
+   fi
+   echo "$result"
+ }

@@ -1,0 +1,81 @@
+diff --git a/reliability/crypto/op_host/op_api/aclnn_crypto.cpp b/reliability/crypto/op_host/op_api/aclnn_crypto.cpp
+index b020bf8..cca52a6 100644
+--- a/reliability/crypto/op_host/op_api/aclnn_crypto.cpp
++++ b/reliability/crypto/op_host/op_api/aclnn_crypto.cpp
+@@ -22,6 +22,7 @@
+ #include "opdev/op_dfx.h"
+ #include "opdev/op_log.h"
+ #include "opdev/platform.h"
++#include "opdev/tensor_view_utils.h"
+ #include "opdev/shape_utils.h"
+ #include "opdev/tensor_view_utils.h"
+ 
+@@ -93,16 +94,16 @@ static bool CheckShape(const aclTensor* inputText, const aclTensor* outputText)
+     return true;
+ }
+ 
+-static bool MakeContiguous(const aclTensor* tensor, const char* tensorName, aclOpExecutor* executor)
++static const aclTensor* MakeContiguous(const aclTensor* tensor, const char* tensorName, aclOpExecutor* executor)
+ {
+     if (tensor == nullptr || tensor->IsEmpty()) {
+-        return true;
++        return tensor;
+     }
+     auto contiguous = l0op::Contiguous(tensor, executor);
+     OP_CHECK(contiguous != nullptr,
+              OP_LOGE(ACLNN_ERR_INNER_NULLPTR, "AclnnCrypto %s contiguous is nullptr", tensorName),
+-             return false);
+-    return true;
++             return nullptr);
++    return contiguous;
+ }
+ 
+ static aclnnStatus CheckParams(const aclTensor* key, const aclTensor* inputText, aclTensor* outputText,
+@@ -134,20 +135,38 @@ aclnnStatus aclnnCryptoGetWorkspaceSize(
+     auto ret = CheckParams(key, inputText, outputText, iv, opConfig, tag, aad, out);
+     CHECK_RET(ret == ACLNN_SUCCESS, ret);
+ 
+-    CHECK_RET(MakeContiguous(inputText, "inputTextContiguous", uniqueExecutor.get()), ACLNN_ERR_INNER_NULLPTR);
+-    CHECK_RET(MakeContiguous(outputText, "outputTextContiguous", uniqueExecutor.get()), ACLNN_ERR_INNER_NULLPTR);
+-    CHECK_RET(MakeContiguous(key, "key", uniqueExecutor.get()), ACLNN_ERR_INNER_NULLPTR);
+-    CHECK_RET(MakeContiguous(iv, "iv", uniqueExecutor.get()), ACLNN_ERR_INNER_NULLPTR);
+-    CHECK_RET(MakeContiguous(tag, "tag", uniqueExecutor.get()), ACLNN_ERR_INNER_NULLPTR);
+-    CHECK_RET(MakeContiguous(opConfig, "opConfig", uniqueExecutor.get()), ACLNN_ERR_INNER_NULLPTR);
+-    CHECK_RET(MakeContiguous(aad, "aad", uniqueExecutor.get()), ACLNN_ERR_INNER_NULLPTR);
+-
+-    auto outOut = l0op::Crypto(key, inputText, outputText, iv, opConfig, tag, aad, uniqueExecutor.get());
++    const aclTensor* keyContiguous = MakeContiguous(key, "key", uniqueExecutor.get());
++    CHECK_RET(keyContiguous != nullptr, ACLNN_ERR_INNER_NULLPTR);
++    const aclTensor* inputContiguous = MakeContiguous(inputText, "inputTextContiguous", uniqueExecutor.get());
++    CHECK_RET(inputContiguous != nullptr, ACLNN_ERR_INNER_NULLPTR);
++    const aclTensor* outputContiguous = MakeContiguous(outputText, "outputTextContiguous", uniqueExecutor.get());
++    CHECK_RET(outputContiguous != nullptr, ACLNN_ERR_INNER_NULLPTR);
++    const aclTensor* ivContiguous = MakeContiguous(iv, "iv", uniqueExecutor.get());
++    CHECK_RET(ivContiguous != nullptr, ACLNN_ERR_INNER_NULLPTR);
++    const aclTensor* tagContiguous = MakeContiguous(tag, "tag", uniqueExecutor.get());
++    CHECK_RET(tagContiguous != nullptr, ACLNN_ERR_INNER_NULLPTR);
++    const aclTensor* opConfigContiguous = MakeContiguous(opConfig, "opConfig", uniqueExecutor.get());
++    CHECK_RET(opConfigContiguous != nullptr, ACLNN_ERR_INNER_NULLPTR);
++    const aclTensor* aadContiguous = MakeContiguous(aad, "aad", uniqueExecutor.get());
++    CHECK_RET(aadContiguous != nullptr, ACLNN_ERR_INNER_NULLPTR);
++
++    auto outOut = l0op::Crypto(keyContiguous, inputContiguous, const_cast<aclTensor*>(outputContiguous), ivContiguous,
++                               opConfigContiguous, const_cast<aclTensor*>(tagContiguous),
++                               const_cast<aclTensor*>(aadContiguous), uniqueExecutor.get());
+     auto castOut = l0op::Cast(outOut, out->GetDataType(), uniqueExecutor.get());
+     CHECK_RET(castOut != nullptr, ACLNN_ERR_INNER_NULLPTR);
+ 
+     auto viewCopyOut = l0op::ViewCopy(castOut, out, uniqueExecutor.get());
+     CHECK_RET(viewCopyOut != nullptr, ACLNN_ERR_INNER_NULLPTR);
++    // Propagate device results back into the caller's (possibly non-contiguous) output views.
++    if (outputText != nullptr && !op::IsContiguous(outputText)) {
++        auto copyBackOutput = l0op::ViewCopy(outputContiguous, outputText, uniqueExecutor.get());
++        CHECK_RET(copyBackOutput != nullptr, ACLNN_ERR_INNER_NULLPTR);
++    }
++    if (tag != nullptr && !op::IsContiguous(tag)) {
++        auto copyBackTag = l0op::ViewCopy(tagContiguous, tag, uniqueExecutor.get());
++        CHECK_RET(copyBackTag != nullptr, ACLNN_ERR_INNER_NULLPTR);
++    }
+ 
+     *workspaceSize = uniqueExecutor->GetWorkspaceSize();
+     uniqueExecutor.ReleaseTo(executor);

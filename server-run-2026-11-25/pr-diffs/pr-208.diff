@@ -1,0 +1,237 @@
+diff --git a/cmake/ut.cmake b/cmake/ut.cmake
+index 437ce1c65fc7a3f17a58e9f2a6eda96ff2aafdb4..10544c799f118bfae729497938dc7b9a20f64479 100644
+--- a/cmake/ut.cmake
++++ b/cmake/ut.cmake
+@@ -326,7 +326,7 @@ function(add_modules_ut_sources)
+     message(STATUS "=== Debug<add_modules_ut_sources>: ${MODULE_HOSTNAME} ${MODULE_MODE} ${MODULE_DIR}")
+ 
+     string(FIND "${MODULE_HOSTNAME}_cases_obj" "tiling" TILING_FOUND_INDEX)
+-    if (DEFINED ASCEND_COMPUTE_UNIT)
++    if (DEFINED ASCEND_COMPUTE_UNIT AND NOT "${ASCEND_COMPUTE_UNIT}" STREQUAL "")
+         map_compute_unit(${ASCEND_COMPUTE_UNIT} compute_unit_long)
+         get_target_dir(${compute_unit_long} target_dir)
+     else()
+diff --git a/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.h b/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.h
+index 34d9ff052b5ee2db3d562097fb2187f4b1e0d84b..e09ad8e2314f4b4ae02d487cca1ebf83819bef00 100644
+--- a/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.h
++++ b/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.h
+@@ -4,11 +4,12 @@
+  * This file is a part of the CANN Open Software.
+  * Licensed under CANN Open Software License Agreement Version 2.0 (the "License").
+  * Please refer to the License for details. You may not use this file except in compliance with the License.
+- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+- * See LICENSE in the root of the software repository for the full text of the License.
++ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING
++ * BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. See LICENSE in the root of
++ * the software repository for the full text of the License.
+  */
+-#ifndef OP_API_INC_OBFUSCATION_CALCULATE_H_
+-#define OP_API_INC_OBFUSCATION_CALCULATE_H_
++#ifndef OP_API_INC_OBFUSCATION_CALCULATE_V2_H_
++#define OP_API_INC_OBFUSCATION_CALCULATE_V2_H_
+ 
+ #include "aclnn/aclnn_base.h"
+ #include "aclnn_util.h"
+@@ -20,34 +21,38 @@ extern "C" {
+ /**
+  * @brief aclnnObfuscationCalculate的第一段接口，根据具体的计算流程，计算workspace大小。
+  * @domain aclnn_ops_infer
+- * 
++ *
+  * 算子功能： PMCC项目计算实现。
+  * @param [in] fd: npu device侧的aclTensor，表示socket连接符，shape为(1)。数据类型支持INT32。数据格式支持ND。
+- * @param [in] x: npu device侧的aclTensor，shape为( , *, ... , hiddenSize)，即最后一维的size是hiddenSize， 数据格式支持ND。
+- * 昇腾310P AI处理器：Tensor数据类型支持ACL_FLOAT、ACL_FLOAT16、ACL_INT8。
+- * 昇腾910B AI处理器：Tensor数据类型支持ACL_FLOAT、ACL_FLOAT16、ACL_INT8、ACL_BF16。
++ * @param [in] x: npu device侧的aclTensor，shape为( , *, ... , hiddenSize)，即最后一维的size是hiddenSize，
++ * 数据格式支持ND。 昇腾310P AI处理器：Tensor数据类型支持ACL_FLOAT、ACL_FLOAT16、ACL_INT8。 昇腾910B
++ * AI处理器：Tensor数据类型支持ACL_FLOAT、ACL_FLOAT16、ACL_INT8、ACL_BF16。
+  * @param [in] param: host侧的int32_t，预留的参数字段。
+  * @param [in] cmd: host侧的int32_t，混淆算子指令编号。目前仅支持1。
+- * @param [in] obfCoefficient: host侧的float，混淆系数，用于对推理数据部分混淆的比例，仅在cmd设置为1或2时需要填写有效值，否则填0。
++ * @param [in] obfCoefficient:
++ * host侧的float，混淆系数，用于对推理数据部分混淆的比例，仅在cmd设置为1或2时需要填写有效值，否则填0。
+  * @param [out] y: npu device侧的aclTensor，混淆处理后的张量，数据类型及Shape与x相同。数据格式支持ND。
+  * @param [out] workspaceSize: 返回用户需要在npu device侧申请的workspace大小。
+  * @param [out] executor: 返回op执行器，包含算子计算流程。
+  * @return aclnnStatus: 返回状态码。
+  */
+- ACLNN_API aclnnStatus aclnnObfuscationCalculateV2GetWorkspaceSize(int32_t fd, const aclTensor* x,
+-    int32_t param, int32_t cmd, float obfCoefficient, aclTensor* y, uint64_t* workspaceSize, aclOpExecutor** executor);
++ACLNN_API aclnnStatus aclnnObfuscationCalculateV2GetWorkspaceSize(
++    int32_t fd, const aclTensor* x, int32_t param, int32_t cmd, float obfCoefficient, aclTensor* y,
++    uint64_t* workspaceSize, aclOpExecutor** executor);
+ 
+ /**
+  * @brief aclnnObfuscationCalculate的第二段接口，用于执行计算
+  * @param [in] workspace: 在npu device侧申请的workspace内存地址
+- * @param [in] workspaceSize: 在npu device侧申请的workspace大小，由第一段接口aclnnObfuscationCalculateGetWorkspaceSize获取
++ * @param [in] workspaceSize: 在npu
++ * device侧申请的workspace大小，由第一段接口aclnnObfuscationCalculateGetWorkspaceSize获取
+  * @param [in] executor: 返回op执行器，包含算子计算流程
+  * @param [in] stream: acl stream流
+  * @return aclnnStatus: 返回状态码
+  */
+-ACLNN_API aclnnStatus aclnnObfuscationCalculateV2(void* workspace, uint64_t workspaceSize, aclOpExecutor* executor, aclrtStream stream);
++ACLNN_API aclnnStatus
++aclnnObfuscationCalculateV2(void* workspace, uint64_t workspaceSize, aclOpExecutor* executor, aclrtStream stream);
+ 
+ #ifdef __cplusplus
+ }
+ #endif
+-#endif  // OP_API_INC_OBFUSCATION_CALCULATE_H_
++#endif // OP_API_INC_OBFUSCATION_CALCULATE_V2_H_
+diff --git a/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.h b/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.h
+index 77a5302eff0c276de0a0f731fa4d1a857e213516..df55d3f1c27d70d58f108f00e1ebfd0ce754e33f 100644
+--- a/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.h
++++ b/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.h
+@@ -4,11 +4,12 @@
+  * This file is a part of the CANN Open Software.
+  * Licensed under CANN Open Software License Agreement Version 2.0 (the "License").
+  * Please refer to the License for details. You may not use this file except in compliance with the License.
+- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+- * See LICENSE in the root of the software repository for the full text of the License.
++ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING
++ * BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. See LICENSE in the root of
++ * the software repository for the full text of the License.
+  */
+-#ifndef OP_API_INC_OBFUSCATION_SETUP_H_
+-#define OP_API_INC_OBFUSCATION_SETUP_H_
++#ifndef OP_API_INC_OBFUSCATION_SETUP_V2_H_
++#define OP_API_INC_OBFUSCATION_SETUP_V2_H_
+ 
+ #include "aclnn/aclnn_base.h"
+ #include "aclnn_util.h"
+@@ -19,7 +20,7 @@ extern "C" {
+ /**
+  * @brief aclnnObfuscationSetup的第一段接口，根据具体的计算流程，计算workspace大小。
+  * @domain aclnn_ops_infer
+- * 
++ *
+  * 算子功能： PMCC项目初始化。
+  * @param [in] fdToClose: host侧的int32_t，待关闭的socket连接符，cmd为3时填写本算子在cmd为1时返回的fd，否则填0。
+  * @param [in] dataType: host侧的int32_t，代表Tensor数据类型的编号，仅在cmd设置为1或2时需要填写有效值，否则填0。
+@@ -27,23 +28,27 @@ extern "C" {
+  * 昇腾910B AI处理器：在{0, 1, 2, 27}中选择，0表示ACL_FLOAT、1表示ACL_FLOAT16、2表示ACL_INT8、27表示ACL_BF16
+  * @param [in] hiddenSize: host侧的int32_t，隐藏层维度，仅在cmd设置为1或2时需要填写有效值，否则填0。
+  * @param [in] tpRank: host侧的int32_t，TP Rank，仅在cmd设置为1或2时需要填写有效值，否则填0。
+- * @param [in] modelObfSeedId: host侧的int32_t，模型混淆因子id，用于TA从TEE KMC查询模型混淆因子，仅在cmd设置为1或2时需要填写有效值，否则填0。
+- * @param [in] dataObfSeedId: host侧的int32_t，数据混淆因子id，用于TA从TEE KMC查询数据混淆因子，仅在cmd设置为1或2时需要填写有效值，否则填0。
+- * @param [in] cmd: host侧的int32_t，setup指令编号，在{1, 2, 3}中选择，设置为1时进行普通模式资源初始化、为2时进行高精度模式资源初始化，设置为3时进行资源释放。
+- * @param [in] threadNum: host侧的int32_t，CA/TA进行混淆处理使用的线程数。在{1, 2, 3, 4, 5, 6}中选择，仅在cmd设置为1或2时需要填写有效值，否则填0。
+- * @param [in] obfCoefficient: host侧的float，混淆系数，用于对推理数据部分混淆的比例，仅在cmd设置为1或2时需要填写有效值，否则填0。
+- * @param [out] fd: npu device侧的aclTensor，表示socket连接符，在{1, 2, 16}中选择，设置为1时进行普通模式资源初始化、为2时进行高精度模式资源初始化，设置为16时进行资源释放。
++ * @param [in] modelObfSeedId: host侧的int32_t，模型混淆因子id，用于TA从TEE
++ * KMC查询模型混淆因子，仅在cmd设置为1或2时需要填写有效值，否则填0。
++ * @param [in] dataObfSeedId: host侧的int32_t，数据混淆因子id，用于TA从TEE
++ * KMC查询数据混淆因子，仅在cmd设置为1或2时需要填写有效值，否则填0。
++ * @param [in] cmd: host侧的int32_t，setup指令编号，在{1, 2,
++ * 3}中选择，设置为1时进行普通模式资源初始化、为2时进行高精度模式资源初始化，设置为3时进行资源释放。
++ * @param [in] threadNum: host侧的int32_t，CA/TA进行混淆处理使用的线程数。在{1, 2, 3, 4, 5,
++ * 6}中选择，仅在cmd设置为1或2时需要填写有效值，否则填0。
++ * @param [in] obfCoefficient:
++ * host侧的float，混淆系数，用于对推理数据部分混淆的比例，仅在cmd设置为1或2时需要填写有效值，否则填0。
++ * @param [out] fd: npu device侧的aclTensor，表示socket连接符，在{1, 2,
++ * 16}中选择，设置为1时进行普通模式资源初始化、为2时进行高精度模式资源初始化，设置为16时进行资源释放。
+  * shape为(1)。数据格式支持ND。
+  * @param [out] workspaceSize: 返回用户需要在npu device侧申请的workspace大小。
+  * @param [out] executor: 返回op执行器，包含算子计算流程。
+  * @return aclnnStatus: 返回状态码。
+  */
+- ACLNN_API aclnnStatus aclnnObfuscationSetupV2GetWorkspaceSize(int32_t fdToClose, int32_t dataType, 
+-                                                             int32_t hiddenSize, int32_t tpRank, 
+-                                                             int32_t modelObfSeedId, int32_t dataObfSeedId, 
+-                                                             int32_t cmd, int32_t threadNum, float obfCoefficient, 
+-                                                             aclTensor* fd, uint64_t* workspaceSize,
+-                                                             aclOpExecutor** executor);
++ACLNN_API aclnnStatus aclnnObfuscationSetupV2GetWorkspaceSize(
++    int32_t fdToClose, int32_t dataType, int32_t hiddenSize, int32_t tpRank, int32_t modelObfSeedId,
++    int32_t dataObfSeedId, int32_t cmd, int32_t threadNum, float obfCoefficient, aclTensor* fd, uint64_t* workspaceSize,
++    aclOpExecutor** executor);
+ 
+ /**
+  * @brief aclnnObfuscationSetup的第二段接口，用于执行计算
+@@ -53,9 +58,10 @@ extern "C" {
+  * @param [in] stream: acl stream流
+  * @return aclnnStatus: 返回状态码
+  */
+-ACLNN_API aclnnStatus aclnnObfuscationSetupV2(void* workspace, uint64_t workspaceSize, aclOpExecutor* executor, aclrtStream stream);
++ACLNN_API aclnnStatus
++aclnnObfuscationSetupV2(void* workspace, uint64_t workspaceSize, aclOpExecutor* executor, aclrtStream stream);
+ 
+ #ifdef __cplusplus
+ }
+ #endif
+-#endif  // OP_API_INC_OBFUSCATION_SETUP_H_
++#endif // OP_API_INC_OBFUSCATION_SETUP_V2_H_
+diff --git a/reliability/obfuscation_setup/tests/ut/op_host/CMakeLists.txt b/reliability/obfuscation_setup/tests/ut/op_host/CMakeLists.txt
+index a629e4132f8821cff96731c9d079da92b7bf311f..5829113c26810326895f3cfda2e3ad094dab04c5 100644
+--- a/reliability/obfuscation_setup/tests/ut/op_host/CMakeLists.txt
++++ b/reliability/obfuscation_setup/tests/ut/op_host/CMakeLists.txt
+@@ -11,4 +11,4 @@
+ file(GLOB CURRENT_DIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/*)
+ if(UT_TEST_ALL OR OP_API_UT)
+     add_modules_ut_sources(HOSTNAME ${OP_API_MODULE_NAME} MODE PRIVATE DIR ${CMAKE_CURRENT_SOURCE_DIR})
+-endif()
+\ No newline at end of file
++endif()
+diff --git a/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_public_headers.cpp b/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_public_headers.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..5eca6a303b2228bafc1fc378193a657752acf9d4
+--- /dev/null
++++ b/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_public_headers.cpp
+@@ -0,0 +1,27 @@
++/**
++ * Copyright (c) 2026 Huawei Technologies Co., Ltd.
++ * This program is free software, you can redistribute it and/or modify it under the terms and conditions of
++ * CANN Open Software License Agreement Version 2.0 (the "License").
++ * Please refer to the License for details. You may not use this file except in compliance with the License.
++ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED,
++ * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
++ * See LICENSE in the root of the software repository for the full text of the License.
++ */
++
++#include <gtest/gtest.h>
++#include <type_traits>
++// The combined OpAPI UT target may pre-include installed headers. Reset these
++// guards so this regression exercises the source headers included below.
++#undef OP_API_INC_OBFUSCATION_SETUP_H_
++#undef OP_API_INC_OBFUSCATION_SETUP_V2_H_
++#undef OP_API_INC_OBFUSCATION_CALCULATE_H_
++#undef OP_API_INC_OBFUSCATION_CALCULATE_V2_H_
++#include "../../../op_host/op_api/aclnn_obfuscation_setup.h"
++#include "../../../op_host/op_api/aclnn_obfuscation_setup_v2.h"
++#include "../../../../obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate.h"
++#include "../../../../obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.h"
++
++static_assert(std::is_pointer_v<decltype(&aclnnObfuscationSetupV2GetWorkspaceSize)>);
++static_assert(std::is_pointer_v<decltype(&aclnnObfuscationCalculateV2GetWorkspaceSize)>);
++
++TEST(ObfuscationPublicHeadersTest, v2DeclarationsRemainVisibleAfterV1Headers) { SUCCEED(); }
+diff --git a/tests/ut/op_api/op_api_ut_common/inc/op_api_ut_common/inner/file_io.h b/tests/ut/op_api/op_api_ut_common/inc/op_api_ut_common/inner/file_io.h
+index b543d303ce93f505a26a931999e5fcdc3f1d7cd2..ce1121352900bd9b69e665498048b65d9151927a 100644
+--- a/tests/ut/op_api/op_api_ut_common/inc/op_api_ut_common/inner/file_io.h
++++ b/tests/ut/op_api/op_api_ut_common/inc/op_api_ut_common/inner/file_io.h
+@@ -4,10 +4,11 @@
+ #include <string>
+ #include <vector>
+ #include <memory>
++#include <cstdint>
+ 
+ using namespace std;
+ 
+-void * ReadBinFile(const string& file_name, size_t& size);
++void* ReadBinFile(const string& file_name, size_t& size);
+ int WriteBinFile(const void* host_mem, const string& file_name, size_t size);
+ bool FileExists(const string& file_name);
+ void DeleteUtTmpFiles(const string& file_prefix);
+@@ -17,6 +18,6 @@ void SetUtTmpFileSwitch();
+ bool GetUtTmpFileSwitch();
+ bool IsDir(const string& path);
+ void GetFilesWithSuffix(const string& path, const string& suffix, vector<string>& files);
+-unique_ptr<char[]> GetBinFromFile(const string& path, uint32_t &data_len);
++unique_ptr<char[]> GetBinFromFile(const string& path, uint32_t& data_len);
+ 
+-#endif
+\ No newline at end of file
++#endif

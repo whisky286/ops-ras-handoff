@@ -1,0 +1,158 @@
+diff --git a/scripts/util/merge_aicpu_info_json.sh b/scripts/util/merge_aicpu_info_json.sh
+index 7d0c0ccd838ed005538c90408fa48ba89f07b0a6..5bf629982479a48ee8abb72af4a6de691e4ad24d 100644
+--- a/scripts/util/merge_aicpu_info_json.sh
++++ b/scripts/util/merge_aicpu_info_json.sh
+@@ -1,26 +1,25 @@
+ #!/bin/bash
+ # ----------------------------------------------------------------------------
+-# This program is free software, you can redistribute it and/or modify.
+ # Copyright (c) 2026 Huawei Technologies Co., Ltd.
+-# This file is a part of the CANN Open Software.
+-# Licensed under CANN Open Software License Agreement Version 2.0 (the "License").
++# This program is free software, you can redistribute it and/or modify it under the terms and conditions of
++# CANN Open Software License Agreement Version 2.0 (the "License").
+ # Please refer to the License for details. You may not use this file except in compliance with the License.
+-# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
++# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED,
++# INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+ # See LICENSE in the root of the software repository for the full text of the License.
+ # ----------------------------------------------------------------------------
+ 
+-echo $@
++echo "$@"
+ top_dir=$1
+ output_json=$2
+ first_json=$3
+ shift 3
+ 
+ merge_json_tool="${top_dir}/scripts/util/insert_op_info.py"
+->$output_json
+ 
+ if [[ -f "$first_json" ]]
+ then
+-    cp -f $first_json $output_json
++    cp -f -- "$first_json" "$output_json" || exit $?
+ else
+     echo "[ERROR] ${first_json} is not a file"
+     exit 1
+@@ -30,8 +29,9 @@ for single_json in "$@"
+ do
+     if [[ -f "${single_json}" ]]
+     then
+-        python3 ${top_dir}/scripts/util/insert_op_info.py ${single_json} ${output_json}
++        python3 "$merge_json_tool" "$single_json" "$output_json" || exit $?
+     else
+         echo "[ERROR] ${single_json} is not a file"
++        exit 1
+     fi
+ done
+diff --git a/tests/ut/scripts/test_aicpu_merge_shell.py b/tests/ut/scripts/test_aicpu_merge_shell.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..f7556202c598001bdaa438df6618c70cff0a9079
+--- /dev/null
++++ b/tests/ut/scripts/test_aicpu_merge_shell.py
+@@ -0,0 +1,104 @@
++#!/usr/bin/env python3
++# -*- coding: utf-8 -*-
++# ----------------------------------------------------------------------------
++# Copyright (c) 2026 gcw_Z57idahf.
++# This program is free software, you can redistribute it and/or modify it under the terms and conditions of
++# CANN Open Software License Agreement Version 2.0 (the "License").
++# Please refer to the License for details. You may not use this file except in compliance with the License.
++# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED,
++# INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
++# See LICENSE in the root of the software repository for the full text of the License.
++# ----------------------------------------------------------------------------
++
++"""Run the production Bash merger and the production Python merge helper."""
++
++import json
++import os
++from pathlib import Path
++import subprocess
++import tempfile
++import unittest
++
++TREE = Path(__file__).resolve().parents[3]
++SCRIPT = TREE / "scripts/util/merge_aicpu_info_json.sh"
++
++
++@unittest.skipUnless(
++    os.name == "posix", "The production merger requires Bash on Linux."
++)
++class TestAicpuMergeShell(unittest.TestCase):
++    def setUp(self):
++        self.temporary = tempfile.TemporaryDirectory(dir="/tmp")
++        self.addCleanup(self.temporary.cleanup)
++        self.root = Path(self.temporary.name)
++        self.top = self.root / "checkout"
++        self.top.symlink_to(TREE, target_is_directory=True)
++
++    def write(self, directory, name):
++        directory.mkdir(parents=True, exist_ok=True)
++        path = directory / (name + ".json")
++        path.write_text(
++            json.dumps({name: {"opInfo": {"engine": "DNN_VM_AICPU"}}}), encoding="utf-8"
++        )
++        return path
++
++    def invoke(self, root, output, *inputs):
++        return subprocess.run(
++            # Match the production script's Linux shebang. Paths are argv,
++            # never interpolated into a shell command or passed to bash -c.
++            ["/bin/bash", str(SCRIPT), str(root), str(output), *map(str, inputs)],
++            capture_output=True,
++            text=True,
++            shell=False,
++        )
++
++    def check_valid_paths(self, directory, top):
++        first = self.write(directory, "First")
++        second = self.write(directory, "Second")
++        output = directory / "merged.json"
++        result = self.invoke(top, output, first, second)
++        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
++        self.assertTrue(output.is_file(), result.stdout + result.stderr)
++        self.assertEqual(set(json.loads(output.read_text())), {"First", "Second"})
++
++    def test_input_and_output_directories_with_spaces(self):
++        self.check_valid_paths(self.root / "metadata with spaces", self.top)
++
++    def test_source_checkout_with_spaces(self):
++        top = self.root / "source checkout"
++        top.symlink_to(TREE, target_is_directory=True)
++        self.check_valid_paths(self.root / "normal", top)
++
++    def test_missing_later_input_is_a_failure(self):
++        first = self.write(self.root, "First")
++        result = self.invoke(
++            self.top, self.root / "merged.json", first, self.root / "absent.json"
++        )
++        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
++
++    def test_invalid_middle_input_is_not_masked_by_later_success(self):
++        first = self.write(self.root, "First")
++        broken = self.root / "broken.json"
++        broken.write_text("{", encoding="utf-8")
++        last = self.write(self.root, "Last")
++        result = self.invoke(self.top, self.root / "merged.json", first, broken, last)
++        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
++
++    def test_missing_first_input_remains_a_failure(self):
++        result = self.invoke(
++            self.top, self.root / "merged.json", self.root / "absent.json"
++        )
++        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
++
++    def test_valid_merge_without_spaces_remains_supported(self):
++        self.check_valid_paths(self.root, self.top)
++
++    def test_one_input_is_copied_unchanged(self):
++        first = self.write(self.root, "First")
++        output = self.root / "merged.json"
++        result = self.invoke(self.top, output, first)
++        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
++        self.assertEqual(output.read_bytes(), first.read_bytes())
++
++    def test_shell_characters_remain_literal_path_characters(self):
++        self.check_valid_paths(self.root / "metadata;$(printf literal)", self.top)
