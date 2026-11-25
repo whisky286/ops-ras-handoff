@@ -65,3 +65,8 @@
 - 草稿修复编译可过但 UT stub case_success 失败(561103),已回滚;草稿存
   results/patches/draft-issue52-crypto-contiguous.patch
 - 回滚后 crypto UT 14/14 PASSED(C2-crypto-ut-clean.log)
+
+## 验证程序补强(v2)
+- #118 与 #56/#57 的 harness 已重写:v2 检查全部返回值、哨兵初值、written 校验、精确故障行判定;
+  非法参数不再送入设备执行。
+- 复核结果与 v1 结论一致,但 v2 为验收依据;日志 C1v2-*.log / C2v2-param-*.log
