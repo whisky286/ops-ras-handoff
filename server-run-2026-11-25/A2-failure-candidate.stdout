@@ -1,0 +1,6 @@
+merge_missing_input exit=1 matched=True
+merge_valid_control exit=0 matched=True
+opc_child_7 exit=7 matched=True
+opc_child_0 exit=0 matched=True
+PASS means failed work returned nonzero and normal controls still succeeded.
+Report: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/results/failure-candidate.json

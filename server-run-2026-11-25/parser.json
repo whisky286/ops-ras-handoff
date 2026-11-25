@@ -1,0 +1,28 @@
+{
+  "source": "/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/scripts/kernel/binary_script/parser_ini.py",
+  "cases": [
+    {
+      "case": "valid_input_and_output",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "stdout": "\n\n==============check valid for ops info start==============\n==============check valid for ops info end================\n\n\n"
+    },
+    {
+      "case": "missing_param_type",
+      "expected": false,
+      "actual": false,
+      "passed": true,
+      "stdout": "\n\n==============check valid for ops info start==============\nop: Demo input0 missing: paramType\n==============check valid for ops info end================\n\n\n"
+    },
+    {
+      "case": "invalid_param_type",
+      "expected": false,
+      "actual": false,
+      "passed": true,
+      "stdout": "\n\n==============check valid for ops info start==============\nop: Demo output0 paramType not valid, valid key:[fix, range, list]\n==============check valid for ops info end================\n\n\n"
+    }
+  ],
+  "passed": true,
+  "scope": "Required input/output keys and paramType only; not shapeType/needCompile validation."
+}

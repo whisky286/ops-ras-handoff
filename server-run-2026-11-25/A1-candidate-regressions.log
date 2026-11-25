@@ -1,0 +1,20 @@
+date: 2026-11-23T23:17:49+08:00  host: node73-144
+== unittest test_build_optional_flags (8 tests) ==
+test_bisheng_conflicting_modes_are_rejected (test_build_optional_flags.BuildOptionalFlagsTest) ... ok
+test_bisheng_options_reach_cmake (test_build_optional_flags.BuildOptionalFlagsTest) ... ok
+test_existing_debug_build_and_unknown_options (test_build_optional_flags.BuildOptionalFlagsTest) ... ok
+test_plugin_help_uses_the_supported_debug_option (test_build_optional_flags.BuildOptionalFlagsTest) ... ok
+test_template_reaches_cmake_without_losing_separators (test_build_optional_flags.BuildOptionalFlagsTest) ... ok
+test_template_requires_one_operator (test_build_optional_flags.BuildOptionalFlagsTest) ... ok
+test_valgrind_disables_asan_and_direct_execution_in_both_orders (test_build_optional_flags.BuildOptionalFlagsTest) ... ok
+test_execution_target_respects_valgrind_and_noexec (test_build_optional_flags.HostValgrindTargetTest) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.438s
+
+OK
+exit=0
+== bash -n build.sh ==
+exit=0
+== git -c core.whitespace=cr-at-eol diff --check ==
+exit=0

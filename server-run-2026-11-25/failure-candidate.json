@@ -1,0 +1,88 @@
+{
+  "repository": "/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate",
+  "expectation": "correct",
+  "meaning": "PASS means failed work returned nonzero and normal controls still succeeded.",
+  "npu_or_opc_execution": false,
+  "cases": [
+    {
+      "command": [
+        "bash",
+        "/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/scripts/util/merge_aicpu_info_json.sh",
+        "/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate",
+        "/home/l00899010/tmp/ras-failure-propagation-cicvxnw0/output.json",
+        "/home/l00899010/tmp/ras-failure-propagation-cicvxnw0/first.json",
+        "/home/l00899010/tmp/ras-failure-propagation-cicvxnw0/missing.json"
+      ],
+      "exit_code": 1,
+      "stdout": "/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate /home/l00899010/tmp/ras-failure-propagation-cicvxnw0/output.json /home/l00899010/tmp/ras-failure-propagation-cicvxnw0/first.json /home/l00899010/tmp/ras-failure-propagation-cicvxnw0/missing.json\n[ERROR] /home/l00899010/tmp/ras-failure-propagation-cicvxnw0/missing.json is not a file\n",
+      "stderr": "",
+      "case_id": "merge_missing_input",
+      "error_expected": true,
+      "output_keys": [
+        "A"
+      ],
+      "passed": true
+    },
+    {
+      "command": [
+        "bash",
+        "/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/scripts/util/merge_aicpu_info_json.sh",
+        "/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate",
+        "/home/l00899010/tmp/ras-failure-propagation-cicvxnw0/output.json",
+        "/home/l00899010/tmp/ras-failure-propagation-cicvxnw0/first.json",
+        "/home/l00899010/tmp/ras-failure-propagation-cicvxnw0/second.json"
+      ],
+      "exit_code": 0,
+      "stdout": "/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate /home/l00899010/tmp/ras-failure-propagation-cicvxnw0/output.json /home/l00899010/tmp/ras-failure-propagation-cicvxnw0/first.json /home/l00899010/tmp/ras-failure-propagation-cicvxnw0/second.json\ninsert op:[ B ] success\n",
+      "stderr": "",
+      "case_id": "merge_valid_control",
+      "error_expected": false,
+      "output_keys": [
+        "A",
+        "B"
+      ],
+      "passed": true
+    },
+    {
+      "command": [
+        "bash",
+        "/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/scripts/kernel/binary_script/build_binary_opc.sh",
+        "Demo",
+        "ascend910b",
+        "/home/l00899010/tmp/ras-failure-propagation-cicvxnw0/output",
+        "Release",
+        "FALSE",
+        "FALSE",
+        "FALSE"
+      ],
+      "exit_code": 7,
+      "stdout": "[INFO] excute file: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/scripts/kernel/binary_script/build_binary_opc.sh\n[ERROR] [Demo]build_binary_opc_gen_task failed with ErrorCode[7].\nCommand executed: build_binary_opc_gen_task.sh Demo ascend910b /home/l00899010/tmp/ras-failure-propagation-cicvxnw0/output /home/l00899010/tmp/ras-failure-propagation-cicvxnw0/output/opc_cmd Release FALSE FALSE FALSE bisheng_flags= kernel_template_input=\nError output: \n controlled child result\n",
+      "stderr": "",
+      "case_id": "opc_child_7",
+      "error_expected": true,
+      "controlled_child_exit_code": 7,
+      "passed": true
+    },
+    {
+      "command": [
+        "bash",
+        "/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/scripts/kernel/binary_script/build_binary_opc.sh",
+        "Demo",
+        "ascend910b",
+        "/home/l00899010/tmp/ras-failure-propagation-cicvxnw0/output",
+        "Release",
+        "FALSE",
+        "FALSE",
+        "FALSE"
+      ],
+      "exit_code": 0,
+      "stdout": "[INFO] excute file: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/scripts/kernel/binary_script/build_binary_opc.sh\ncontrolled child result\n",
+      "stderr": "",
+      "case_id": "opc_child_0",
+      "error_expected": false,
+      "controlled_child_exit_code": 0,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

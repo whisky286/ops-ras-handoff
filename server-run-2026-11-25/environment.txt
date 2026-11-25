@@ -1,0 +1,575 @@
+ops-ras server environment collection (not a test PASS)
+captured_at_utc=2026-11-23T15:10:16.247409+00:00
+platform=Linux-5.10.0-216.0.0.115.oe2203sp4.aarch64-aarch64-with-glibc2.34
+architecture=aarch64
+repository=/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate
+ASCEND_HOME_PATH=/usr/local/Ascend/cann-9.0.0
+ASCEND_OPP_PATH=/usr/local/Ascend/cann-9.0.0/opp
+ASCEND_CUSTOM_OPP_PATH=<unset>
+LD_LIBRARY_PATH=/usr/local/Ascend/nnal/atb/latest/atb/cxx_abi_1/lib:/usr/local/Ascend/nnal/atb/latest/atb/cxx_abi_1/examples:/usr/local/Ascend/nnal/atb/latest/atb/cxx_abi_1/tests/atbopstest:/usr/local/Ascend/cann-9.0.0/lib64:/usr/local/Ascend/cann-9.0.0/lib64/plugin/opskernel:/usr/local/Ascend/cann-9.0.0/lib64/plugin/nnengine:/usr/local/Ascend/cann-9.0.0/opp/built-in/op_impl/ai_core/tbe/op_tiling/lib/linux/aarch64:/usr/local/Ascend/driver/lib64:/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64/driver
+ASCEND_RT_VISIBLE_DEVICES=0,1,2,3
+ASCEND_VISIBLE_DEVICES=<unset>
+
+$ git rev-parse HEAD
+executable=/bin/git
+exit_code=0
+6943b10042266ee3dbee3e17237919a0ded600bf
+
+$ git status --short --branch
+executable=/bin/git
+exit_code=0
+## verify/server-candidate
+ M build.sh
+ M docs/en/context/basic_concept.md
+ M docs/en/context/compile_and_run_sample.md
+ M docs/en/install/build.md
+ M docs/zh/context/compile_and_run_sample.md
+ M docs/zh/install/build.md
+ M docs/zh/op_api_list.md
+ M reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify.md
+ M reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify_en.md
+ M reliability/obfuscation_calculate/docs/aclnnObfuscationCalculate.md
+ M reliability/obfuscation_calculate/docs/aclnnObfuscationCalculateV2.md
+ M reliability/obfuscation_calculate/docs/aclnnObfuscationCalculateV2_en.md
+ M reliability/obfuscation_calculate/docs/aclnnObfuscationCalculate_en.md
+ M reliability/obfuscation_setup/docs/aclnnObfuscationSetup.md
+ M reliability/obfuscation_setup/docs/aclnnObfuscationSetupV2.md
+ M reliability/obfuscation_setup/docs/aclnnObfuscationSetupV2_en.md
+ M reliability/obfuscation_setup/docs/aclnnObfuscationSetup_en.md
+ M reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup.h
+ M reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.h
+ M scripts/kernel/binary_script/parser_ini.py
+ M tests/ut/op_host/CMakeLists.txt
+?? tests/ut/scripts/
+
+$ bash --version
+executable=/bin/bash
+exit_code=0
+GNU bash, version 5.1.8(1)-release (aarch64-openEuler-linux-gnu)
+Copyright (C) 2020 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+$ python3 --version
+executable=/bin/python3
+exit_code=0
+Python 3.9.9
+
+$ cmake --version
+executable=/bin/cmake
+exit_code=0
+cmake version 3.22.0
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+
+$ ninja --version
+executable=/usr/local/bin/ninja
+exit_code=0
+1.13.2.git.kitware.jobserver-pipe-1
+
+$ g++ --version
+executable=/bin/g++
+exit_code=0
+g++ (GCC) 10.3.1
+Copyright (C) 2020 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+$ gcc --version
+executable=/bin/gcc
+exit_code=0
+gcc (GCC) 10.3.1
+Copyright (C) 2020 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+$ clang++ --version
+executable=None
+NOT AVAILABLE
+
+$ valgrind --version
+executable=None
+NOT AVAILABLE
+
+$ openssl version
+executable=/bin/openssl
+exit_code=0
+OpenSSL 3.0.7 1 Nov 2022 (Library: OpenSSL 3.0.7 1 Nov 2022)
+
+$ npu-smi info
+executable=/usr/local/bin/npu-smi
+exit_code=0
++------------------------------------------------------------------------------------------------------------------+
+| npu-smi 26.0.rc1                            Version: 26.0.rc1                                                    |
++---------------------------+---------------+----------------------------------------------------------------------+
+| NPU   Name                | Health        | Power(W)             Temp(C)                 Hugepages-Usage(page)   |
+| Chip  Phy-ID              | Bus-Id        | AICore(%)            Memory-Usage(MB)        HBM-Usage(MB)           |
++===========================+===============+======================================================================+
+| 0     Ascend910           | OK            | 187.9                53                      0    / 0                |
+| 0     0                   | 0000:9D:00.0  | 0                    0    / 0                58885/ 65536            |
++------------------------------------------------------------------------------------------------------------------+
+| 0     Ascend910           | OK            | -                    49                      0    / 0                |
+| 1     1                   | 0000:9F:00.0  | 0                    0    / 0                58159/ 65536            |
++===========================+===============+======================================================================+
+| 1     Ascend910           | OK            | 216.4                52                      0    / 0                |
+| 0     2                   | 0000:99:00.0  | 0                    0    / 0                62766/ 65536            |
++------------------------------------------------------------------------------------------------------------------+
+| 1     Ascend910           | OK            | -                    51                      0    / 0                |
+| 1     3                   | 0000:9B:00.0  | 0                    0    / 0                62510/ 65536            |
++===========================+===============+======================================================================+
+| 2     Ascend910           | OK            | 204.3                41                      0    / 0                |
+| 0     4                   | 0000:95:00.0  | 0                    0    / 0                62749/ 65536            |
++------------------------------------------------------------------------------------------------------------------+
+| 2     Ascend910           | OK            | -                    41                      0    / 0                |
+| 1     5                   | 0000:97:00.0  | 0                    0    / 0                62507/ 65536            |
++===========================+===============+======================================================================+
+| 3     Ascend910           | OK            | 210.4                41                      0    / 0                |
+| 0     6                   | 0000:91:00.0  | 0                    0    / 0                62730/ 65536            |
++------------------------------------------------------------------------------------------------------------------+
+| 3     Ascend910           | OK            | -                    42                      0    / 0                |
+| 1     7                   | 0000:93:00.0  | 0                    0    / 0                62507/ 65536            |
++===========================+===============+======================================================================+
+| 4     Ascend910           | OK            | 180.3                52                      0    / 0                |
+| 0     8                   | 0000:8D:00.0  | 0                    0    / 0                62758/ 65536            |
++------------------------------------------------------------------------------------------------------------------+
+| 4     Ascend910           | OK            | -                    52                      0    / 0                |
+| 1     9                   | 0000:8F:00.0  | 0                    0    / 0                62511/ 65536            |
++===========================+===============+======================================================================+
+| 5     Ascend910           | OK            | 175.3                52                      0    / 0                |
+| 0     10                  | 0000:89:00.0  | 0                    0    / 0                3130 / 65536            |
++------------------------------------------------------------------------------------------------------------------+
+| 5     Ascend910           | OK            | -                    52                      0    / 0                |
+| 1     11                  | 0000:8B:00.0  | 0                    0    / 0                2893 / 65536            |
++===========================+===============+======================================================================+
+| 6     Ascend910           | OK            | 173.2                39                      0    / 0                |
+| 0     12                  | 0000:85:00.0  | 0                    0    / 0                53813/ 65536            |
++------------------------------------------------------------------------------------------------------------------+
+| 6     Ascend910           | OK            | -                    39                      0    / 0                |
+| 1     13                  | 0000:87:00.0  | 0                    0    / 0                52096/ 65536            |
++===========================+===============+======================================================================+
+| 7     Ascend910           | OK            | 175.4                39                      0    / 0                |
+| 0     14                  | 0000:81:00.0  | 0                    0    / 0                52424/ 65536            |
++------------------------------------------------------------------------------------------------------------------+
+| 7     Ascend910           | OK            | -                    39                      0    / 0                |
+| 1     15                  | 0000:83:00.0  | 0                    0    / 0                52017/ 65536            |
++===========================+===============+======================================================================+
++---------------------------+---------------+----------------------------------------------------------------------+
+| NPU     Chip              | Process id    | Process name       | Process memory(MB)    | Process id in container |
++===========================+===============+======================================================================+
+| 0       0                 | 3633098       | python3            | 106                   | NA                      |
+| 0       0                 | 2051059       | vllm               | 106                   | NA                      |
+| 0       0                 | 2064628       | VLLMWorker_TP      | 55333                 | NA                      |
+| 0       1                 | 2064629       | VLLMWorker_TP      | 55315                 | NA                      |
++===========================+===============+======================================================================+
+| 1       0                 | 3242585       | VLLMWorker_DP      | 59654                 | NA                      |
+| 1       1                 | 3242574       | VLLMWorker_DP      | 59654                 | NA                      |
++===========================+===============+======================================================================+
+| 2       0                 | 3242575       | VLLMWorker_DP      | 59652                 | NA                      |
+| 2       1                 | 3242577       | VLLMWorker_DP      | 59652                 | NA                      |
++===========================+===============+======================================================================+
+| 3       0                 | 3242599       | VLLMWorker_DP      | 59632                 | NA                      |
+| 3       1                 | 3242576       | VLLMWorker_DP      | 59652                 | NA                      |
++===========================+===============+======================================================================+
+| 4       0                 | 3242578       | VLLMWorker_DP      | 59652                 | NA                      |
+| 4       1                 | 3242587       | VLLMWorker_DP      | 59654                 | NA                      |
++===========================+===============+======================================================================+
+| No running processes found in NPU 5                                                                              |
++===========================+===============+======================================================================+
+| 6       0                 | 89751         | VLLMWorker         | 50426                 | NA                      |
+| 6       0                 | 85606         | VLLMEngineCor      | 174                   | NA                      |
+| 6       1                 | 89755         | VLLMWorker         | 49146                 | NA                      |
+| 6       1                 | 85607         | VLLMEngineCor      | 172                   | NA                      |
++===========================+===============+======================================================================+
+| 7       0                 | 89804         | VLLMWorker         | 49044                 | NA                      |
+| 7       0                 | 85608         | VLLMEngineCor      | 170                   | NA                      |
+| 7       1                 | 85609         | VLLMEngineCor      | 174                   | NA                      |
+| 7       1                 | 89648         | VLLMWorker         | 49064                 | NA                      |
++===========================+===============+======================================================================+
+
+$ df -h /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate
+executable=/bin/df
+exit_code=0
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/nvme2n1    3.5T  3.3T   31G 100% /home
+
+$ free -h
+executable=/bin/free
+exit_code=0
+               total        used        free      shared  buff/cache   available
+Mem:           1.0Ti       667Gi        23Gi       9.5Gi       328Gi       337Gi
+Swap:          2.0Gi       2.0Gi          0B
+
+VERSION FILE: /usr/local/Ascend/driver/version.info
+Version=26.0.rc1
+ascendhal_version=7.35.23
+aicpu_version=1.0
+tdt_version=1.0
+log_version=1.0
+prof_version=2.0
+dvppkernels_version=1.1
+tsfw_version=1.0
+Innerversion=V100R001C10SPC001B237
+compatible_version=[V100R001C21],[V100R001C22],[V100R001C23],[V100R001C25],[V100R001C10]
+compatible_version_fw=[7.0.0,9.9.9]
+package_version=26.0.rc1
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/acl_extend/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version="9.0"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/aoe/version.info
+Version=9.0.0
+version_dir=cann
+timestamp=20260415_000526603
+required_package_acl-extend_version="9.0"
+required_package_ge-compiler_version="9.0"
+required_package_ge-executor_version="9.0"
+required_package_metadef_version="9.0"
+required_package_ncs_version="9.0"
+required_package_opbase_version="9.0"
+required_package_runtime_version="9.0"
+required_package_tbe-tik_version="9.0"
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/asc-devkit/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version="9.0"
+required_package_ge-executor_version="9.0"
+required_package_metadef_version="9.0"
+required_package_opbase_version="9.0"
+required_package_bisheng-compiler_version="9.0"
+required_package_tbe-tik_version="9.0"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/asc-tools/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version="9.0"
+required_package_ge-executor_version="9.0"
+required_package_metadef_version="9.0"
+required_package_asc-devkit_version="9.0"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/ascendnpu-ir/version.info
+Version=1.1.0
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/bisheng-compiler/version.info
+Version=9.0.0
+version_dir=cann
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/dflow-executor/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version="9.0"
+required_package_metadef_version="9.0"
+required_package_hcomm_version="9.0"
+required_package_bisheng-compiler_version="9.0"
+required_package_ge-executor_version="9.0"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/dvpp/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version="9.0"
+required_package_metadef_version="9.0"
+required_package_opbase_version="9.0"
+required_package_bisheng-compiler_version="9.0"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/ge-compiler/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version="9.0"
+required_package_metadef_version="9.0"
+required_package_hcomm_version="9.0"
+required_package_asc-devkit_version="9.0"
+required_package_ge-executor_version="9.0"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/ge-executor/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version="9.0"
+required_package_metadef_version="9.0"
+required_package_hcomm_version="9.0"
+required_package_asc-devkit_version="9.0"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/graph_autofusion/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version="9.0"
+required_package_asc-devkit_version="9.0"
+required_package_ge-compiler_version="9.0"
+required_package_bisheng-compiler_version="9.0"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/hccl/version.info
+Version=9.0.0
+version_dir=cann
+required_package_hcomm_version=">=8.5"
+required_package_runtime_version=">=8.5"
+required_package_metadef_version=">=8.5"
+timestamp=20260415_000526603
+host_only=false
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/hcomm/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version="9.0"
+required_package_metadef_version="9.0"
+timestamp=20260415_000526603
+host_only=false
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/hixl/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version=">=8.5"
+required_package_metadef_version=">=8.5"
+required_package_hcomm_version=">=8.5"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/metadef/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version="9.0"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/mindstudio-debugger/version.info
+[PACKAGE]
+Name=mindstudio-debugger
+Version=26.0.0
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/mindstudio-operator-tools/version.info
+[PACKAGE]
+Name=mindstudio-operator-tools
+Version=26.0.0
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/mindstudio-opprof/version.info
+[PACKAGE]
+Name=mindstudio-opprof
+Version=26.0.0
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/mindstudio-sanitizer/version.info
+[PACKAGE]
+Name=mindstudio-sanitizer
+Version=26.0.0
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/ms_fmk_transplt/version.info
+[PACKAGE]
+Name=mindstudio-transplt
+Version=1.0.0
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/msmemscope/version.info
+[PACKAGE]
+Name=mindstudio-memscope
+Version=26.0.0
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/msprof/version.info
+ [PACKAGE]
+ Name=mindstudio-profiler
+ Version=26.0.0
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/mspti/version.info
+[PACKAGE]
+Name=mindstudio-profiler-tools-interface
+Version=26.0.0
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/msserviceprofiler/version.info
+[PACKAGE]
+Name=mindstudio-serviceprofiler
+Version=26.0.0
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/mstx/version.info
+[PACKAGE]
+Name=mindstudio-TX
+Version=1.0.0
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/ncs/version.info
+Version=9.0.0
+version_dir=cann
+timestamp=20260415_000526603
+required_package_acl-extend_version="9.0"
+required_package_aoe_version="9.0"
+required_package_ge-compiler_version="9.0"
+required_package_ge-executor_version="9.0"
+required_package_metadef_version="9.0"
+required_package_opbase_version="9.0"
+required_package_runtime_version="9.0"
+required_package_tbe-tik_version="9.0"
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/oam_tools/version.info
+Version=9.0.0
+version_dir=cann
+required_package_metadef_version="9.0"
+required_package_runtime_version="9.0"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/opbase/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version=">=8.5"
+required_package_ge-executor_version=">=8.5"
+required_package_metadef_version=">=8.5"
+required_package_asc-devkit_version=">=8.5"
+required_package_bisheng-compiler_version=">=8.5"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/operator_cmp/version.info
+[PACKAGE]
+Name=mindstudio-accucmp
+Version=1.0.0
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/ops_cv/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version=">=8.5"
+required_package_opbase_version=">=8.5"
+required_package_metadef_version=">=8.5"
+required_package_bisheng-compiler_version=">=8.5"
+required_package_asc-devkit_version=">=8.5"
+required_package_ge-executor_version=">=8.5"
+required_package_asc-tools_version=">=8.5"
+required_package_ps-legacy_version=">=8.5"
+required_package_ops-math_version=">=8.5"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/ops_legacy/version.info
+Version=9.0.0
+version_dir=cann
+timestamp=20260415_000526603
+ops_version=9.0.0
+adk_version=9.0.0
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/ops_math/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version=">=8.5"
+required_package_opbase_version=">=8.5"
+required_package_metadef_version=">=8.5"
+required_package_bisheng-compiler_version=">=8.5"
+required_package_asc-devkit_version=">=8.5"
+required_package_ge-executor_version=">=8.5"
+required_package_asc-tools_version=">=8.5"
+required_package_ops-legacy_version=">=8.5"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/ops_nn/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version=">=8.5"
+required_package_opbase_version=">=8.5"
+required_package_bisheng-compiler_version=">=8.5"
+required_package_asc-devkit_version=">=8.5"
+required_package_asc-tools_version=">=8.5"
+required_package_metadef_version=">=8.5"
+required_package_ge-executor_version=">=8.5"
+required_package_ops_legacy_version=">=8.5"
+required_package_ops_math_version=">=8.5"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/ops_ras/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version=">=8.5"
+required_package_opbase_version=">=8.5"
+required_package_asc-devkit_version=">=8.5"
+required_package_ge-compiler_version=">=8.5"
+required_package_metadef_version=">=8.5"
+required_package_ge-executor_version=">=8.5"
+required_package_bisheng-compiler_version=">=8.5"
+required_package_tbe-tik_version=">=8.5"
+required_package_asc-tools_version=">=8.5"
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/ops_transformer/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version=">=8.5"
+required_package_opbase_version=">=8.5"
+required_package_hcomm_version=">=8.5"
+required_package_ge-executor_version=">=8.5"
+required_package_metadef_version=">=8.5"
+required_package_ge-compiler_version=">=8.5"
+required_package_bisheng-compiler_version=">=8.5"
+required_package_asc-tools_version=">=8.5"
+required_package_bisheng-compiler_version=">=8.5"
+required_package_ops-nn_version=">=8.5"
+required_package_hccl_version=">=8.5"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/pto_isa/version.info
+Version=9.0.0
+version_dir=cann
+required_package_runtime_version="9.0"
+required_package_opbase_version="9.0"
+required_package_asc-devkit_version="9.0"
+required_package_metadef_version="9.0"
+required_package_ge-executor_version="9.0"
+required_package_bisheng-compiler_version="9.0"
+required_package_asc-tools_version="9.0"
+required_package_ge-compiler_version="9.0"
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/pyACL/version.info
+Version=9.0.0
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/runtime/version.info
+Version=9.0.0
+version_dir=cann
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/simulator/version.info
+Version=9.0.0
+version_dir=cann
+timestamp=20260415_000526603
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/tbe-tik/version.info
+Version=9.0.0
+version_dir=cann
+timestamp=20260415_000526603
+required_opp_abi_version=tbe-tik
+required_package_ge-compiler_version="9.0"
+required_package_ge-executor_version="9.0"
+required_package_metadef_version="9.0"
+required_package_runtime_version="9.0"
+
+
+VERSION FILE: /usr/local/Ascend/cann-9.0.0/share/info/test-ops/version.info
+Version=9.0.0
+
