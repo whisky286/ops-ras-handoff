@@ -1,0 +1,12 @@
+COMPILE_EXIT=0
+{"case":"valid_fp16_control","getws":0,"exec":0,"sync":0,"msg":""}
+{"case":"A_fp16_B_fp32_mismatch","getws":161002,"exec":-99,"sync":-99,"msg":"[PID: 571066] 2026-11-25-18:13:06.486.365 AclNN_Parameter_Error(EZ1001): Io input dtype or format is not supported, get io input info is a(D"}
+{"case":"C_rank1","getws":0,"exec":0,"sync":0,"msg":""}
+{"case":"C_col_mismatch","getws":0,"exec":0,"sync":0,"msg":""}
+{"case":"W_len_mismatch","getws":0,"exec":0,"sync":0,"msg":""}
+{"case":"W_rank2","getws":0,"exec":0,"sync":0,"msg":""}
+{"case":"eMax_negative","getws":0,"exec":0,"sync":0,"msg":""}
+{"case":"eMax_zero","getws":0,"exec":0,"sync":0,"msg":""}
+{"case":"eMax_nan","getws":0,"exec":0,"sync":0,"msg":""}
+{"case":"eMax_pos_inf","getws":0,"exec":0,"sync":0,"msg":""}
+{"probe":"done"}

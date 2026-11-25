@@ -1,0 +1,5 @@
+== #117 verification 2026-11-25T18:14:25+08:00
+OK obfuscation_setup /tmp/inc_v1v2.cpp
+OK obfuscation_setup /tmp/inc_v2v1.cpp
+OK obfuscation_calculate /tmp/calc_v1v2.cpp
+OK obfuscation_calculate /tmp/calc_v2v1.cpp

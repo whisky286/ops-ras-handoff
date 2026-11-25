@@ -1,0 +1,442 @@
+=== B2 opapi crypto/obfuscation 2026-11-25T17:34:11+08:00 ===
+[2026-11-25 17:34:11] COMPUTE_UNIT: ascend910_93;
+[2026-11-25 17:34:11] CMAKE_ARGS: -DBUILD_PATH=/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build -DBISHENG_FLAGS= -DKERNEL_TEMPLATE_INPUT= -DENABLE_VALGRIND=FALSE -DCMAKE_BUILD_TYPE=Release -DENABLE_MSSANITIZER=FALSE -DENABLE_OOM=FALSE -DENABLE_DUMP_CCE=FALSE -DENABLE_COVERAGE=FALSE -DENABLE_TEST=TRUE -DENABLE_UT_EXEC=TRUE -DENABLE_CUSTOM=FALSE -DENABLE_STATIC=FALSE -DNO_AICPU=FALSE -DNO_ACLNN=FALSE -DMODULE_EXT= -DENABLE_CCACHE=TRUE -DASCEND_OP_NAME=crypto;obfuscation_setup;obfuscation_calculate -UVENDOR_NAME -DENABLE_BINARY=FALSE -DENABLE_PACKAGE=FALSE -DPACKAGE_TYPE=run -DENABLE_EXPERIMENTAL=FALSE -DNO_FORCE=FALSE -DBUILD_MODE= -DOP_HOST_UT=FALSE -DOP_GRAPH_UT=FALSE -DOP_API_UT=TRUE -DOP_KERNEL_UT=FALSE -DOP_KERNEL_AICPU_UT=FALSE -DUT_TEST_ALL=FALSE -DASCEND_COMPUTE_UNIT=ascend910_93; -DCANN_3RD_LIB_PATH=/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party
+[2026-11-25 17:34:11] -- The C compiler identification is GNU 10.3.1
+[2026-11-25 17:34:11] -- The CXX compiler identification is GNU 10.3.1
+[2026-11-25 17:34:11] -- Detecting C compiler ABI info
+[2026-11-25 17:34:11] -- Detecting C compiler ABI info - done
+[2026-11-25 17:34:11] -- Check for working C compiler: /bin/cc - skipped
+[2026-11-25 17:34:11] -- Detecting C compile features
+[2026-11-25 17:34:11] -- Detecting C compile features - done
+[2026-11-25 17:34:11] -- Detecting CXX compiler ABI info
+[2026-11-25 17:34:11] -- Detecting CXX compiler ABI info - done
+[2026-11-25 17:34:11] -- Check for working CXX compiler: /bin/c++ - skipped
+[2026-11-25 17:34:11] -- Detecting CXX compile features
+[2026-11-25 17:34:11] -- Detecting CXX compile features - done
+[2026-11-25 17:34:11] -- compile project with library
+[2026-11-25 17:34:11] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-25 17:34:11] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-25 17:34:11] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-25 17:34:11] -- compile option:  -O2 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-25 17:34:11] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-25 17:34:11] -- Found dlog: /usr/local/Ascend/cann-9.0.0/pkg_inc/base  
+[2026-11-25 17:34:11] -- Variables in dlog module:
+[2026-11-25 17:34:11] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-25 17:34:11] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:34:11] -- 
+[2026-11-25 17:34:11]  Properties for TARGET dlog:
+[2026-11-25 17:34:11]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-25 17:34:11]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-25 17:34:11]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:34:11] 
+[2026-11-25 17:34:11] -- 
+[2026-11-25 17:34:11]  Properties for TARGET dlog_headers:
+[2026-11-25 17:34:11]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-25 17:34:11] 
+[2026-11-25 17:34:11] -- Found securec: /usr/local/Ascend/cann-9.0.0/include  
+[2026-11-25 17:34:11] -- Found OPBASE: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include  
+[2026-11-25 17:34:11] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-25 17:34:11] -- Found platform: /usr/local/Ascend/cann-9.0.0/include  
+[2026-11-25 17:34:11] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:11] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-25 17:34:11] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-25 17:34:11] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-25 17:34:11] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-25 17:34:11] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-25 17:34:11] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-25 17:34:11] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-25 17:34:11] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-25 17:34:11] -- Found metadef: /usr/local/Ascend/cann-9.0.0/include  
+[2026-11-25 17:34:11] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-25 17:34:11] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:11] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-25 17:34:11] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:11] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-25 17:34:11] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:11] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-25 17:34:11] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-25 17:34:11] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-25 17:34:11] -- Found json: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/json/include  
+[2026-11-25 17:34:11] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-25 17:34:11] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-25 17:34:11] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:34:11] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:34:11] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-25 17:34:11] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-25 17:34:11] -- [ThirdParty][protobuf] protoc build.
+[2026-11-25 17:34:11] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-25 17:34:11] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-25 17:34:11] -- System processor: aarch64
+[2026-11-25 17:34:11] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-25 17:34:11] -- Package dlog has been found.
+[2026-11-25 17:34:11] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-25 17:34:11] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-25 17:34:11] -- Ops for this compilation contains: crypto;matmul_abft_verify;obfuscation_calculate;obfuscation_setup
+[2026-11-25 17:34:11] -- Opbuild generating sources
+[2026-11-25 17:34:13] -- Opbuild generating sources - done
+[2026-11-25 17:34:13] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-25 17:34:13] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-25 17:34:13] -- create aclnn master header file: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/aclnn_ops_ras.h
+[2026-11-25 17:34:13] -- No RAS op_graph proto sources found, skipping opgraph_ras and es_ras.
+[2026-11-25 17:34:13] -- No onnx plugin object target found, skipping oponnx_plugin_ras.
+[2026-11-25 17:34:13] -- No tf plugin object target found, skipping optf_plugin_ras.
+[2026-11-25 17:34:13] -- All host targets: 
+[2026-11-25 17:34:13] -- No builtin host aicpu targets found, skipping.
+[2026-11-25 17:34:13] -- Configuring done
+[2026-11-25 17:34:13] -- Generating done
+[2026-11-25 17:34:13] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-25 17:34:13] ----------------------------------------------------------------
+[2026-11-25 17:34:13] Start to parse op dependencies for crypto;obfuscation_setup;obfuscation_calculate
+[2026-11-25 17:34:13] INFO:root:op_dependencies:crypto;obfuscation_setup;obfuscation_calculate, reverse_op_dependencies:crypto;obfuscation_setup;obfuscation_calculate
+[2026-11-25 17:34:13] -- compile project with library
+[2026-11-25 17:34:13] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-25 17:34:13] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-25 17:34:13] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-25 17:34:13] -- compile option:  -O2 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-25 17:34:13] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-25 17:34:13] -- Variables in dlog module:
+[2026-11-25 17:34:13] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-25 17:34:13] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:34:13] -- 
+[2026-11-25 17:34:13]  Properties for TARGET dlog:
+[2026-11-25 17:34:13]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-25 17:34:13]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-25 17:34:13]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:34:13] 
+[2026-11-25 17:34:13] -- 
+[2026-11-25 17:34:13]  Properties for TARGET dlog_headers:
+[2026-11-25 17:34:13]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-25 17:34:13] 
+[2026-11-25 17:34:13] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-25 17:34:13] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:13] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-25 17:34:13] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-25 17:34:13] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-25 17:34:13] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-25 17:34:13] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-25 17:34:13] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-25 17:34:13] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-25 17:34:13] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-25 17:34:13] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-25 17:34:13] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:13] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-25 17:34:13] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:13] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-25 17:34:13] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:13] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-25 17:34:13] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-25 17:34:13] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-25 17:34:13] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-25 17:34:13] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-25 17:34:13] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:34:13] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:34:13] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-25 17:34:13] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-25 17:34:13] -- [ThirdParty][protobuf] protoc build.
+[2026-11-25 17:34:13] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-25 17:34:13] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-25 17:34:13] -- System processor: aarch64
+[2026-11-25 17:34:13] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-25 17:34:13] -- Package dlog has been found.
+[2026-11-25 17:34:13] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-25 17:34:13] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-25 17:34:13] -- Ops for this compilation contains: crypto;matmul_abft_verify;obfuscation_calculate;obfuscation_setup
+[2026-11-25 17:34:13] -- Opbuild generating sources
+[2026-11-25 17:34:14] -- Opbuild generating sources - done
+[2026-11-25 17:34:14] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-25 17:34:14] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-25 17:34:14] -- create aclnn master header file: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/aclnn_ops_ras.h
+[2026-11-25 17:34:14] -- No RAS op_graph proto sources found, skipping opgraph_ras and es_ras.
+[2026-11-25 17:34:14] -- No onnx plugin object target found, skipping oponnx_plugin_ras.
+[2026-11-25 17:34:14] -- No tf plugin object target found, skipping optf_plugin_ras.
+[2026-11-25 17:34:14] -- All host targets: 
+[2026-11-25 17:34:14] -- No builtin host aicpu targets found, skipping.
+[2026-11-25 17:34:14] -- Configuring done
+[2026-11-25 17:34:14] -- Generating done
+[2026-11-25 17:34:14] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-25 17:34:14] ----------------------------------------------------------------
+[2026-11-25 17:34:14] End to parse op dependencies
+[2026-11-25 17:34:14] -- compile project with library
+[2026-11-25 17:34:14] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-25 17:34:14] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-25 17:34:14] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-25 17:34:14] -- compile option:  -O0 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-25 17:34:14] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-25 17:34:14] -- Variables in dlog module:
+[2026-11-25 17:34:14] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-25 17:34:14] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:34:14] -- 
+[2026-11-25 17:34:14]  Properties for TARGET dlog:
+[2026-11-25 17:34:14]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-25 17:34:14]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-25 17:34:14]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:34:14] 
+[2026-11-25 17:34:14] -- 
+[2026-11-25 17:34:14]  Properties for TARGET dlog_headers:
+[2026-11-25 17:34:14]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-25 17:34:14] 
+[2026-11-25 17:34:14] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-25 17:34:14] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:14] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-25 17:34:14] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-25 17:34:14] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-25 17:34:14] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-25 17:34:14] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-25 17:34:14] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-25 17:34:14] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-25 17:34:14] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-25 17:34:14] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-25 17:34:14] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:14] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-25 17:34:14] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:14] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-25 17:34:14] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:14] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-25 17:34:14] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-25 17:34:14] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-25 17:34:14] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-25 17:34:14] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-25 17:34:14] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:34:14] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:34:14] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-25 17:34:14] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-25 17:34:14] -- [ThirdParty][protobuf] protoc build.
+[2026-11-25 17:34:14] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-25 17:34:14] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-25 17:34:14] -- System processor: aarch64
+[2026-11-25 17:34:14] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-25 17:34:14] -- Package dlog has been found.
+[2026-11-25 17:34:CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    BISHENG_FLAGS
+    BUILD_PATH
+    KERNEL_TEMPLATE_INPUT
+    MODULE_EXT
+    NO_FORCE
+
+
+14] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-25 17:34:14] -- Found gtest: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/gtest/include  
+[2026-11-25 17:34:14] -- [ThirdParty][gtest] GTest found in /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/gtest, and not force rebuild
+[2026-11-25 17:34:14] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-25 17:34:14] -- === Debug<add_modules_ut_sources>: ras_op_api_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/crypto/tests/ut/op_host
+[2026-11-25 17:34:14] -- === Debug<add_modules_ut_sources>: ras_op_api_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/crypto/tests/ut/op_host/test_aclnn_crypto.cpp
+[2026-11-25 17:34:14] -- === Debug<add_modules_ut_sources>: ras_op_api_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_calculate/tests/ut/op_host
+[2026-11-25 17:34:14] -- === Debug<add_modules_ut_sources>: ras_op_api_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate.cpp;/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate_v2.cpp
+[2026-11-25 17:34:14] -- === Debug: start ops.reliablity.setup.tests.CMakeLists.txt 
+[2026-11-25 17:34:14] -- === Debug: CURRENT_DIRS =CMakeLists.txt;ut 
+[2026-11-25 17:34:14] -- === Debug<add_modules_ut_sources>: ras_op_api_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_setup/tests/ut/op_host
+[2026-11-25 17:34:14] -- === Debug<add_modules_ut_sources>: ras_op_api_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup.cpp;/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup_v2.cpp
+[2026-11-25 17:34:14] -- No aclnn srcs, skip aclnn
+[2026-11-25 17:34:14] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-25 17:34:14] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-25 17:34:14] -- create aclnn master header file: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/op_api/aclnn_ops_ras.h
+[2026-11-25 17:34:14] -- Ops for this compilation contains: crypto;obfuscation_calculate;obfuscation_setup
+[2026-11-25 17:34:14] -- Configuring done
+[2026-11-25 17:34:14] -- Generating done
+[2026-11-25 17:34:14] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-25 17:34:14] ----------------------------------------------------------------
+[2026-11-25 17:34:14] Start to build ut
+[2026-11-25 17:34:14] -- compile project with library
+[2026-11-25 17:34:14] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-25 17:34:14] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-25 17:34:14] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-25 17:34:14] -- compile option:  -O0 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-25 17:34:14] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-25 17:34:14] -- Variables in dlog module:
+[2026-11-25 17:34:14] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-25 17:34:14] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:34:14] -- 
+[2026-11-25 17:34:14]  Properties for TARGET dlog:
+[2026-11-25 17:34:14]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-25 17:34:14]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-25 17:34:14]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:34:14] 
+[2026-11-25 17:34:14] -- 
+[2026-11-25 17:34:14]  Properties for TARGET dlog_headers:
+[2026-11-25 17:34:14]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-25 17:34:14] 
+[2026-11-25 17:34:15] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-25 17:34:15] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:15] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-25 17:34:15] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-25 17:34:15] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-25 17:34:15] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-25 17:34:15] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-25 17:34:15] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-25 17:34:15] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-25 17:34:15] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-25 17:34:15] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-25 17:34:15] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:15] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-25 17:34:15] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:15] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-25 17:34:15] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:34:15] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-25 17:34:15] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-25 17:34:15] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-25 17:34:15] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-25 17:34:15] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-25 17:34:15] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:34:15] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:34:15] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-25 17:34:15] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-25 17:34:15] -- [ThirdParty][protobuf] protoc build.
+[2026-11-25 17:34:15] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-25 17:34:15] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-25 17:34:15] -- System processor: aarch64
+[2026-11-25 17:34:15] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-25 17:34:15] -- Package dlog has been found.
+[2026-11-25 17:34:15] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-25 17:34:15] -- [ThirdParty][gtest] GTest found in /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/gtest, and not force rebuild
+[2026-11-25 17:34:15] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-25 17:34:15] -- === Debug<add_modules_ut_sources>: ras_op_api_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/crypto/tests/ut/op_host
+[2026-11-25 17:34:15] -- === Debug<add_modules_ut_sources>: ras_op_api_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/crypto/tests/ut/op_host/test_aclnn_crypto.cpp
+[2026-11-25 17:34:15] -- === Debug<add_modules_ut_sources>: ras_op_api_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_calculate/tests/ut/op_host
+[2026-11-25 17:34:15] -- === Debug<add_modules_ut_sources>: ras_op_api_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate.cpp;/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate_v2.cpp
+[2026-11-25 17:34:15] -- === Debug: start ops.reliablity.setup.tests.CMakeLists.txt 
+[2026-11-25 17:34:15] -- === Debug: CURRENT_DIRS =CMakeLists.txt;ut 
+[2026-11-25 17:34:15] -- === Debug<add_modules_ut_sources>: ras_op_api_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_setup/tests/ut/op_host
+[2026-11-25 17:34:15] -- === Debug<add_modules_ut_sources>: ras_op_api_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup.cpp;/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup_v2.cpp
+[2026-11-25 17:34:15] -- No aclnn srcs, skip aclnn
+[2026-11-25 17:34:15] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-25 17:34:15] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-25 17:34:15] -- create aclnn master header file: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/op_api/aclnn_ops_ras.h
+[2026-11-25 17:34:15] -- Ops for this compilation contains: crypto;obfuscation_calculate;obfuscation_setup
+[2026-11-25 17:34:15] -- Configuring done
+[2026-11-25 17:34:15] -- Generating done
+[2026-11-25 17:34:15] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-25 17:34:15] Consolidate compiler generated dependencies of target opbuild_gen_aclnn_all
+[2026-11-25 17:34:15] Consolidate compiler generated dependencies of target ras_math_test_double
+[2026-11-25 17:34:15] Consolidate compiler generated dependencies of target opbase_util_objs
+[2026-11-25 17:34:15] Consolidate compiler generated dependencies of target ras_op_api_ut_cases_obj
+[2026-11-25 17:34:15] Consolidate compiler generated dependencies of target op_api_ut_common
+[2026-11-25 17:34:15] [  6%] Built target ras_math_test_double
+[2026-11-25 17:34:15] [  9%] Building CXX object tests/ut/op_api/CMakeFiles/opbuild_gen_aclnn_all.dir/__/__/__/autogen/aclnn_matmul_abft_verify.cpp.o
+[2026-11-25 17:34:15] [ 12%] Building CXX object reliability/crypto/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/log/log.cpp.o
+[2026-11-25 17:34:15] [ 15%] Building CXX object reliability/crypto/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/util/math_util.cpp.o
+[2026-11-25 17:34:15] [ 24%] Building CXX object reliability/crypto/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/util/fp16.cpp.o
+[2026-11-25 17:34:15] [ 24%] Building CXX object reliability/crypto/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/util/op_arch_helper.cpp.o
+[2026-11-25 17:34:15] [ 24%] Building CXX object reliability/crypto/tests/ut/op_host/CMakeFiles/ras_op_api_ut_cases_obj.dir/test_aclnn_crypto.cpp.o
+[2026-11-25 17:34:15] [ 27%] Building CXX object reliability/crypto/tests/ut/op_host/CMakeFiles/ras_op_api_ut_cases_obj.dir/__/__/__/__/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate.cpp.o
+[2026-11-25 17:34:15] [ 54%] Built target op_api_ut_common
+[2026-11-25 17:34:15] [ 57%] Building CXX object reliability/crypto/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/util/shape_util.cpp.o
+[2026-11-25 17:34:15] [ 57%] Built target opbuild_gen_aclnn_all
+[2026-11-25 17:34:15] [ 60%] Building CXX object reliability/crypto/tests/ut/op_host/CMakeFiles/ras_op_api_ut_cases_obj.dir/__/__/__/__/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate_v2.cpp.o
+[2026-11-25 17:34:15] [ 63%] Building CXX object reliability/crypto/tests/ut/op_host/CMakeFiles/ras_op_api_ut_cases_obj.dir/__/__/__/__/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup.cpp.o
+[2026-11-25 17:34:15] [ 66%] Building CXX object reliability/crypto/tests/ut/op_host/CMakeFiles/ras_op_api_ut_cases_obj.dir/__/__/__/__/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup_v2.cpp.o
+[2026-11-25 17:34:16] [ 66%] Built target opbase_util_objs
+[2026-11-25 17:34:16] Consolidate compiler generated dependencies of target ophost_ras_opapi_obj
+[2026-11-25 17:34:16] [ 72%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/op_api/crypto.cpp.o
+[2026-11-25 17:34:16] [ 72%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/op_api/aclnn_crypto.cpp.o
+[2026-11-25 17:34:16] [ 75%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/__/__/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate.cpp.o
+[2026-11-25 17:34:19] [ 78%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/__/__/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.cpp.o
+[2026-11-25 17:34:19] [ 81%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/__/__/obfuscation_calculate/op_host/op_api/obfuscation_calculate.cpp.o
+[2026-11-25 17:34:19] [ 84%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/__/__/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup.cpp.o
+[2026-11-25 17:34:19] [ 87%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/__/__/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.cpp.o
+[2026-11-25 17:34:20] [ 87%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/__/__/obfuscation_setup/op_host/op_api/obfuscation_setup.cpp.o
+[2026-11-25 17:34:20] [ 93%] Built target ras_op_api_ut_cases_obj
+[2026-11-25 17:34:22] [ 93%] Built target ophost_ras_opapi_obj
+[2026-11-25 17:34:22] [ 96%] Building CXX object tests/ut/op_api/CMakeFiles/ophost_ras_opapi.dir/empty_runtime.cpp.o
+[2026-11-25 17:34:22] [ 96%] Linking CXX shared library libophost_ras_opapi.so
+[2026-11-25 17:34:23] [ 96%] Built target ophost_ras_opapi
+[2026-11-25 17:34:23] [100%] Building CXX object tests/ut/op_api/CMakeFiles/ras_op_api_ut.dir/ut_main.cpp.o
+[2026-11-25 17:34:24] [100%] Linking CXX executable ras_op_api_ut
+[2026-11-25 17:34:24] Run ops op_api utest
+[2026-11-25 17:34:24] OpApiUtEnvironment new
+[2026-11-25 17:34:24] [==========] Running 29 tests from 5 test suites.
+[2026-11-25 17:34:24] [----------] Global test environment set-up.
+[2026-11-25 17:34:24] Global Environment SetpUp.
+[2026-11-25 17:34:24] [----------] 14 tests from l2_crypto_test
+[2026-11-25 17:34:24] crypto_test SetUp
+[2026-11-25 17:34:24] [ RUN      ] l2_crypto_test.case_success
+[2026-11-25 17:34:24] [       OK ] l2_crypto_test.case_success (8 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_crypto_test.case_nullptr_key
+[2026-11-25 17:34:24] [       OK ] l2_crypto_test.case_nullptr_key (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_crypto_test.case_nullptr_op_config
+[2026-11-25 17:34:24] [       OK ] l2_crypto_test.case_nullptr_op_config (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_crypto_test.case_nullptr_y
+[2026-11-25 17:34:24] [       OK ] l2_crypto_test.case_nullptr_y (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_crypto_test.case_key_dtype_invalid
+[2026-11-25 17:34:24] [       OK ] l2_crypto_test.case_key_dtype_invalid (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_crypto_test.case_input_dtype_invalid
+[2026-11-25 17:34:24] [       OK ] l2_crypto_test.case_input_dtype_invalid (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_crypto_test.case_output_dtype_invalid
+[2026-11-25 17:34:24] [       OK ] l2_crypto_test.case_output_dtype_invalid (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_crypto_test.case_iv_dtype_invalid
+[2026-11-25 17:34:24] [       OK ] l2_crypto_test.case_iv_dtype_invalid (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_crypto_test.case_op_config_dtype_invalid
+[2026-11-25 17:34:24] [       OK ] l2_crypto_test.case_op_config_dtype_invalid (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_crypto_test.case_tag_dtype_invalid
+[2026-11-25 17:34:24] [       OK ] l2_crypto_test.case_tag_dtype_invalid (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_crypto_test.case_aad_dtype_invalid
+[2026-11-25 17:34:24] [       OK ] l2_crypto_test.case_aad_dtype_invalid (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_crypto_test.case_y_dtype_invalid
+[2026-11-25 17:34:24] [       OK ] l2_crypto_test.case_y_dtype_invalid (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_crypto_test.case_supported_data_dtypes
+[2026-11-25 17:34:24] [       OK ] l2_crypto_test.case_supported_data_dtypes (2 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_crypto_test.case_shape_dim_num_mismatch
+[2026-11-25 17:34:24] [       OK ] l2_crypto_test.case_shape_dim_num_mismatch (0 ms)
+[2026-11-25 17:34:24] crypto_test TearDown
+[2026-11-25 17:34:24] [----------] 14 tests from l2_crypto_test (14 ms total)
+[2026-11-25 17:34:24] 
+[2026-11-25 17:34:24] [----------] 5 tests from l2_obfuscation_calculate_test
+[2026-11-25 17:34:24] obfuscation_calculate_test SetUp
+[2026-11-25 17:34:24] [ RUN      ] l2_obfuscation_calculate_test.case_float_success
+[2026-11-25 17:34:24] [       OK ] l2_obfuscation_calculate_test.case_float_success (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_obfuscation_calculate_test.case_anullptr_x
+[2026-11-25 17:34:24] [       OK ] l2_obfuscation_calculate_test.case_anullptr_x (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_obfuscation_calculate_test.case_anullptr_y
+[2026-11-25 17:34:24] [       OK ] l2_obfuscation_calculate_test.case_anullptr_y (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_obfuscation_calculate_test.case_datatype_x_equal_y
+[2026-11-25 17:34:24] [       OK ] l2_obfuscation_calculate_test.case_datatype_x_equal_y (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_obfuscation_calculate_test.case_shape_x_equal_y
+[2026-11-25 17:34:24] [       OK ] l2_obfuscation_calculate_test.case_shape_x_equal_y (0 ms)
+[2026-11-25 17:34:24] obfuscation_calculate_test TearDown
+[2026-11-25 17:34:24] [----------] 5 tests from l2_obfuscation_calculate_test (1 ms total)
+[2026-11-25 17:34:24] 
+[2026-11-25 17:34:24] [----------] 5 tests from l2_obfuscation_calculate_v2_test
+[2026-11-25 17:34:24] obfuscation_calculate_v2_test SetUp
+[2026-11-25 17:34:24] [ RUN      ] l2_obfuscation_calculate_v2_test.case_float_success
+[2026-11-25 17:34:24] [       OK ] l2_obfuscation_calculate_v2_test.case_float_success (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_obfuscation_calculate_v2_test.case_anullptr_x
+[2026-11-25 17:34:24] [       OK ] l2_obfuscation_calculate_v2_test.case_anullptr_x (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_obfuscation_calculate_v2_test.case_anullptr_y
+[2026-11-25 17:34:24] [       OK ] l2_obfuscation_calculate_v2_test.case_anullptr_y (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_obfuscation_calculate_v2_test.case_datatype_x_equal_y
+[2026-11-25 17:34:24] [       OK ] l2_obfuscation_calculate_v2_test.case_datatype_x_equal_y (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_obfuscation_calculate_v2_test.case_shape_x_equal_y
+[2026-11-25 17:34:24] [       OK ] l2_obfuscation_calculate_v2_test.case_shape_x_equal_y (0 ms)
+[2026-11-25 17:34:24] obfuscation_calculate_v2_test TearDown
+[2026-11-25 17:34:24] [----------] 5 tests from l2_obfuscation_calculate_v2_test (1 ms total)
+[2026-11-25 17:34:24] 
+[2026-11-25 17:34:24] [----------] 2 tests from l2_obfuscation_setup_test
+[2026-11-25 17:34:24] obfuscation_setup_test SetUp
+[2026-11-25 17:34:24] [ RUN      ] l2_obfuscation_setup_test.case_anullptr_y
+[2026-11-25 17:34:24] [       OK ] l2_obfuscation_setup_test.case_anullptr_y (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_obfuscation_setup_test.case_shape_x_equal_y
+[2026-11-25 17:34:24] [       OK ] l2_obfuscation_setup_test.case_shape_x_equal_y (0 ms)
+[2026-11-25 17:34:24] obfuscation_setup_test TearDown
+[2026-11-25 17:34:24] [----------] 2 tests from l2_obfuscation_setup_test (0 ms total)
+[2026-11-25 17:34:24] 
+[2026-11-25 17:34:24] [----------] 3 tests from l2_obfuscation_setup_v2_test
+[2026-11-25 17:34:24] obfuscation_setup_v2_test SetUp
+[2026-11-25 17:34:24] [ RUN      ] l2_obfuscation_setup_v2_test.case_success
+[2026-11-25 17:34:24] [       OK ] l2_obfuscation_setup_v2_test.case_success (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_obfuscation_setup_v2_test.case_anullptr_y
+[2026-11-25 17:34:24] [       OK ] l2_obfuscation_setup_v2_test.case_anullptr_y (0 ms)
+[2026-11-25 17:34:24] [ RUN      ] l2_obfuscation_setup_v2_test.case_shape_x_equal_y
+[2026-11-25 17:34:24] [       OK ] l2_obfuscation_setup_v2_test.case_shape_x_equal_y (0 ms)
+[2026-11-25 17:34:24] obfuscation_setup_v2_test TearDown
+[2026-11-25 17:34:24] [----------] 3 tests from l2_obfuscation_setup_v2_test (0 ms total)
+[2026-11-25 17:34:24] 
+[2026-11-25 17:34:24] [----------] Global test environment tear-down
+[2026-11-25 17:34:24] Global Environment TearDown
+[2026-11-25 17:34:24] [==========] 29 tests from 5 test suites ran. (17 ms total)
+[2026-11-25 17:34:24] [  PASSED  ] 29 tests.
+[2026-11-25 17:34:24] OpApiUtEnvironment delete
+[2026-11-25 17:34:24] [100%] Built target ras_op_api_ut
+B2_EXIT=0
+/dev/nvme2n1    3.5T  3.3T   22G 100% /home
+ALL_DONE

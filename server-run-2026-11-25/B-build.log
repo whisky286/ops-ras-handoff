@@ -1,0 +1,1156 @@
+=== B1 ophost matmul_abft_verify 2026-11-25T17:25:27+08:00 ===
+[2026-11-25 17:25:27] COMPUTE_UNIT: ascend910_93;
+[2026-11-25 17:25:27] CMAKE_ARGS: -DBUILD_PATH=/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build -DBISHENG_FLAGS= -DKERNEL_TEMPLATE_INPUT= -DENABLE_VALGRIND=FALSE -DCMAKE_BUILD_TYPE=Release -DENABLE_MSSANITIZER=FALSE -DENABLE_OOM=FALSE -DENABLE_DUMP_CCE=FALSE -DENABLE_COVERAGE=FALSE -DENABLE_TEST=TRUE -DENABLE_UT_EXEC=TRUE -DENABLE_CUSTOM=FALSE -DENABLE_STATIC=FALSE -DNO_AICPU=FALSE -DNO_ACLNN=FALSE -DMODULE_EXT= -DENABLE_CCACHE=TRUE -DASCEND_OP_NAME=matmul_abft_verify -UVENDOR_NAME -DENABLE_BINARY=FALSE -DENABLE_PACKAGE=FALSE -DPACKAGE_TYPE=run -DENABLE_EXPERIMENTAL=FALSE -DNO_FORCE=FALSE -DBUILD_MODE= -DOP_HOST_UT=TRUE -DOP_GRAPH_UT=FALSE -DOP_API_UT=FALSE -DOP_KERNEL_UT=FALSE -DOP_KERNEL_AICPU_UT=FALSE -DUT_TEST_ALL=FALSE -DASCEND_COMPUTE_UNIT=ascend910_93; -DCANN_3RD_LIB_PATH=/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party
+[2026-11-25 17:25:27] -- The C compiler identification is GNU 10.3.1
+[2026-11-25 17:25:27] -- The CXX compiler identification is GNU 10.3.1
+[2026-11-25 17:25:27] -- Detecting C compiler ABI info
+[2026-11-25 17:25:27] -- Detecting C compiler ABI info - done
+[2026-11-25 17:25:27] -- Check for working C compiler: /bin/cc - skipped
+[2026-11-25 17:25:27] -- Detecting C compile features
+[2026-11-25 17:25:27] -- Detecting C compile features - done
+[2026-11-25 17:25:27] -- Detecting CXX compiler ABI info
+[2026-11-25 17:25:27] -- Detecting CXX compiler ABI info - done
+[2026-11-25 17:25:27] -- Check for working CXX compiler: /bin/c++ - skipped
+[2026-11-25 17:25:27] -- Detecting CXX compile features
+[2026-11-25 17:25:27] -- Detecting CXX compile features - done
+[2026-11-25 17:25:27] -- compile project with library
+[2026-11-25 17:25:27] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-25 17:25:27] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-25 17:25:27] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-25 17:25:27] -- compile option:-I/home/hww/projects/ops-ras/deps-include  -O2 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-25 17:25:27] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-25 17:25:27] -- Found dlog: /usr/local/Ascend/cann-9.0.0/pkg_inc/base  
+[2026-11-25 17:25:27] -- Variables in dlog module:
+[2026-11-25 17:25:27] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-25 17:25:27] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:27] -- 
+[2026-11-25 17:25:27]  Properties for TARGET dlog:
+[2026-11-25 17:25:27]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-25 17:25:27]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-25 17:25:27]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:27] 
+[2026-11-25 17:25:27] -- 
+[2026-11-25 17:25:27]  Properties for TARGET dlog_headers:
+[2026-11-25 17:25:27]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-25 17:25:27] 
+[2026-11-25 17:25:27] -- Found securec: /usr/local/Ascend/cann-9.0.0/include  
+[2026-11-25 17:25:27] -- Found OPBASE: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include  
+[2026-11-25 17:25:27] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-25 17:25:27] -- Found platform: /usr/local/Ascend/cann-9.0.0/include  
+[2026-11-25 17:25:27] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:27] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-25 17:25:27] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-25 17:25:27] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-25 17:25:27] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-25 17:25:27] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-25 17:25:27] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-25 17:25:27] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-25 17:25:27] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-25 17:25:27] -- Found metadef: /usr/local/Ascend/cann-9.0.0/include  
+[2026-11-25 17:25:27] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-25 17:25:27] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:27] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-25 17:25:27] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:27] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-25 17:25:27] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:27] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-25 17:25:27] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-25 17:25:27] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-25 17:25:27] -- Found json: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/json/include  
+[2026-11-25 17:25:27] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-25 17:25:27] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-25 17:25:27] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:27] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:27] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-25 17:25:27] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-25 17:25:27] -- [ThirdParty][protobuf] protoc build.
+[2026-11-25 17:25:27] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-25 17:25:27] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-25 17:25:27] -- System processor: aarch64
+[2026-11-25 17:25:27] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-25 17:25:27] -- Package dlog has been found.
+[2026-11-25 17:25:27] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-25 17:25:27] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-25 17:25:27] -- Ops for this compilation contains: crypto;matmul_abft_verify;obfuscation_calculate;obfuscation_setup
+[2026-11-25 17:25:27] -- Opbuild generating sources
+[2026-11-25 17:25:28] -- Opbuild generating sources - done
+[2026-11-25 17:25:28] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-25 17:25:28] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-25 17:25:28] -- create aclnn master header file: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/aclnn_ops_ras.h
+[2026-11-25 17:25:28] -- No RAS op_graph proto sources found, skipping opgraph_ras and es_ras.
+[2026-11-25 17:25:28] -- No onnx plugin object target found, skipping oponnx_plugin_ras.
+[2026-11-25 17:25:28] -- No tf plugin object target found, skipping optf_plugin_ras.
+[2026-11-25 17:25:28] -- All host targets: 
+[2026-11-25 17:25:28] -- No builtin host aicpu targets found, skipping.
+[2026-11-25 17:25:28] -- Configuring done
+[2026-11-25 17:25:29] -- Generating done
+[2026-11-25 17:25:29] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-25 17:25:29] ----------------------------------------------------------------
+[2026-11-25 17:25:29] Start to parse op dependencies for matmul_abft_verify
+[2026-11-25 17:25:29] INFO:root:op_dependencies:matmul_abft_verify, reverse_op_dependencies:matmul_abft_verify
+[2026-11-25 17:25:29] -- compile project with library
+[2026-11-25 17:25:29] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-25 17:25:29] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-25 17:25:29] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-25 17:25:29] -- compile option:-I/home/hww/projects/ops-ras/deps-include  -O2 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-25 17:25:29] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-25 17:25:29] -- Variables in dlog module:
+[2026-11-25 17:25:29] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-25 17:25:29] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:29] -- 
+[2026-11-25 17:25:29]  Properties for TARGET dlog:
+[2026-11-25 17:25:29]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-25 17:25:29]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-25 17:25:29]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:29] 
+[2026-11-25 17:25:29] -- 
+[2026-11-25 17:25:29]  Properties for TARGET dlog_headers:
+[2026-11-25 17:25:29]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-25 17:25:29] 
+[2026-11-25 17:25:29] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-25 17:25:29] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:29] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-25 17:25:29] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-25 17:25:29] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-25 17:25:29] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-25 17:25:29] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-25 17:25:29] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-25 17:25:29] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-25 17:25:29] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-25 17:25:29] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-25 17:25:29] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:29] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-25 17:25:29] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:29] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-25 17:25:29] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:29] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-25 17:25:29] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-25 17:25:29] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-25 17:25:29] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-25 17:25:29] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-25 17:25:29] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:29] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:29] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-25 17:25:29] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-25 17:25:29] -- [ThirdParty][protobuf] protoc build.
+[2026-11-25 17:25:29] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-25 17:25:29] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-25 17:25:29] -- System processor: aarch64
+[2026-11-25 17:25:29] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-25 17:25:29] -- Package dlog has been found.
+[2026-11-25 17:25:29] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-25 17:25:29] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-25 17:25:29] -- Ops for this compilation contains: crypto;matmul_abft_verify;obfuscation_calculate;obfuscation_setup
+[2026-11-25 17:25:29] -- Opbuild generating sources
+[2026-11-25 17:25:30] -- Opbuild generating sources - done
+[2026-11-25 17:25:30] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-25 17:25:30] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-25 17:25:30] -- create aclnn master header file: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/aclnn_ops_ras.h
+[2026-11-25 17:25:30] -- No RAS op_graph proto sources found, skipping opgraph_ras and es_ras.
+[2026-11-25 17:25:30] -- No onnx plugin object target found, skipping oponnx_plugin_ras.
+[2026-11-25 17:25:30] -- No tf plugin object target found, skipping optf_plugin_ras.
+[2026-11-25 17:25:30] -- All host targets: 
+[2026-11-25 17:25:30] -- No builtin host aicpu targets found, skipping.
+[2026-11-25 17:25:30] -- Configuring done
+[2026-11-25 17:25:30] -- Generating done
+[2026-11-25 17:25:30] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-25 17:25:30] ----------------------------------------------------------------
+[2026-11-25 17:25:30] End to parse op dependencies
+[2026-11-25 17:25:30] -- compile project with library
+[2026-11-25 17:25:30] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-25 17:25:30] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-25 17:25:30] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-25 17:25:30] -- compile option:-I/home/hww/projects/ops-ras/deps-include  -O0 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-25 17:25:30] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-25 17:25:30] -- Variables in dlog module:
+[2026-11-25 17:25:30] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-25 17:25:30] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:30] -- 
+[2026-11-25 17:25:30]  Properties for TARGET dlog:
+[2026-11-25 17:25:30]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-25 17:25:30]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-25 17:25:30]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:30] 
+[2026-11-25 17:25:30] -- 
+[2026-11-25 17:25:30]  Properties for TARGET dlog_headers:
+[2026-11-25 17:25:30]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-25 17:25:30] 
+[2026-11-25 17:25:30] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-25 17:25:30] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:30] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-25 17:25:30] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-25 17:25:30] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-25 17:25:30] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-25 17:25:30] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-25 17:25:30] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-25 17:25:30] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-25 17:25:30] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-25 17:25:30] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-25 17:25:30] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:30] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-25 17:25:30] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:30] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-25 17:25:30] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:30] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-25 17:25:30] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-25 17:25:30] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-25 17:25:30] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-25 17:25:30] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-25 17:25:30] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:30] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:30] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-25 17:25:30] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-25 17:25:30] -- [ThirdParty][protobuf] protoc build.
+[2026-11-25 17:25:30] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-25 17:25:30] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-25 17:25:30] -- System processor: aarch64
+[2026-11-25 17:25:30] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-25 17:25:30] -- Package dlog has been found.
+[2026-1CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    BISHENG_FLAGS
+    KERNEL_TEMPLATE_INPUT
+    MODULE_EXT
+    NO_FORCE
+
+
+1-25 17:25:30] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-25 17:25:30] -- Found gtest: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/gtest/include  
+[2026-11-25 17:25:30] -- [ThirdParty][gtest] GTest found in /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/gtest, and not force rebuild
+[2026-11-25 17:25:30] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-25 17:25:30] -- === Debug<add_modules_ut_sources>: ras_op_tiling_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host
+[2026-11-25 17:25:30] -- === Debug<add_modules_ut_sources>: ras_op_tiling_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
+[2026-11-25 17:25:30] -- === Debug<add_modules_ut_sources>: ras_op_infershape_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host
+[2026-11-25 17:25:30] -- === Debug<add_modules_ut_sources>: ras_op_infershape_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_infershape.cpp
+[2026-11-25 17:25:30] -- Ops for this compilation contains: matmul_abft_verify
+[2026-11-25 17:25:30] -- Configuring done
+[2026-11-25 17:25:30] -- Generating done
+[2026-11-25 17:25:30] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-25 17:25:30] ----------------------------------------------------------------
+[2026-11-25 17:25:30] Start to build ut
+[2026-11-25 17:25:30] -- compile project with library
+[2026-11-25 17:25:30] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-25 17:25:30] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-25 17:25:30] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-25 17:25:30] -- compile option:-I/home/hww/projects/ops-ras/deps-include  -O0 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-25 17:25:30] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-25 17:25:30] -- Variables in dlog module:
+[2026-11-25 17:25:30] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-25 17:25:30] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:30] -- 
+[2026-11-25 17:25:30]  Properties for TARGET dlog:
+[2026-11-25 17:25:30]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-25 17:25:30]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-25 17:25:30]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:30] 
+[2026-11-25 17:25:30] -- 
+[2026-11-25 17:25:30]  Properties for TARGET dlog_headers:
+[2026-11-25 17:25:30]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-25 17:25:30] 
+[2026-11-25 17:25:30] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-25 17:25:30] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:30] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-25 17:25:30] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-25 17:25:30] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-25 17:25:30] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-25 17:25:30] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-25 17:25:30] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-25 17:25:30] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-25 17:25:30] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-25 17:25:30] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-25 17:25:30] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:30] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-25 17:25:30] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:30] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-25 17:25:30] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:30] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-25 17:25:30] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-25 17:25:30] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-25 17:25:30] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-25 17:25:30] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-25 17:25:30] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:30] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:30] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-25 17:25:30] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-25 17:25:30] -- [ThirdParty][protobuf] protoc build.
+[2026-11-25 17:25:30] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-25 17:25:30] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-25 17:25:30] -- System processorIn file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:46:19: error: redefinition of ‘const graphStatus ge::GRAPH_FAILED’
+   46 | const graphStatus GRAPH_FAILED = 0xFFFFFFFF;
+      |                   ^~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:61:19: note: ‘const graphStatus ge::GRAPH_FAILED’ previously defined here
+   61 | const graphStatus GRAPH_FAILED = 0xFFFFFFFF;
+      |                   ^~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:47:19: error: redefinition of ‘const graphStatus ge::GRAPH_SUCCESS’
+   47 | const graphStatus GRAPH_SUCCESS = 0;
+      |                   ^~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:62:19: note: ‘const graphStatus ge::GRAPH_SUCCESS’ previously defined here
+   62 | const graphStatus GRAPH_SUCCESS = 0;
+      |                   ^~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:48:19: error: redefinition of ‘const graphStatus ge::GRAPH_NOT_CHANGED’
+   48 | const graphStatus GRAPH_NOT_CHANGED = 1343242304;
+      |                   ^~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:63:19: note: ‘const graphStatus ge::GRAPH_NOT_CHANGED’ previously defined here
+   63 | const graphStatus GRAPH_NOT_CHANGED = 1343242304;
+      |                   ^~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:50:19: error: redefinition of ‘const graphStatus ge::GRAPH_PARAM_INVALID’
+   50 | const graphStatus GRAPH_PARAM_INVALID = 50331649;
+      |                   ^~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:65:19: note: ‘const graphStatus ge::GRAPH_PARAM_INVALID’ previously defined here
+   65 | const graphStatus GRAPH_PARAM_INVALID = 50331649;
+      |                   ^~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:51:19: error: redefinition of ‘const graphStatus ge::GRAPH_NODE_WITHOUT_CONST_INPUT’
+   51 | const graphStatus GRAPH_NODE_WITHOUT_CONST_INPUT = 50331648;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:66:19: note: ‘const graphStatus ge::GRAPH_NODE_WITHOUT_CONST_INPUT’ previously defined here
+   66 | const graphStatus GRAPH_NODE_WITHOUT_CONST_INPUT = 50331648;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:52:19: error: redefinition of ‘const graphStatus ge::GRAPH_NODE_NEED_REPASS’
+   52 | const graphStatus GRAPH_NODE_NEED_REPASS = 50331647;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:67:19: note: ‘const graphStatus ge::GRAPH_NODE_NEED_REPASS’ previously defined here
+   67 | const graphStatus GRAPH_NODE_NEED_REPASS = 50331647;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:53:19: error: redefinition of ‘const graphStatus ge::GRAPH_INVALID_IR_DEF’
+   53 | const graphStatus GRAPH_INVALID_IR_DEF = 50331646;
+      |                   ^~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:68:19: note: ‘const graphStatus ge::GRAPH_INVALID_IR_DEF’ previously defined here
+   68 | const graphStatus GRAPH_INVALID_IR_DEF = 50331646;
+      |                   ^~~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:54:19: error: redefinition of ‘const graphStatus ge::OP_WITHOUT_IR_DATATYPE_INFER_RULE’
+   54 | const graphStatus OP_WITHOUT_IR_DATATYPE_INFER_RULE = 50331645;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:69:19: note: ‘const graphStatus ge::OP_WITHOUT_IR_DATATYPE_INFER_RULE’ previously defined here
+   69 | const graphStatus OP_WITHOUT_IR_DATATYPE_INFER_RULE = 50331645;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:55:19: error: redefinition of ‘const graphStatus ge::GRAPH_PARAM_OUT_OF_RANGE’
+   55 | const graphStatus GRAPH_PARAM_OUT_OF_RANGE = 50331644;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:70:19: note: ‘const graphStatus ge::GRAPH_PARAM_OUT_OF_RANGE’ previously defined here
+   70 | const graphStatus GRAPH_PARAM_OUT_OF_RANGE = 50331644;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:57:19: error: redefinition of ‘const graphStatus ge::GRAPH_MEM_OPERATE_FAILED’
+   57 | const graphStatus GRAPH_MEM_OPERATE_FAILED = 50331539;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:72:19: note: ‘const graphStatus ge::GRAPH_MEM_OPERATE_FAILED’ previously defined here
+   72 | const graphStatus GRAPH_MEM_OPERATE_FAILED = 50331539;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:58:19: error: redefinition of ‘const graphStatus ge::GRAPH_NULL_PTR’
+   58 | const graphStatus GRAPH_NULL_PTR = 50331538;
+      |                   ^~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:73:19: note: ‘const graphStatus ge::GRAPH_NULL_PTR’ previously defined here
+   73 | const graphStatus GRAPH_NULL_PTR = 50331538;
+      |                   ^~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:59:19: error: redefinition of ‘const graphStatus ge::GRAPH_MEMCPY_FAILED’
+   59 | const graphStatus GRAPH_MEMCPY_FAILED = 50331537;
+      |                   ^~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:74:19: note: ‘const graphStatus ge::GRAPH_MEMCPY_FAILED’ previously defined here
+   74 | const graphStatus GRAPH_MEMCPY_FAILED = 50331537;
+      |                   ^~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:60:19: error: redefinition of ‘const graphStatus ge::GRAPH_MEMSET_FAILED’
+   60 | const graphStatus GRAPH_MEMSET_FAILED = 50331536;
+      |                   ^~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:75:19: note: ‘const graphStatus ge::GRAPH_MEMSET_FAILED’ previously defined here
+   75 | const graphStatus GRAPH_MEMSET_FAILED = 50331536;
+      |                   ^~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:62:19: error: redefinition of ‘const graphStatus ge::GRAPH_MATH_CAL_FAILED’
+   62 | const graphStatus GRAPH_MATH_CAL_FAILED = 50331429;
+      |                   ^~~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:77:19: note: ‘const graphStatus ge::GRAPH_MATH_CAL_FAILED’ previously defined here
+   77 | const graphStatus GRAPH_MATH_CAL_FAILED = 50331429;
+      |                   ^~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:63:19: error: redefinition of ‘const graphStatus ge::GRAPH_ADD_OVERFLOW’
+   63 | const graphStatus GRAPH_ADD_OVERFLOW = 50331428;
+      |                   ^~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:78:19: note: ‘const graphStatus ge::GRAPH_ADD_OVERFLOW’ previously defined here
+   78 | const graphStatus GRAPH_ADD_OVERFLOW = 50331428;
+      |                   ^~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:64:19: error: redefinition of ‘const graphStatus ge::GRAPH_MUL_OVERFLOW’
+   64 | const graphStatus GRAPH_MUL_OVERFLOW = 50331427;
+      |                   ^~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:79:19: note: ‘const graphStatus ge::GRAPH_MUL_OVERFLOW’ previously defined here
+   79 | const graphStatus GRAPH_MUL_OVERFLOW = 50331427;
+      |                   ^~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/infer_shape_context.h:15,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/op_host/infershape_broadcast_util.h:19,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:18:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:65:19: error: redefinition of ‘const graphStatus ge::GRAPH_RoundUp_Overflow’
+   65 | const graphStatus GRAPH_RoundUp_Overflow = 50331426;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:80:19: note: ‘const graphStatus ge::GRAPH_RoundUp_Overflow’ previously defined here
+   80 | const graphStatus GRAPH_RoundUp_Overflow = 50331426;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:46:19: error: redefinition of ‘const graphStatus ge::GRAPH_FAILED’
+   46 | const graphStatus GRAPH_FAILED = 0xFFFFFFFF;
+      |                   ^~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:61:19: note: ‘const graphStatus ge::GRAPH_FAILED’ previously defined here
+   61 | const graphStatus GRAPH_FAILED = 0xFFFFFFFF;
+      |                   ^~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:47:19: error: redefinition of ‘const graphStatus ge::GRAPH_SUCCESS’
+   47 | const graphStatus GRAPH_SUCCESS = 0;
+      |                   ^~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:62:19: note: ‘const graphStatus ge::GRAPH_SUCCESS’ previously defined here
+   62 | const graphStatus GRAPH_SUCCESS = 0;
+      |                   ^~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:48:19: error: redefinition of ‘const graphStatus ge::GRAPH_NOT_CHANGED’
+   48 | const graphStatus GRAPH_NOT_CHANGED = 1343242304;
+      |                   ^~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:63:19: note: ‘const graphStatus ge::GRAPH_NOT_CHANGED’ previously defined here
+   63 | const graphStatus GRAPH_NOT_CHANGED = 1343242304;
+      |                   ^~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:50:19: error: redefinition of ‘const graphStatus ge::GRAPH_PARAM_INVALID’
+   50 | const graphStatus GRAPH_PARAM_INVALID = 50331649;
+      |                   ^~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:65:19: note: ‘const graphStatus ge::GRAPH_PARAM_INVALID’ previously defined here
+   65 | const graphStatus GRAPH_PARAM_INVALID = 50331649;
+      |                   ^~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:51:19: error: redefinition of ‘const graphStatus ge::GRAPH_NODE_WITHOUT_CONST_INPUT’
+   51 | const graphStatus GRAPH_NODE_WITHOUT_CONST_INPUT = 50331648;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:66:19: note: ‘const graphStatus ge::GRAPH_NODE_WITHOUT_CONST_INPUT’ previously defined here
+   66 | const graphStatus GRAPH_NODE_WITHOUT_CONST_INPUT = 50331648;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:52:19: error: redefinition of ‘const graphStatus ge::GRAPH_NODE_NEED_REPASS’
+   52 | const graphStatus GRAPH_NODE_NEED_REPASS = 50331647;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:67:19: note: ‘const graphStatus ge::GRAPH_NODE_NEED_REPASS’ previously defined here
+   67 | const graphStatus GRAPH_NODE_NEED_REPASS = 50331647;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:53:19: error: redefinition of ‘const graphStatus ge::GRAPH_INVALID_IR_DEF’
+   53 | const graphStatus GRAPH_INVALID_IR_DEF = 50331646;
+      |                   ^~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:68:19: note: ‘const graphStatus ge::GRAPH_INVALID_IR_DEF’ previously defined here
+   68 | const graphStatus GRAPH_INVALID_IR_DEF = 50331646;
+      |                   ^~~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:54:19: error: redefinition of ‘const graphStatus ge::OP_WITHOUT_IR_DATATYPE_INFER_RULE’
+   54 | const graphStatus OP_WITHOUT_IR_DATATYPE_INFER_RULE = 50331645;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:69:19: note: ‘const graphStatus ge::OP_WITHOUT_IR_DATATYPE_INFER_RULE’ previously defined here
+   69 | const graphStatus OP_WITHOUT_IR_DATATYPE_INFER_RULE = 50331645;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:55:19: error: redefinition of ‘const graphStatus ge::GRAPH_PARAM_OUT_OF_RANGE’
+   55 | const graphStatus GRAPH_PARAM_OUT_OF_RANGE = 50331644;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:70:19: note: ‘const graphStatus ge::GRAPH_PARAM_OUT_OF_RANGE’ previously defined here
+   70 | const graphStatus GRAPH_PARAM_OUT_OF_RANGE = 50331644;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:57:19: error: redefinition of ‘const graphStatus ge::GRAPH_MEM_OPERATE_FAILED’
+   57 | const graphStatus GRAPH_MEM_OPERATE_FAILED = 50331539;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:72:19: note: ‘const graphStatus ge::GRAPH_MEM_OPERATE_FAILED’ previously defined here
+   72 | const graphStatus GRAPH_MEM_OPERATE_FAILED = 50331539;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:58:19: error: redefinition of ‘const graphStatus ge::GRAPH_NULL_PTR’
+   58 | const graphStatus GRAPH_NULL_PTR = 50331538;
+      |                   ^~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:73:19: note: ‘const graphStatus ge::GRAPH_NULL_PTR’ previously defined here
+   73 | const graphStatus GRAPH_NULL_PTR = 50331538;
+      |                   ^~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:59:19: error: redefinition of ‘const graphStatus ge::GRAPH_MEMCPY_FAILED’
+   59 | const graphStatus GRAPH_MEMCPY_FAILED = 50331537;
+      |                   ^~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:74:19: note: ‘const graphStatus ge::GRAPH_MEMCPY_FAILED’ previously defined here
+   74 | const graphStatus GRAPH_MEMCPY_FAILED = 50331537;
+      |                   ^~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:60:19: error: redefinition of ‘const graphStatus ge::GRAPH_MEMSET_FAILED’
+   60 | const graphStatus GRAPH_MEMSET_FAILED = 50331536;
+      |                   ^~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:75:19: note: ‘const graphStatus ge::GRAPH_MEMSET_FAILED’ previously defined here
+   75 | const graphStatus GRAPH_MEMSET_FAILED = 50331536;
+      |                   ^~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:62:19: error: redefinition of ‘const graphStatus ge::GRAPH_MATH_CAL_FAILED’
+   62 | const graphStatus GRAPH_MATH_CAL_FAILED = 50331429;
+      |                   ^~~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:77:19: note: ‘const graphStatus ge::GRAPH_MATH_CAL_FAILED’ previously defined here
+   77 | const graphStatus GRAPH_MATH_CAL_FAILED = 50331429;
+      |                   ^~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:63:19: error: redefinition of ‘const graphStatus ge::GRAPH_ADD_OVERFLOW’
+   63 | const graphStatus GRAPH_ADD_OVERFLOW = 50331428;
+      |                   ^~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:78:19: note: ‘const graphStatus ge::GRAPH_ADD_OVERFLOW’ previously defined here
+   78 | const graphStatus GRAPH_ADD_OVERFLOW = 50331428;
+      |                   ^~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:64:19: error: redefinition of ‘const graphStatus ge::GRAPH_MUL_OVERFLOW’
+   64 | const graphStatus GRAPH_MUL_OVERFLOW = 50331427;
+      |                   ^~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:79:19: note: ‘const graphStatus ge::GRAPH_MUL_OVERFLOW’ previously defined here
+   79 | const graphStatus GRAPH_MUL_OVERFLOW = 50331427;
+      |                   ^~~~~~~~~~~~~~~~~~
+In file included from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tensor.h:16,
+                 from /usr/local/Ascend/cann-9.0.0/include/exe_graph/runtime/tiling_context.h:14,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:21,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/usr/local/Ascend/cann-9.0.0/include/graph/ge_error_codes.h:65:19: error: redefinition of ‘const graphStatus ge::GRAPH_RoundUp_Overflow’
+   65 | const graphStatus GRAPH_RoundUp_Overflow = 50331426;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+In file included from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/op_common/log/log.h:25,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling_base.h:20,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include/../pkg_inc/op_common/atvoss/broadcast/broadcast_tiling.h:18,
+                 from /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp:17:
+/home/hww/projects/ops-ras/deps-include/graph/error_codes.h:80:19: note: ‘const graphStatus ge::GRAPH_RoundUp_Overflow’ previously defined here
+   80 | const graphStatus GRAPH_RoundUp_Overflow = 50331426;
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+gmake[3]: *** [reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_infer_objs.dir/build.make:76: reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_infer_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp.o] Error 1
+gmake[2]: *** [CMakeFiles/Makefile2:749: reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_infer_objs.dir/all] Error 2
+gmake[2]: *** Waiting for unfinished jobs....
+gmake[3]: *** [reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_tiling_objs.dir/build.make:76: reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_tiling_objs.dir/__/__/__/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp.o] Error 1
+gmake[2]: *** [CMakeFiles/Makefile2:775: reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_tiling_objs.dir/all] Error 2
+: aarch64
+[2026-11-25 17:25:30] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-25 17:25:30] -- Package dlog has been found.
+[2026-11-25 17:25:30] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-25 17:25:31] -- [ThirdParty][gtest] GTest found in /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/gtest, and not force rebuild
+[2026-11-25 17:25:31] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-25 17:25:31] -- === Debug<add_modules_ut_sources>: ras_op_tiling_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host
+[2026-11-25 17:25:31] -- === Debug<add_modules_ut_sources>: ras_op_tiling_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
+[2026-11-25 17:25:31] -- === Debug<add_modules_ut_sources>: ras_op_infershape_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host
+[2026-11-25 17:25:31] -- === Debug<add_modules_ut_sources>: ras_op_infershape_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_infershape.cpp
+[2026-11-25 17:25:31] -- Ops for this compilation contains: matmul_abft_verify
+[2026-11-25 17:25:31] -- Configuring done
+[2026-11-25 17:25:31] -- Generating done
+[2026-11-25 17:25:31] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-25 17:25:31] Consolidate compiler generated dependencies of target opbase_util_objs
+[2026-11-25 17:25:31] [  2%] Building CXX object reliability/matmul_abft_verify/tests/ut/op_host/CMakeFiles/ras_op_infershape_ut_cases_obj.dir/test_matmul_abft_verify_infershape.cpp.o
+[2026-11-25 17:25:31] [  8%] Building CXX object tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/infer_datatype_context_faker.cpp.o
+[2026-11-25 17:25:31] [  8%] Building CXX object tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/infer_shape_context_faker.cpp.o
+[2026-11-25 17:25:31] [ 11%] Building CXX object tests/ut/common/CMakeFiles/ras_op_tiling_ut_common_obj.dir/test_cube_util.cpp.o
+[2026-11-25 17:25:31] [ 14%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_infer_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp.o
+[2026-11-25 17:25:31] [ 17%] Building CXX object reliability/matmul_abft_verify/tests/ut/op_host/CMakeFiles/ras_op_tiling_ut_cases_obj.dir/test_matmul_abft_verify_tiling.cpp.o
+[2026-11-25 17:25:31] [ 20%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_tiling_objs.dir/__/__/__/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp.o
+[2026-11-25 17:25:31] [ 22%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/log/log.cpp.o
+[2026-11-25 17:25:31] [ 25%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/util/fp16.cpp.o
+[2026-11-25 17:25:31] [ 28%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/util/math_util.cpp.o
+[2026-11-25 17:25:32] [ 31%] Building CXX object tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/infer_shaperange_context_faker.cpp.o
+[2026-11-25 17:25:32] [ 34%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/util/op_arch_helper.cpp.o
+[2026-11-25 17:25:32] [ 37%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_util_objs.dir/__/_gmake[1]: *** [CMakeFiles/Makefile2:1058: tests/ut/op_host/CMakeFiles/ras_op_host_ut.dir/rule] Error 2
+gmake: *** [Makefile:460: ras_op_host_ut] Error 2
+_/__/third_party/opbase/src/op_common/op_host/util/shape_util.cpp.o
+[2026-11-25 17:25:32] [ 40%] Building CXX object tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/infershape_test_util.cpp.o
+[2026-11-25 17:25:32] [ 42%] Building CXX object tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/ut_op_common.cpp.o
+[2026-11-25 17:25:33] [ 45%] Building CXX object tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/ut_op_util.cpp.o
+[2026-11-25 17:25:33] [ 45%] Built target ras_op_infershape_ut_cases_obj
+[2026-11-25 17:25:33] [ 48%] Building CXX object tests/ut/common/CMakeFiles/ras_op_tiling_ut_common_obj.dir/tiling_case_executor.cpp.o
+[2026-11-25 17:25:33] [ 48%] Built target opbase_util_objs
+[2026-11-25 17:25:33] [ 51%] Building CXX object tests/ut/common/CMakeFiles/ras_op_tiling_ut_common_obj.dir/tiling_context_faker.cpp.o
+[2026-11-25 17:25:33] [ 54%] Building CXX object tests/ut/common/CMakeFiles/ras_op_tiling_ut_common_obj.dir/tiling_parse_context_faker.cpp.o
+[2026-11-25 17:25:34] [ 54%] Built target ras_op_tiling_ut_cases_obj
+[2026-11-25 17:25:35] [ 54%] Built target ras_op_infershape_ut_common_obj
+[2026-11-25 17:25:39] [ 54%] Built target ras_op_tiling_ut_common_obj
+[2026-11-25 17:25:39] 
+[2026-11-25 17:25:39] ----------------------------------------------------------------
+[2026-11-25 17:25:39] [31m[ERROR] UT build/test failed[0m
+[2026-11-25 17:25:39] ----------------------------------------------------------------
+[2026-11-25 17:25:39] 
+B1_EXIT=1
+=== B2 opapi crypto/obfuscation 2026-11-25T17:25:39+08:00 ===
+[2026-11-25 17:25:39] COMPUTE_UNIT: ascend910_93;
+[2026-11-25 17:25:39] CMAKE_ARGS: -DBUILD_PATH=/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build -DBISHENG_FLAGS= -DKERNEL_TEMPLATE_INPUT= -DENABLE_VALGRIND=FALSE -DCMAKE_BUILD_TYPE=Release -DENABLE_MSSANITIZER=FALSE -DENABLE_OOM=FALSE -DENABLE_DUMP_CCE=FALSE -DENABLE_COVERAGE=FALSE -DENABLE_TEST=TRUE -DENABLE_UT_EXEC=TRUE -DENABLE_CUSTOM=FALSE -DENABLE_STATIC=FALSE -DNO_AICPU=FALSE -DNO_ACLNN=FALSE -DMODULE_EXT= -DENABLE_CCACHE=TRUE -DASCEND_OP_NAME=crypto;obfuscation_setup;obfuscation_calculate -UVENDOR_NAME -DENABLE_BINARY=FALSE -DENABLE_PACKAGE=FALSE -DPACKAGE_TYPE=run -DENABLE_EXPERIMENTAL=FALSE -DNO_FORCE=FALSE -DBUILD_MODE= -DOP_HOST_UT=FALSE -DOP_GRAPH_UT=FALSE -DOP_API_UT=TRUE -DOP_KERNEL_UT=FALSE -DOP_KERNEL_AICPU_UT=FALSE -DUT_TEST_ALL=FALSE -DASCEND_COMPUTE_UNIT=ascend910_93; -DCANN_3RD_LIB_PATH=/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party
+[2026-11-25 17:25:39] -- The C compiler identification is GNU 10.3.1
+[2026-11-25 17:25:40] -- The CXX compiler identification is GNU 10.3.1
+[2026-11-25 17:25:40] -- Detecting C compiler ABI info
+[2026-11-25 17:25:40] -- Detecting C compiler ABI info - done
+[2026-11-25 17:25:40] -- Check for working C compiler: /bin/cc - skipped
+[2026-11-25 17:25:40] -- Detecting C compile features
+[2026-11-25 17:25:40] -- Detecting C compile features - done
+[2026-11-25 17:25:40] -- Detecting CXX compiler ABI info
+[2026-11-25 17:25:40] -- Detecting CXX compiler ABI info - done
+[2026-11-25 17:25:40] -- Check for working CXX compiler: /bin/c++ - skipped
+[2026-11-25 17:25:40] -- Detecting CXX compile features
+[2026-11-25 17:25:40] -- Detecting CXX compile features - done
+[2026-11-25 17:25:40] -- compile project with library
+[2026-11-25 17:25:40] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-25 17:25:40] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-25 17:25:40] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-25 17:25:40] -- compile option:-I/home/hww/projects/ops-ras/deps-include  -O2 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-25 17:25:40] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-25 17:25:40] -- Found dlog: /usr/local/Ascend/cann-9.0.0/pkg_inc/base  
+[2026-11-25 17:25:40] -- Variables in dlog module:
+[2026-11-25 17:25:40] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-25 17:25:40] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:40] -- 
+[2026-11-25 17:25:40]  Properties for TARGET dlog:
+[2026-11-25 17:25:40]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-25 17:25:40]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-25 17:25:40]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:40] 
+[2026-11-25 17:25:40] -- 
+[2026-11-25 17:25:40]  Properties for TARGET dlog_headers:
+[2026-11-25 17:25:40]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-25 17:25:40] 
+[2026-11-25 17:25:40] -- Found securec: /usr/local/Ascend/cann-9.0.0/include  
+[2026-11-25 17:25:40] -- Found OPBASE: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include  
+[2026-11-25 17:25:40] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-25 17:25:40] -- Found platform: /usr/local/Ascend/cann-9.0.0/include  
+[2026-11-25 17:25:40] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:40] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-25 17:25:40] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-25 17:25:40] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-25 17:25:40] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-25 17:25:40] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-25 17:25:40] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-25 17:25:40] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-25 17:25:40] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-25 17:25:40] -- Found metadef: /usr/local/Ascend/cann-9.0.0/include  
+[2026-11-25 17:25:40] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-25 17:25:40] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:40] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-25 17:25:40] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:40] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-25 17:25:40] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:40] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-25 17:25:40] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-25 17:25:40] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-25 17:25:40] -- Found json: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/json/include  
+[2026-11-25 17:25:40] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-25 17:25:40] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-25 17:25:40] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:40] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:40] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-25 17:25:40] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-25 17:25:40] -- [ThirdParty][protobuf] protoc build.
+[2026-11-25 17:25:40] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-25 17:25:40] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-25 17:25:40] -- System processor: aarch64
+[2026-11-25 17:25:40] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-25 17:25:40] -- Package dlog has been found.
+[2026-11-25 17:25:40] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-25 17:25:40] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-25 17:25:40] -- Ops for this compilation contains: crypto;matmul_abft_verify;obfuscation_calculate;obfuscation_setup
+[2026-11-25 17:25:40] -- Opbuild generating sources
+[2026-11-25 17:25:41] -- Opbuild generating sources - done
+[2026-11-25 17:25:41] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-25 17:25:41] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-25 17:25:41] -- create aclnn master header file: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/aclnn_ops_ras.h
+[2026-11-25 17:25:41] -- No RAS op_graph proto sources found, skipping opgraph_ras and es_ras.
+[2026-11-25 17:25:41] -- No onnx plugin object target found, skipping oponnx_plugin_ras.
+[2026-11-25 17:25:41] -- No tf plugin object target found, skipping optf_plugin_ras.
+[2026-11-25 17:25:41] -- All host targets: 
+[2026-11-25 17:25:41] -- No builtin host aicpu targets found, skipping.
+[2026-11-25 17:25:41] -- Configuring done
+[2026-11-25 17:25:41] -- Generating done
+[2026-11-25 17:25:41] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-25 17:25:41] ----------------------------------------------------------------
+[2026-11-25 17:25:41] Start to parse op dependencies for crypto;obfuscation_setup;obfuscation_calculate
+[2026-11-25 17:25:41] INFO:root:op_dependencies:crypto;obfuscation_setup;obfuscation_calculate, reverse_op_dependencies:crypto;obfuscation_setup;obfuscation_calculate
+[2026-11-25 17:25:41] -- compile project with library
+[2026-11-25 17:25:41] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-25 17:25:41] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-25 17:25:41] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-25 17:25:41] -- compile option:-I/home/hww/projects/ops-ras/deps-include  -O2 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-25 17:25:41] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-25 17:25:41] -- Variables in dlog module:
+[2026-11-25 17:25:41] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-25 17:25:41] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:41] -- 
+[2026-11-25 17:25:41]  Properties for TARGET dlog:
+[2026-11-25 17:25:41]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-25 17:25:41]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-25 17:25:41]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:41] 
+[2026-11-25 17:25:41] -- 
+[2026-11-25 17:25:41]  Properties for TARGET dlog_headers:
+[2026-11-25 17:25:41]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-25 17:25:41] 
+[2026-11-25 17:25:41] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-25 17:25:41] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:41] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-25 17:25:41] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-25 17:25:41] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-25 17:25:41] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-25 17:25:41] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-25 17:25:41] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-25 17:25:41] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-25 17:25:41] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-25 17:25:41] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-25 17:25:41] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:41] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-25 17:25:41] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:41] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-25 17:25:41] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:41] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-25 17:25:41] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-25 17:25:41] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-25 17:25:41] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-25 17:25:41] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-25 17:25:41] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:41] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:41] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-25 17:25:41] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-25 17:25:41] -- [ThirdParty][protobuf] protoc build.
+[2026-11-25 17:25:41] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-25 17:25:41] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-25 17:25:41] -- System processor: aarch64
+[2026-11-25 17:25:41] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-25 17:25:41] -- Package dlog has been found.
+[2026-11-25 17:25:41] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-25 17:25:41] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-25 17:25:41] -- Ops for this compilation contains: crypto;matmul_abft_verify;obfuscation_calculate;obfuscation_setup
+[2026-11-25 17:25:41] -- Opbuild generating sources
+[2026-11-25 17:25:42] -- Opbuild generating sources - done
+[2026-11-25 17:25:42] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-25 17:25:42] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-25 17:25:42] -- create aclnn master header file: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/aclnn_ops_ras.h
+[2026-11-25 17:25:42] -- No RAS op_graph proto sources found, skipping opgraph_ras and es_ras.
+[2026-11-25 17:25:42] -- No onnx plugin object target found, skipping oponnx_plugin_ras.
+[2026-11-25 17:25:42] -- No tf plugin object target found, skipping optf_plugin_ras.
+[2026-11-25 17:25:42] -- All host targets: 
+[2026-11-25 17:25:42] -- No builtin host aicpu targets found, skipping.
+[2026-11-25 17:25:42] -- Configuring done
+[2026-11-25 17:25:43] -- Generating done
+[2026-11-25 17:25:43] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-25 17:25:43] ----------------------------------------------------------------
+[2026-11-25 17:25:43] End to parse op dependencies
+[2026-11-25 17:25:43] -- compile project with library
+[2026-11-25 17:25:43] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-25 17:25:43] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-25 17:25:43] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-25 17:25:43] -- compile option:-I/home/hww/projects/ops-ras/deps-include  -O0 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-25 17:25:43] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-25 17:25:43] -- Variables in dlog module:
+[2026-11-25 17:25:43] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-25 17:25:43] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:43] -- 
+[2026-11-25 17:25:43]  Properties for TARGET dlog:
+[2026-11-25 17:25:43]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-25 17:25:43]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-25 17:25:43]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:43] 
+[2026-11-25 17:25:43] -- 
+[2026-11-25 17:25:43]  Properties for TARGET dlog_headers:
+[2026-11-25 17:25:43]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-25 17:25:43] 
+[2026-11-25 17:25:43] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-25 17:25:43] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:43] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-25 17:25:43] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-25 17:25:43] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-25 17:25:43] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-25 17:25:43] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-25 17:25:43] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-25 17:25:43] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-25 17:25:43] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-25 17:25:43] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-25 17:25:43] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:43] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-25 17:25:43] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:43] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-25 17:25:43] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:43] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-25 17:25:43] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-25 17:25:43] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-25 17:25:43] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-25 17:25:43] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-25 17:25:43] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:43] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:43] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-25 17:25:43] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-25 17:25:43] -- [ThirdParty][protobuf] protoc build.
+[2026-11-25 17:25:43] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-25 17:25:43] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-25 17:25:43] -- System processor: aarch64
+[2026-11-25 17:25:43] -- [CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    BISHENG_FLAGS
+    BUILD_PATH
+    KERNEL_TEMPLATE_INPUT
+    MODULE_EXT
+    NO_FORCE
+
+
+ThirdParty][eigen] package needs to be downloaded.
+[2026-11-25 17:25:43] -- Package dlog has been found.
+[2026-11-25 17:25:43] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-25 17:25:43] -- Found gtest: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/gtest/include  
+[2026-11-25 17:25:43] -- [ThirdParty][gtest] GTest found in /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/gtest, and not force rebuild
+[2026-11-25 17:25:43] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-25 17:25:43] -- === Debug<add_modules_ut_sources>: ras_op_api_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/crypto/tests/ut/op_host
+[2026-11-25 17:25:43] -- === Debug<add_modules_ut_sources>: ras_op_api_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/crypto/tests/ut/op_host/test_aclnn_crypto.cpp
+[2026-11-25 17:25:43] -- === Debug<add_modules_ut_sources>: ras_op_api_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_calculate/tests/ut/op_host
+[2026-11-25 17:25:43] -- === Debug<add_modules_ut_sources>: ras_op_api_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate.cpp;/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate_v2.cpp
+[2026-11-25 17:25:43] -- === Debug: start ops.reliablity.setup.tests.CMakeLists.txt 
+[2026-11-25 17:25:43] -- === Debug: CURRENT_DIRS =CMakeLists.txt;ut 
+[2026-11-25 17:25:43] -- === Debug<add_modules_ut_sources>: ras_op_api_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_setup/tests/ut/op_host
+[2026-11-25 17:25:43] -- === Debug<add_modules_ut_sources>: ras_op_api_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup.cpp;/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup_v2.cpp
+[2026-11-25 17:25:43] -- No aclnn srcs, skip aclnn
+[2026-11-25 17:25:43] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-25 17:25:43] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-25 17:25:43] -- create aclnn master header file: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/op_api/aclnn_ops_ras.h
+[2026-11-25 17:25:43] -- Ops for this compilation contains: crypto;obfuscation_calculate;obfuscation_setup
+[2026-11-25 17:25:43] -- Configuring done
+[2026-11-25 17:25:43] -- Generating done
+[2026-11-25 17:25:43] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-25 17:25:43] ----------------------------------------------------------------
+[2026-11-25 17:25:43] Start to build ut
+[2026-11-25 17:25:43] -- compile project with library
+[2026-11-25 17:25:43] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-25 17:25:43] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-25 17:25:43] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-25 17:25:43] -- compile option:-I/home/hww/projects/ops-ras/deps-include  -O0 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-25 17:25:43] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-25 17:25:43] -- Variables in dlog module:
+[2026-11-25 17:25:43] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-25 17:25:43] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:43] -- 
+[2026-11-25 17:25:43]  Properties for TARGET dlog:
+[2026-11-25 17:25:43]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-25 17:25:43]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-25 17:25:43]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-25 17:25:43] 
+[2026-11-25 17:25:43] -- 
+[2026-11-25 17:25:43]  Properties for TARGET dlog_headers:
+[2026-11-25 17:25:43]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-25 17:25:43] 
+[2026-11-25 17:25:43] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-25 17:25:43] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:43] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-25 17:25:43] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-25 17:25:43] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-25 17:25:43] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-25 17:25:43] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-25 17:25:43] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-25 17:25:43] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-25 17:25:43] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-25 17:25:43] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-25 17:25:43] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:43] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-25 17:25:43] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:43] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-25 17:25:43] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-25 17:25:43] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-25 17:25:43] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-25 17:25:43] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-25 17:25:43] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-25 17:25:43] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-25 17:25:43] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:43] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-25 17:25:43] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-25 17:25:43] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-25 17:25:43] -- [ThirdParty][protobuf] protoc build.
+[2026-11-25 17:25:43] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-25 17:25:43] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-25 17:25:43] -- System processor: aarch64
+[2026-11-25 17:25:43] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-25 17:25:43] -- Package dlog has been found.
+[2026-11-25 17:25:43] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-25 17:25:43] -- [ThirdParty][gtest] GTest found in /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/gtest, and not force rebuild
+[2026-11-25 17:25:43] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-25 17:25:43] -- === Debug<add_modules_ut_sources>: ras_op_api_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/crypto/tests/ut/op_host
+[2026-11-25 17:25:43] -- === Debug<add_modules_ut_sources>: ras_op_api_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/crypto/tests/ut/op_host/test_aclnn_crypto.cpp
+[2026-11-25 17:25:43] -- === Debug<add_modules_ut_sources>: ras_op_api_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_calculate/tests/ut/op_host
+[2026-11-25 17:25:43] -- === Debug<add_modules_ut_sources>: ras_op_api_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate.cpp;/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate_v2.cpp
+[2026-11-25 17:25:43] -- === Debug: start ops.reliablity.setup.tests.CMakeLists.txt 
+[2026-11-25 17:25:43] -- === Debug: CURRENT_DIRS =CMakeLists.txt;ut 
+[2026-11-25 17:25:43] -- === Debug<add_modules_ut_sources>: ras_op_api_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_setup/tests/ut/op_host
+[2026-11-25 17:25:43] -- === Debug<add_modules_ut_sources>: ras_op_api_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup.cpp;/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup_v2.cpp
+[2026-11-25 17:25:43] -- No aclnn srcs, skip aclnn
+[2026-11-25 17:25:43] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-25 17:25:43] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-25 17:25:43] -- create aclnn master header file: /home/hww/projects/ops-ra/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/crypto/tests/ut/op_host/test_aclnn_crypto.cpp:16:10: fatal error: aclnn_crypto.h: No such file or directory
+   16 | #include "aclnn_crypto.h"
+      |          ^~~~~~~~~~~~~~~~
+compilation terminated.
+gmake[3]: *** [reliability/crypto/tests/ut/op_host/CMakeFiles/ras_op_api_ut_cases_obj.dir/build.make:104: reliability/crypto/tests/ut/op_host/CMakeFiles/ras_op_api_ut_cases_obj.dir/test_aclnn_crypto.cpp.o] Error 1
+gmake[3]: *** Waiting for unfinished jobs....
+s/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/op_api/aclnn_ops_ras.h
+[2026-11-25 17:25:43] -- Ops for this compilation contains: crypto;obfuscation_calculate;obfuscation_setup
+[2026-11-25 17:25:43] -- Configuring done
+[2026-11-25 17:25:43] -- Generating done
+[2026-11-25 17:25:43] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-25 17:25:43] Consolidate compiler generated dependencies of target opbuild_gen_aclnn_all
+[2026-11-25 17:25:43] Consolidate compiler generated dependencies of target ras_math_test_double
+[2026-11-25 17:25:43] Consolidate compiler generated dependencies of target ras_op_api_ut_cases_obj
+[2026-11-25 17:25:43] Consolidate compiler generated dependencies of target opbase_util_objs
+[2026-11-25 17:25:43] Consolidate compiler generated dependencies of target op_api_ut_common
+[2026-11-25 17:25:43] [  3%] Building CXX object reliability/crypto/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/util/fp16.cpp.o
+[2026-11-25 17:25:43] [  6%] Building CXX object reliability/crypto/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/util/math_util.cpp.o
+[2026-11-25 17:25:43] [  9%] Building CXX object reliability/crypto/tests/ut/op_host/CMakeFiles/ras_op_api_ut_cases_obj.dir/__/__/__/__/__/tests/ut/op_api/stub/opdev/op_executor.cpp.o
+[2026-11-25 17:25:43] [ 21%] Building CXX object common/stub/op_api/CMakeFiles/ras_math_test_double.dir/ras_math_test_double.cpp.o
+[2026-11-25 17:25:43] [ 21%] Building CXX object tests/ut/op_api/CMakeFiles/opbuild_gen_aclnn_all.dir/__/__/__/autogen/aclnn_matmul_abft_verify.cpp.o
+[2026-11-25 17:25:43] [ 21%] Building CXX object reliability/crypto/tests/ut/op_host/CMakeFiles/ras_op_api_ut_cases_obj.dir/__/__/__/__/__/tests/ut/op_api/stub/opdev/platform.cpp.o
+[2026-11-25 17:25:43] [ 21%] Building CXX object reliability/crypto/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/log/log.cpp.o
+[2026-11-25 17:25:43] [ 24%] Building CXX object tests/ut/op_api/op_api_ut_common/src/CMakeFiles/op_api_ut_common.dir/array_desc.cpp.o
+[2026-11-25 17:25:44] [ 24%] Built target opbuild_gen_aclnn_all
+[2026-11-25 17:25:44] [ 27%] Building CXX object reliability/crypto/tests/ut/op_host/CMakeFiles/ras_op_api_ut_cases_obj.dir/test_aclnn_crypto.cpp.o
+[2026-11-25 17:25:44] [ 30%] Building CXX object reliability/crypto/tests/ut/op_host/CMakeFiles/ras_op_api_ut_cases_obj.dir/__/__/__/__/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate.cpp.o
+[2026-11-25 17:25:44] [ 33%] Building CXX object reliability/crypto/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/util/op_arch_helper.cpp.o
+[2026-11-25 17:25:44] [ 36%] Building CXX object reliability/crypto/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/util/shape_util.cpp.o
+[2026-11-25 17:25:44] [ 39%] Building CXX object tests/ut/op_api/op_api_ut_common/src/CMakeFiles/op_api_ut_common.dir/inner/c_shell.cpp.o
+[2026-11-25 17:25:44] [ 39%] Building CXX object tests/ut/op_api/op_api_ut_common/src/CMakeFiles/op_api_ut_common.dir/inner/file_io.cpp.o
+[2026-11-25 17:25:44] [ 42%] Building CXX object tests/ut/op_api/op_api_ut_common/src/CMakeFiles/op_api_ut_common.dir/inner/rts_interface.cpp.o
+[2026-11-25 17:25:44] [ 45%] Building CXX object tests/ut/op_api/op_api_ut_common/src/CMakeFiles/op_api_ut_common.dir/inner/string_utils.cpp.o
+[2026-11-25 17:25:44] [ 48%] Linking CXX shared library libras_math_test_double.so
+[2026-11-25 17:25:45] [ 48%] Built target ras_math_test_double
+[2026-11-25 17:25:45] [ 51%] Building CXX object tests/ut/op_api/op_api_ut_common/src/CMakeFiles/op_api_ut_common.dir/inner/types.cpp.o
+[2026-11-25 17:25:45] [ 54%] Building CXX object tests/ut/op_api/op_api_ut_common/src/CMakeFiles/op_api_ut_common.dir/op_api_ut.cpp.o
+[2026-11-25 17:25:45] [ 57%] Building CXX object tests/ut/op_api/op_api_ut_common/src/CMakeFilesgmake[2]: *** [CMakeFiles/Makefile2:956: reliability/crypto/tests/ut/op_host/CMakeFiles/ras_op_api_ut_cases_obj.dir/all] Error 2
+gmake[2]: *** Waiting for unfinished jobs....
+gmake[1]: *** [CMakeFiles/Makefile2:1045: tests/ut/op_api/CMakeFiles/ras_op_api_ut.dir/rule] Error 2
+gmake: *** [Makefile:382: ras_op_api_ut] Error 2
+/op_api_ut_common.dir/scalar_desc.cpp.o
+[2026-11-25 17:25:45] [ 60%] Building CXX object tests/ut/op_api/op_api_ut_common/src/CMakeFiles/op_api_ut_common.dir/tensor_desc.cpp.o
+[2026-11-25 17:25:45] [ 60%] Built target opbase_util_objs
+[2026-11-25 17:25:45] [ 63%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/op_api/aclnn_crypto.cpp.o
+[2026-11-25 17:25:45] [ 66%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/op_api/crypto.cpp.o
+[2026-11-25 17:25:46] [ 69%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/__/__/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate.cpp.o
+[2026-11-25 17:25:46] [ 72%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/__/__/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.cpp.o
+[2026-11-25 17:25:48] [ 75%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/__/__/obfuscation_calculate/op_host/op_api/obfuscation_calculate.cpp.o
+[2026-11-25 17:25:48] [ 78%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/__/__/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup.cpp.o
+[2026-11-25 17:25:48] [ 81%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/__/__/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.cpp.o
+[2026-11-25 17:25:48] [ 81%] Building CXX object reliability/crypto/op_host/CMakeFiles/ophost_ras_opapi_obj.dir/__/__/obfuscation_setup/op_host/op_api/obfuscation_setup.cpp.o
+[2026-11-25 17:25:49] [ 84%] Linking CXX shared library libop_api_ut_common.so
+[2026-11-25 17:25:49] [ 84%] Built target op_api_ut_common
+[2026-11-25 17:25:51] [ 84%] Built target ophost_ras_opapi_obj
+[2026-11-25 17:25:51] 
+[2026-11-25 17:25:51] ----------------------------------------------------------------
+[2026-11-25 17:25:51] [31m[ERROR] UT build/test failed[0m
+[2026-11-25 17:25:51] ----------------------------------------------------------------
+[2026-11-25 17:25:51] 
+B2_EXIT=1
+/dev/nvme2n1    3.5T  3.3T   22G 100% /home
+ALL_DONE
