@@ -1,0 +1,352 @@
+diff --git a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
+index 72b0ead..73270f7 100644
+--- a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
++++ b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
+@@ -16,6 +16,7 @@
+ #include <cstring>
+ #include <cmath>
+ #include <limits>
++#include <cstdlib>
+ 
+ #include "log/log.h"
+ #include "tiling/platform/platform_ascendc.h"
+@@ -29,6 +30,8 @@ namespace {
+ constexpr size_t SYSTEM_WORKSPACE_SIZE = 16UL * 1024UL * 1024UL;
+ constexpr uint64_t WORKSPACE_ALIGNMENT = 32;
+ constexpr uint64_t FLOAT_BYTES = sizeof(float);
++constexpr int64_t L1_TILE_N = 256;
++constexpr int64_t COMP_PACK = 8;
+ 
+ bool AddWorkspaceTensor(uint64_t elements, uint64_t elementBytes, uint64_t& workspaceBytes)
+ {
+@@ -50,8 +53,7 @@ bool AddWorkspaceTensor(uint64_t elements, uint64_t elementBytes, uint64_t& work
+ uint32_t FloatBits(float value)
+ {
+     uint32_t bits;
+-    std::copy_n(reinterpret_cast<const unsigned char *>(&value), sizeof(value),
+-        reinterpret_cast<unsigned char *>(&bits));
++    std::copy_n(reinterpret_cast<const unsigned char*>(&value), sizeof(value), reinterpret_cast<unsigned char*>(&bits));
+     return bits;
+ }
+ 
+@@ -83,93 +85,119 @@ uint16_t FloatToFp16Bits(float value)
+     }
+     return static_cast<uint16_t>((halfExponent << 10U) | (mantissa >> 13U));
+ }
+-}
++} // namespace
++
++struct MatmulAbftVerifyTilingParams {
++    uint32_t splitNNum;
++    uint32_t splitReduceM;
++    uint32_t splitReduceN;
++    uint32_t nRemainSplit;
++    uint32_t totalInputElements;
++    uint32_t totalOutputElements;
++    uint32_t rowOutputElements;
++    uint32_t colOutputElements;
++    uint32_t xLen;
++    float commonSize;
++    float commonStdFactor;
++    float remainStdFactor;
++    float remainKnRatio;
++    float remainKnSqrtRatio;
++    float remainKSqrtNRatio;
++};
+ 
+ template <typename Policy>
+-MatmulAbftVerifyComputeTilingData BuildComputeTiling(uint32_t m, uint32_t n, uint32_t k,
+-    float eMax, uint32_t reduceCores, uint32_t splitKs)
++MatmulAbftVerifyTilingParams BuildTilingParams(uint32_t m, uint32_t n, uint32_t k, uint32_t reduceCores)
+ {
+     // DIVISOR_GUARDED[585]: keep the reduction divisor non-zero for all caller inputs.
+     const uint32_t safeReduceCores = reduceCores == 0U ? 1U : reduceCores;
+     const uint32_t splitNNum = (n + Policy::L1TileShape_N - 1) / Policy::L1TileShape_N;
+-    const uint32_t firstBlockN = splitNNum;
+-    const uint32_t remainBlockN = n;
+-
+-    const uint32_t totalInputElements = m + n;
+-    const uint32_t totalOutputElements = (m + 7) / 8 + (n + 7) / 8;
+-    const uint32_t rowOutputElements = (m + 7) / 8;
+-    const uint32_t colOutputElements = (n + 7) / 8;
+-    const uint32_t xLen = m > n ? m : n;
+-
+     uint32_t splitReduceM = (splitNNum + safeReduceCores - 1U) / safeReduceCores;
+     splitReduceM = splitReduceM >= Policy::UBTileShapeforBRed_M ? Policy::UBTileShapeforBRed_M : splitReduceM;
+     splitReduceM = splitReduceM < 2 ? 2 : splitReduceM;
+ 
+     const uint32_t splitReduceNNum = (k + Policy::UBTileShapeforBRed_N - 1) / Policy::UBTileShapeforBRed_N;
+-    uint32_t splitReduceN = Policy::UBTileShapeforBRed_N;
+-    if (splitReduceNNum < 2) {
+-        splitReduceN = (k + 1) / 2;
+-    }
+-
++    const uint32_t splitReduceN = splitReduceNNum < 2 ? (k + 1) / 2 : Policy::UBTileShapeforBRed_N;
+     const uint32_t nRemainSplit = n % Policy::L1TileShape_N;
+     const float commonSize = static_cast<float>(k) * Policy::L1TileShape_N;
+     const float remainSize = static_cast<float>(k) * nRemainSplit;
+-
+     const float commonStdFactor = std::sqrt(2.0f * std::log(commonSize));
+-    float remainStdFactor = commonStdFactor;
+-    float remainKnRatio = commonSize;
+-    float remainKnSqrtRatio = std::sqrt(commonSize);
+-    float remainKSqrtNRatio = std::sqrt(static_cast<float>(k)) * Policy::L1TileShape_N;
+-    if (nRemainSplit > 0) {
+-        remainStdFactor = std::sqrt(2.0f * std::log(remainSize));
+-        remainKnRatio = remainSize;
+-        remainKnSqrtRatio = std::sqrt(static_cast<float>(nRemainSplit));
+-        remainKSqrtNRatio = std::sqrt(static_cast<float>(k)) * nRemainSplit;
+-    }
++    const bool hasRemain = nRemainSplit > 0;
++    const float remainStdFactor = hasRemain ? std::sqrt(2.0f * std::log(remainSize)) : commonStdFactor;
++    const float remainKnRatio = hasRemain ? remainSize : commonSize;
++    const float remainKnSqrtRatio = hasRemain ? std::sqrt(static_cast<float>(nRemainSplit)) : std::sqrt(commonSize);
++    const float remainKSqrtNRatio = hasRemain ? std::sqrt(static_cast<float>(k)) * nRemainSplit :
++                                                std::sqrt(static_cast<float>(k)) * Policy::L1TileShape_N;
++    return {
++        splitNNum,     splitReduceM,      splitReduceN,     nRemainSplit, m + n,           (m + 7) / 8 + (n + 7) / 8,
++        (m + 7) / 8,   (n + 7) / 8,       m > n ? m : n,    commonSize,   commonStdFactor, remainStdFactor,
++        remainKnRatio, remainKnSqrtRatio, remainKSqrtNRatio};
++}
+ 
+-    MatmulAbftVerifyComputeTilingData tiling{};
++void SetTilingShapeFields(
++    MatmulAbftVerifyComputeTilingData& tiling, const MatmulAbftVerifyTilingParams& params, uint32_t m, uint32_t n,
++    uint32_t k)
++{
+     tiling.problemGemmShape = {m, n, k};
+-    tiling.problemGemmShapeFirst = {m, firstBlockN, k};
+-    tiling.problemGemmShapeRemain = {m, remainBlockN, k};
++    tiling.problemGemmShapeFirst = {m, params.splitNNum, k};
++    tiling.problemGemmShapeRemain = {m, n, k};
+     tiling.problemShape = {m, n};
+     tiling.problemShapeCol = {n, m};
+-    tiling.problemCompShape = {1, totalInputElements};
+-    tiling.problemSliceShape = {splitNNum, m};
+-    tiling.totalInputElements = totalInputElements;
+-    tiling.totalOutputElements = totalOutputElements;
+-    tiling.rowOutputElements = rowOutputElements;
+-    tiling.colOutputElements = colOutputElements;
+-    tiling.xLen = xLen;
++    tiling.problemCompShape = {1, params.totalInputElements};
++    tiling.problemSliceShape = {params.splitNNum, m};
++    tiling.totalInputElements = params.totalInputElements;
++    tiling.totalOutputElements = params.totalOutputElements;
++    tiling.rowOutputElements = params.rowOutputElements;
++    tiling.colOutputElements = params.colOutputElements;
++    tiling.xLen = params.xLen;
+     tiling.layoutThreLen = m;
+-    tiling.roundingAlpha = 1.0f;
+-    tiling.eMax = eMax * 6 * std::sqrt(static_cast<float>(k) / 1024.0f);
+-    tiling.stdEstARowRatio = 1.0f / std::sqrt(2.0f * std::log(static_cast<float>(k)));
+-    tiling.aRowScaleRatio = 1.0f / static_cast<float>(k);
++}
+ 
+-    tiling.stdEstRatios[0] = commonStdFactor == 0.0f ? 0.0f : 1.0f / commonStdFactor;
+-    tiling.stdEstRatios[1] = remainStdFactor == 0.0f ? 0.0f : 1.0f / remainStdFactor;
+-    tiling.knRatios[0] = commonSize;
+-    tiling.knRatios[1] = remainKnRatio;
+-    tiling.knScaleRatios[0] = 1.0f / commonSize;
+-    tiling.knScaleRatios[1] = 1.0f / remainKnRatio;
+-    tiling.knSqrtRatios[0] = std::sqrt(commonSize);
+-    tiling.knSqrtRatios[1] = remainKnSqrtRatio;
++template <typename Policy>
++void SetTilingRatioFields(
++    MatmulAbftVerifyComputeTilingData& tiling, const MatmulAbftVerifyTilingParams& params, uint32_t k)
++{
++    tiling.stdEstRatios[0] = params.commonStdFactor == 0.0f ? 0.0f : 1.0f / params.commonStdFactor;
++    tiling.stdEstRatios[1] = params.remainStdFactor == 0.0f ? 0.0f : 1.0f / params.remainStdFactor;
++    tiling.knRatios[0] = params.commonSize;
++    tiling.knRatios[1] = params.remainKnRatio;
++    tiling.knScaleRatios[0] = 1.0f / params.commonSize;
++    tiling.knScaleRatios[1] = 1.0f / params.remainKnRatio;
++    tiling.knSqrtRatios[0] = std::sqrt(params.commonSize);
++    tiling.knSqrtRatios[1] = params.remainKnSqrtRatio;
+     tiling.kSqrtNRatios[0] = std::sqrt(static_cast<float>(k)) * Policy::L1TileShape_N;
+-    tiling.kSqrtNRatios[1] = remainKSqrtNRatio;
++    tiling.kSqrtNRatios[1] = params.remainKSqrtNRatio;
++}
+ 
++template <typename Policy>
++void SetTilingColumnRatios(MatmulAbftVerifyComputeTilingData& tiling, const MatmulAbftVerifyTilingParams& params)
++{
++    const uint32_t remainN = params.nRemainSplit > 0 ? params.nRemainSplit : Policy::L1TileShape_N;
+     tiling.nScaleRatios[0] = 1.0f / Policy::L1TileShape_N;
+     tiling.nRatios[0] = static_cast<float>(Policy::L1TileShape_N);
+     tiling.nSqrtRatios[0] = std::sqrt(static_cast<float>(Policy::L1TileShape_N));
+     tiling.nSquareRatios[0] = static_cast<float>(Policy::L1TileShape_N * Policy::L1TileShape_N);
+-    const uint32_t remainN = nRemainSplit > 0 ? nRemainSplit : Policy::L1TileShape_N;
+     tiling.nScaleRatios[1] = 1.0f / remainN;
+     tiling.nRatios[1] = static_cast<float>(remainN);
+     tiling.nSqrtRatios[1] = std::sqrt(static_cast<float>(remainN));
+     tiling.nSquareRatios[1] = static_cast<float>(remainN * remainN);
++}
+ 
+-    tiling.splitNNum = splitNNum;
+-    tiling.splitReduceM = splitReduceM;
+-    tiling.splitReduceN = splitReduceN;
++template <typename Policy>
++MatmulAbftVerifyComputeTilingData BuildComputeTiling(
++    uint32_t m, uint32_t n, uint32_t k, float eMax, uint32_t reduceCores, uint32_t splitKs)
++{
++    const auto params = BuildTilingParams<Policy>(m, n, k, reduceCores);
++    MatmulAbftVerifyComputeTilingData tiling{};
++    SetTilingShapeFields(tiling, params, m, n, k);
++    tiling.roundingAlpha = 1.0f;
++    tiling.eMax = eMax * 6 * std::sqrt(static_cast<float>(k) / 1024.0f);
++    tiling.stdEstARowRatio = 1.0f / std::sqrt(2.0f * std::log(static_cast<float>(k)));
++    tiling.aRowScaleRatio = 1.0f / static_cast<float>(k);
++    SetTilingRatioFields<Policy>(tiling, params, k);
++    SetTilingColumnRatios<Policy>(tiling, params);
++    tiling.splitNNum = params.splitNNum;
++    tiling.splitReduceM = params.splitReduceM;
++    tiling.splitReduceN = params.splitReduceN;
+     tiling.splitKNum = splitKs;
+     tiling.outputThre = 1;
+     tiling.outputCE = 1;
+@@ -177,27 +205,48 @@ MatmulAbftVerifyComputeTilingData BuildComputeTiling(uint32_t m, uint32_t n, uin
+     return tiling;
+ }
+ 
+-
+ static ge::graphStatus MatmulAbftVerifyTilingFunc(gert::TilingContext* context)
+ {
+     const gert::StorageShape* aShape = context->GetInputShape(0);
+     const gert::StorageShape* bShape = context->GetInputShape(1);
++    const gert::StorageShape* cShape = context->GetInputShape(2);
++    const gert::StorageShape* weightShape = context->GetInputShape(3);
++    const gert::StorageShape* compRowShape = context->GetOutputShape(0);
+     OP_CHECK_NULL_WITH_CONTEXT(context, aShape);
+     OP_CHECK_NULL_WITH_CONTEXT(context, bShape);
++    OP_CHECK_NULL_WITH_CONTEXT(context, cShape);
++    OP_CHECK_NULL_WITH_CONTEXT(context, weightShape);
++    OP_CHECK_NULL_WITH_CONTEXT(context, compRowShape);
+ 
+     const gert::Shape& aStorageShape = aShape->GetStorageShape();
+     const gert::Shape& bStorageShape = bShape->GetStorageShape();
+-    OP_CHECK_IF(aStorageShape.GetDimNum() != 2 || bStorageShape.GetDimNum() != 2,
++    const gert::Shape& cStorageShape = cShape->GetStorageShape();
++    const gert::Shape& weightStorageShape = weightShape->GetStorageShape();
++    OP_CHECK_IF(
++        aStorageShape.GetDimNum() != 2 || bStorageShape.GetDimNum() != 2,
+         OP_LOGE(context, "MatmulAbftVerify expects rank-2 A and B"), return ge::GRAPH_FAILED);
+ 
+     const int64_t m = aStorageShape.GetDim(0);
+     const int64_t k = aStorageShape.GetDim(1);
+     const int64_t bK = bStorageShape.GetDim(0);
+     const int64_t n = bStorageShape.GetDim(1);
+-    OP_CHECK_IF(m <= 0 || n <= 0 || k <= 0 || k != bK,
+-        OP_LOGE(context, "invalid MatmulAbftVerify problem shape"), return ge::GRAPH_FAILED);
+-    OP_CHECK_IF(m > UINT32_MAX || n > UINT32_MAX || k > UINT32_MAX,
++    OP_CHECK_IF(
++        cStorageShape.GetDimNum() != 2 || cStorageShape.GetDim(0) != m || cStorageShape.GetDim(1) != n,
++        OP_LOGE(context, "C must have shape [A.M, B.N]"), return ge::GRAPH_PARAM_INVALID);
++    OP_CHECK_IF(
++        weightStorageShape.GetDimNum() != 1 || weightStorageShape.GetDim(0) != n,
++        OP_LOGE(context, "checksum_weight must have shape [B.N]"), return ge::GRAPH_PARAM_INVALID);
++    OP_CHECK_IF(
++        m <= 0 || n <= 0 || k <= 0 || k != bK, OP_LOGE(context, "invalid MatmulAbftVerify problem shape"),
++        return ge::GRAPH_FAILED);
++    OP_CHECK_IF(
++        m > UINT32_MAX || n > UINT32_MAX || k > UINT32_MAX,
+         OP_LOGE(context, "MatmulAbftVerify shape exceeds uint32 range"), return ge::GRAPH_FAILED);
++    const gert::Shape& compRowStorageShape = compRowShape->GetStorageShape();
++    const int64_t expectedCompRowLength = ((m + COMP_PACK - 1) / COMP_PACK) * ((n + L1_TILE_N - 1) / L1_TILE_N);
++    OP_CHECK_IF(
++        compRowStorageShape.GetDimNum() != 1 || compRowStorageShape.GetDim(0) != expectedCompRowLength,
++        OP_LOGE(context, "comp_row must have the inferred output length"), return ge::GRAPH_PARAM_INVALID);
+ 
+     auto attrs = context->GetAttrs();
+     OP_CHECK_NULL_WITH_CONTEXT(context, attrs);
+@@ -206,35 +255,56 @@ static ge::graphStatus MatmulAbftVerifyTilingFunc(gert::TilingContext* context)
+     OP_CHECK_NULL_WITH_CONTEXT(context, eMaxAttr);
+ 
+     const float eMax = *eMaxAttr;
++    OP_CHECK_IF(
++        !std::isfinite(eMax) || eMax < 0.0f, OP_LOGE(context, "e_max must be a finite non-negative value"),
++        return ge::GRAPH_PARAM_INVALID);
+     const uint32_t splitKs = 1;
+     const auto* aDesc = context->GetInputDesc(0);
++    const auto* bDesc = context->GetInputDesc(1);
++    const auto* cDesc = context->GetInputDesc(2);
++    const auto* weightDesc = context->GetInputDesc(3);
+     OP_CHECK_NULL_WITH_CONTEXT(context, aDesc);
++    OP_CHECK_NULL_WITH_CONTEXT(context, bDesc);
++    OP_CHECK_NULL_WITH_CONTEXT(context, cDesc);
++    OP_CHECK_NULL_WITH_CONTEXT(context, weightDesc);
+     const ge::DataType aDtype = aDesc->GetDataType();
++    OP_CHECK_IF(
++        aDtype != ge::DT_FLOAT16 && aDtype != ge::DT_BF16 && aDtype != ge::DT_FLOAT,
++        OP_LOGE(context, "unsupported A data type"), return ge::GRAPH_PARAM_INVALID);
++    OP_CHECK_IF(
++        bDesc->GetDataType() != aDtype || weightDesc->GetDataType() != aDtype || cDesc->GetDataType() != ge::DT_FLOAT,
++        OP_LOGE(context, "MatmulAbftVerify requires matching A/B/checksum_weight types and FLOAT32 C"),
++        return ge::GRAPH_PARAM_INVALID);
+ 
+     auto platformInfoPtr = context->GetPlatformInfo();
+-    OP_CHECK_IF(platformInfoPtr == nullptr,
+-        OP_LOGE(context, "platformInfoPtr is null"), return ge::GRAPH_FAILED);
++    OP_CHECK_IF(platformInfoPtr == nullptr, OP_LOGE(context, "platformInfoPtr is null"), return ge::GRAPH_FAILED);
+     auto ascendcPlatform = platform_ascendc::PlatformAscendC(platformInfoPtr);
+     const uint32_t aicNum = ascendcPlatform.GetCoreNumAic();
+-    OP_CHECK_IF(aicNum == 0,
+-        OP_LOGE(context, "invalid AIC core count"), return ge::GRAPH_FAILED);
++    OP_CHECK_IF(aicNum == 0, OP_LOGE(context, "invalid AIC core count"), return ge::GRAPH_FAILED);
+     const uint32_t reduceCores = std::min(aicNum, 8U);
+ 
+     MatmulAbftVerifyTilingData* tiling = context->GetTilingData<MatmulAbftVerifyTilingData>();
+     OP_CHECK_NULL_WITH_CONTEXT(context, tiling);
+     if (aDtype == ge::DT_FLOAT16) {
+         tiling->compute = BuildComputeTiling<MatmulAbftVerifyFp16TilingPolicy>(
+-            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k),
+-            eMax, reduceCores, splitKs);
++            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k), eMax, reduceCores, splitKs);
+     } else if (aDtype == ge::DT_FLOAT) {
+         tiling->compute = BuildComputeTiling<MatmulAbftVerifyFp32TilingPolicy>(
+-            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k),
+-            eMax, reduceCores, splitKs);
++            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k), eMax, reduceCores, splitKs);
+     } else {
+         tiling->compute = BuildComputeTiling<MatmulAbftVerifyBf16TilingPolicy>(
+-            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k),
+-            eMax, reduceCores, splitKs);
++            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k), eMax, reduceCores, splitKs);
+     }
++    // EXPERIMENT ONLY (#118 investigation): dtype noise-floor for the scaled eMax,
++    // tunable through ABFT_EMAX_FLOOR so one build can sweep thresholds. Remove before any upstream use.
++    {
++        const char* floorEnv = std::getenv("ABFT_EMAX_FLOOR");
++        const float floorVal = (floorEnv != nullptr) ? static_cast<float>(std::atof(floorEnv)) : 0.0f;
++        if (floorVal > 0.0f && aDtype != ge::DT_FLOAT && tiling->compute.eMax < floorVal) {
++            tiling->compute.eMax = floorVal;
++        }
++    }
++
+     const float aMeanFactor = 1.0f / static_cast<float>(k);
+     if (aDtype == ge::DT_FLOAT16) {
+         tiling->compute.aMeanFactorBits = FloatToFp16Bits(aMeanFactor);
+@@ -261,19 +331,18 @@ static ge::graphStatus MatmulAbftVerifyTilingFunc(gert::TilingContext* context)
+         workspaceValid &= AddWorkspaceTensor(bStatElements, FLOAT_BYTES, userWorkspaceBytes);
+     }
+     workspaceValid &= AddWorkspaceTensor(beElements, precisionBytes, userWorkspaceBytes); // be
+-    workspaceValid &= AddWorkspaceTensor(beElements, ceBytes, userWorkspaceBytes); // be_for_aiv
+-    for (uint32_t i = 0; i < 2; ++i) { // b_max_slice, b_min_slice
++    workspaceValid &= AddWorkspaceTensor(beElements, ceBytes, userWorkspaceBytes);        // be_for_aiv
++    for (uint32_t i = 0; i < 2; ++i) {                                                    // b_max_slice, b_min_slice
+         workspaceValid &= AddWorkspaceTensor(beElements, FLOAT_BYTES, userWorkspaceBytes);
+     }
+     for (uint32_t i = 0; i < 3; ++i) { // a_max, a_mean, a_min
+         workspaceValid &= AddWorkspaceTensor(m, FLOAT_BYTES, userWorkspaceBytes);
+     }
+-    const uint64_t internalWorkspaceElements =
+-        static_cast<uint64_t>(m) * (splitN + 1) * tiling->compute.splitKNum;
++    const uint64_t internalWorkspaceElements = static_cast<uint64_t>(m) * (splitN + 1) * tiling->compute.splitKNum;
+     workspaceValid &= AddWorkspaceTensor(internalWorkspaceElements, FLOAT_BYTES, userWorkspaceBytes);
+ 
+-    OP_CHECK_IF(!workspaceValid || userWorkspaceBytes >
+-            std::numeric_limits<size_t>::max() - SYSTEM_WORKSPACE_SIZE,
++    OP_CHECK_IF(
++        !workspaceValid || userWorkspaceBytes > std::numeric_limits<size_t>::max() - SYSTEM_WORKSPACE_SIZE,
+         OP_LOGE(context, "MatmulAbftVerify workspace size overflow"), return ge::GRAPH_FAILED);
+     size_t* workspaceSizes = context->GetWorkspaceSizes(1);
+     OP_CHECK_NULL_WITH_CONTEXT(context, workspaceSizes);

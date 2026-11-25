@@ -1,0 +1,952 @@
+diff --git a/reliability/crypto/docs/aclnnCrypto.md b/reliability/crypto/docs/aclnnCrypto.md
+index 92d5c9fe75715a0dbc7bc49f1c5674623c6dd3c2..208bbc3e3dd223066d2bc18a23597ca1ec59a993 100644
+--- a/reliability/crypto/docs/aclnnCrypto.md
++++ b/reliability/crypto/docs/aclnnCrypto.md
+@@ -34,7 +34,7 @@
+ 每个算子分为两段式接口，必须先调用“aclnnCryptoGetWorkspaceSize”接口获取计算所需workspace大小以及包含了算子计算流程的执行器，再调用“aclnnCrypto”接口执行计算。
+ 
+ ```c++
+-aclnnStatus aclnnCryptoAicpuGetWorkspaceSize(
++aclnnStatus aclnnCryptoGetWorkspaceSize(
+   const aclTensor      *key,
+   const aclTensor      *inputText,
+   aclTensor            *outputText,
+@@ -48,7 +48,7 @@ aclnnStatus aclnnCryptoAicpuGetWorkspaceSize(
+ ```
+ 
+ ```c++
+-aclnnStatus aclnnCryptoAicpu(
++aclnnStatus aclnnCrypto(
+   void          *workspace,
+   uint64_t       workspaceSize,
+   aclOpExecutor *executor,
+@@ -486,6 +486,10 @@ template <typename T>
+ int CreateAclTensor(const std::vector<T>& hostData, const std::vector<int64_t>& shape, void** deviceAddr,
+                     aclDataType dataType, aclTensor** tensor) {
+     auto size = GetShapeSize(shape) * sizeof(T);
++    if (hostData.size() != GetShapeSize(shape)) {
++        LOG_PRINT("host data length does not match tensor shape\n");
++        return ACL_ERROR_INVALID_PARAM;
++    }
+     auto ret = aclrtMalloc(deviceAddr, size, ACL_MEM_MALLOC_HUGE_FIRST);
+     CHECK_RET(ret == ACL_SUCCESS, LOG_PRINT("aclrtMalloc failed. ERROR: %d\n", ret); return ret);
+ 
+@@ -612,7 +616,7 @@ int main(int argc, char *argv[]) {
+     std::vector<uint8_t> keyHostData(16, 0x11);            // key数据
+     std::vector<uint8_t> inputHostData(msg_len, 0x00);         // 输入数据
+ 
+-    std::vector<uint8_t> ivHostData(16, 0x1f);            // iv
++    std::vector<uint8_t> ivHostData(32, 0x1f);            // iv，长度与 iv_shape_data 一致
+     std::vector<uint32_t> opConfigHostData = {1, static_cast<uint32_t>(mode), static_cast<uint32_t>(alg_type), 1, 34, 0};          // 配置version, mode, alg_type, key_type, keyId, device_id
+     std::vector<uint8_t> outputHostData(msg_len, 0);           // 输出
+     std::vector<uint32_t> yHostData = {0};           // 输出
+@@ -626,16 +630,23 @@ int main(int argc, char *argv[]) {
+     }
+ 
+     // ===================== 创建所有aclTensor =====================
+-    CreateAclTensor(keyHostData, key_shape_data, &keyDeviceAddr, ACL_UINT8, &key);
++    ret = CreateAclTensor(keyHostData, key_shape_data, &keyDeviceAddr, ACL_UINT8, &key);
++    CHECK_RET(ret == ACL_SUCCESS, return ret);
+ 
+-    CreateAclTensor(inputHostData, input_shape_data, &inputDeviceAddr, ACL_UINT8, &input);
++    ret = CreateAclTensor(inputHostData, input_shape_data, &inputDeviceAddr, ACL_UINT8, &input);
++    CHECK_RET(ret == ACL_SUCCESS, return ret);
+ 
+-    CreateAclTensor(ivHostData, iv_shape_data, &ivDeviceAddr, ACL_UINT8, &iv);
+-    CreateAclTensor(opConfigHostData, shape_op_cfg, &opConfigDeviceAddr, ACL_UINT32, &opConfig);
+-    CreateAclTensor(outputHostData, shape_output, &outputDeviceAddr, ACL_UINT8, &output);
+-    CreateAclTensor(yHostData, shape_y, &yDeviceAddr, ACL_UINT32, &y);
++    ret = CreateAclTensor(ivHostData, iv_shape_data, &ivDeviceAddr, ACL_UINT8, &iv);
++    CHECK_RET(ret == ACL_SUCCESS, return ret);
++    ret = CreateAclTensor(opConfigHostData, shape_op_cfg, &opConfigDeviceAddr, ACL_UINT32, &opConfig);
++    CHECK_RET(ret == ACL_SUCCESS, return ret);
++    ret = CreateAclTensor(outputHostData, shape_output, &outputDeviceAddr, ACL_UINT8, &output);
++    CHECK_RET(ret == ACL_SUCCESS, return ret);
++    ret = CreateAclTensor(yHostData, shape_y, &yDeviceAddr, ACL_UINT32, &y);
++    CHECK_RET(ret == ACL_SUCCESS, return ret);
+ 
+-    CreateAclTensor(tagHostData, shape_tag, &tagRefOptionalDeviceAddr, ACL_UINT8, &tagRefOptional);
++    ret = CreateAclTensor(tagHostData, shape_tag, &tagRefOptionalDeviceAddr, ACL_UINT8, &tagRefOptional);
++    CHECK_RET(ret == ACL_SUCCESS, return ret);
+     printf("tensor created\n");
+     // ===================== 3. 调用自定义算子aclnnCrypto =====================
+     uint64_t workspaceSize = 0;
+diff --git a/reliability/crypto/docs/aclnnCrypto_en.md b/reliability/crypto/docs/aclnnCrypto_en.md
+index 3d7cbba8eb08fb8ecdce954df0a890f367688a74..d6f979485bc2cf3880ddfba4772fbfc0cbe4f26a 100644
+--- a/reliability/crypto/docs/aclnnCrypto_en.md
++++ b/reliability/crypto/docs/aclnnCrypto_en.md
+@@ -34,7 +34,7 @@
+ Each operator uses a two-phase API. Call the "aclnnCryptoGetWorkspaceSize" API to obtain the required workspace size and the executor that contains the operator computation flow, and then call the "aclnnCrypto" API to execute the computation.
+ 
+ ```c++
+-aclnnStatus aclnnCryptoAicpuGetWorkspaceSize(
++aclnnStatus aclnnCryptoGetWorkspaceSize(
+   const aclTensor      *key,
+   const aclTensor      *inputText,
+   aclTensor            *outputText,
+@@ -48,7 +48,7 @@ aclnnStatus aclnnCryptoAicpuGetWorkspaceSize(
+ ```
+ 
+ ```c++
+-aclnnStatus aclnnCryptoAicpu(
++aclnnStatus aclnnCrypto(
+   void          *workspace,
+   uint64_t       workspaceSize,
+   aclOpExecutor *executor,
+@@ -612,7 +612,7 @@ int main(int argc, char *argv[]) {
+     std::vector<uint8_t> keyHostData(16, 0x11);            // key data
+     std::vector<uint8_t> inputHostData(msg_len, 0x00);         // input data
+ 
+-    std::vector<uint8_t> ivHostData(16, 0x1f);            // iv
++    std::vector<uint8_t> ivHostData(32, 0x1f);            // iv, matching iv_shape_data
+     std::vector<uint32_t> opConfigHostData = {1, static_cast<uint32_t>(mode), static_cast<uint32_t>(alg_type), 1, 34, 0};          // Configure version, mode, alg_type, key_type, keyId, device_id
+     std::vector<uint8_t> outputHostData(msg_len, 0);           // output
+     std::vector<uint32_t> yHostData = {0};           // output
+diff --git a/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify.md b/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify.md
+index d9af65029951312406558a59cd6202a7e78a23a4..12539d121bdbab997cac5e9fcf872dcedbd64d2a 100644
+--- a/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify.md
++++ b/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify.md
+@@ -236,8 +236,8 @@ aclnnStatus aclnnMatmulAbftVerify(
+       <td>必选输入、输出或者必选属性是空指针。</td>
+     </tr>
+     <tr>
+-      <td rowspan="5">ACLNN_ERR_PARAM_INVALID</td>
+-      <td rowspan="5">161002</td>
++      <td rowspan="8">ACLNN_ERR_PARAM_INVALID</td>
++      <td rowspan="8">161002</td>
+       <td>a、b、c、weight、eMax、beSplitFactor、compRow的数据类型和数据格式不在支持的范围内。</td>
+     </tr>
+     <tr>
+@@ -249,6 +249,15 @@ aclnnStatus aclnnMatmulAbftVerify(
+     <tr>
+       <td>eMax为负数。</td>
+     </tr>
++    <tr>
++      <td>eMax为非有限值。</td>
++    </tr>
++    <tr>
++      <td>a、b和checksumWeight的数据类型组合不受支持，或c的数据类型不是FLOAT32。</td>
++    </tr>
++    <tr>
++      <td>c的shape与[M, N]不匹配，或checksumWeight的shape与[N]不匹配。</td>
++    </tr>
+     <tr>
+       <td>reduceCores小于0。</td>
+     </tr>
+@@ -279,6 +288,7 @@ aclnnStatus aclnnMatmulAbftVerify(
+   - aclnnMatmulAbftVerify默认确定性实现。
+ - 输入矩阵a、b和c必须为2维，shape分别为[M, K]、[K, N]和[M, N]，且a的第1维（K）与b的第0维（K）必须相等。
+ - 输入向量checksumWeight的shape必须为[N]。
++- a、b和checksumWeight必须使用相同的数据类型，c必须为FLOAT32；支持的数据类型组合见下表。
+ - 支持的数据类型组合为：
+ 
+   | a       | b       | c       | checksumWeight      |
+diff --git a/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify_en.md b/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify_en.md
+index 8fb402c2a57f6c3be92935e051720b5e0534ec23..6a14d226f6f0f9a03b6d19bf10413a9abcc00e84 100644
+--- a/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify_en.md
++++ b/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify_en.md
+@@ -97,7 +97,9 @@ aclnnStatus aclnnMatmulAbftVerify(
+   | ACLNN_ERR_PARAM_INVALID | 161002 | The data type or format of `a`, `b`, `c`, `weight`, `eMax`, `beSplitFactor`, or `compRow` is unsupported. |
+   | ACLNN_ERR_PARAM_INVALID | 161002 | `a` or `b` is not a 2D tensor. |
+   | ACLNN_ERR_PARAM_INVALID | 161002 | Dimension 1 (K) of `a` differs from dimension 0 (K) of `b`. |
+-  | ACLNN_ERR_PARAM_INVALID | 161002 | `eMax` is negative. |
++  | ACLNN_ERR_PARAM_INVALID | 161002 | `eMax` is negative or non-finite. |
++  | ACLNN_ERR_PARAM_INVALID | 161002 | The data type combination of `a`, `b`, and `checksumWeight` is unsupported, or `c` is not FLOAT32. |
++  | ACLNN_ERR_PARAM_INVALID | 161002 | The shape of `c` does not match `[M, N]`, or the shape of `checksumWeight` does not match `[N]`. |
+   | ACLNN_ERR_PARAM_INVALID | 161002 | `reduceCores` is less than 0. |
+ 
+ ## aclnnMatmulAbftVerify
+@@ -120,6 +122,7 @@ aclnnStatus aclnnMatmulAbftVerify(
+ - Deterministic computation: `aclnnMatmulAbftVerify` uses a deterministic implementation by default.
+ - Input matrices `a`, `b`, and `c` must be 2D tensors with shapes `[M, K]`, `[K, N]`, and `[M, N]`, respectively. Dimension 1 (K) of `a` must equal dimension 0 (K) of `b`.
+ - The shape of input vector `checksumWeight` must be `[N]`.
++- `a`, `b`, and `checksumWeight` must have the same data type, and `c` must be FLOAT32. Supported combinations are listed below.
+ - The following data type combinations are supported:
+ 
+   | a | b | c | checksumWeight |
+diff --git a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_infershape.cpp b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_infershape.cpp
+index 8aa5b76d56e96e7c7cb4ccb4845f4218a712650f..45c6b67d434116b4d96badbe68729eea2727c5c9 100644
+--- a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_infershape.cpp
++++ b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_infershape.cpp
+@@ -20,6 +20,8 @@ namespace {
+ constexpr int64_t L1_TILE_N = 256;
+ constexpr int64_t COMP_PACK = 8;
+ 
++bool IsShapeDimCompatible(int64_t actual, int64_t expected) { return actual < 0 || expected < 0 || actual == expected; }
++
+ ge::graphStatus SetVectorShape(gert::InferShapeContext* context, size_t index, int64_t length)
+ {
+     gert::Shape* shape = context->GetOutputShape(index);
+@@ -34,20 +36,34 @@ static ge::graphStatus InferShapeMatmulAbftVerify(gert::InferShapeContext* conte
+ {
+     const gert::Shape* aShape = context->GetInputShape(0);
+     const gert::Shape* bShape = context->GetInputShape(1);
++    const gert::Shape* cShape = context->GetInputShape(2);
++    const gert::Shape* weightShape = context->GetInputShape(3);
+     OP_CHECK_NULL_WITH_CONTEXT(context, aShape);
+     OP_CHECK_NULL_WITH_CONTEXT(context, bShape);
+-    OP_CHECK_IF(aShape->GetDimNum() != 2 || bShape->GetDimNum() != 2,
++    OP_CHECK_NULL_WITH_CONTEXT(context, cShape);
++    OP_CHECK_NULL_WITH_CONTEXT(context, weightShape);
++    OP_CHECK_IF(
++        aShape->GetDimNum() != 2 || bShape->GetDimNum() != 2,
+         OP_LOGE(context->GetNodeName(), "MatmulAbftVerify expects rank-2 A and B"), return ge::GRAPH_FAILED);
+ 
+     const int64_t m = aShape->GetDim(0);
+     const int64_t k = aShape->GetDim(1);
+     const int64_t bK = bShape->GetDim(0);
+     const int64_t n = bShape->GetDim(1);
+-    OP_CHECK_IF(k != bK, OP_LOGE(context->GetNodeName(), "A.K must equal B.K"), return ge::GRAPH_FAILED);
++    OP_CHECK_IF(
++        k >= 0 && bK >= 0 && k != bK, OP_LOGE(context->GetNodeName(), "A.K must equal B.K"), return ge::GRAPH_FAILED);
++    OP_CHECK_IF(
++        cShape->GetDimNum() != 2 || !IsShapeDimCompatible(cShape->GetDim(0), m) ||
++            !IsShapeDimCompatible(cShape->GetDim(1), n),
++        OP_LOGE(context->GetNodeName(), "C must have shape [A.M, B.N]"), return ge::GRAPH_PARAM_INVALID);
++    OP_CHECK_IF(
++        weightShape->GetDimNum() != 1 || !IsShapeDimCompatible(weightShape->GetDim(0), n),
++        OP_LOGE(context->GetNodeName(), "checksum_weight must have shape [B.N]"), return ge::GRAPH_PARAM_INVALID);
+ 
+-    const int64_t splitN = (n + L1_TILE_N - 1) / L1_TILE_N;
+-    OP_CHECK_IF(SetVectorShape(context, 0, ((m + COMP_PACK - 1) / COMP_PACK) * splitN) !=
+-                    ge::GRAPH_SUCCESS,
++    const int64_t compRowLength =
++        (m < 0 || n < 0) ? -1 : ((m + COMP_PACK - 1) / COMP_PACK) * ((n + L1_TILE_N - 1) / L1_TILE_N);
++    OP_CHECK_IF(
++        SetVectorShape(context, 0, compRowLength) != ge::GRAPH_SUCCESS,
+         OP_LOGE(context->GetNodeName(), "failed to set comp_row shape"), return ge::GRAPH_FAILED);
+     return ge::GRAPH_SUCCESS;
+ }
+@@ -58,5 +74,7 @@ static ge::graphStatus InferDataTypeMatmulAbftVerify(gert::InferDataTypeContext*
+     return ge::GRAPH_SUCCESS;
+ }
+ 
+-IMPL_OP_INFERSHAPE(MatmulAbftVerify).InferShape(InferShapeMatmulAbftVerify).InferDataType(InferDataTypeMatmulAbftVerify);
++IMPL_OP_INFERSHAPE(MatmulAbftVerify)
++    .InferShape(InferShapeMatmulAbftVerify)
++    .InferDataType(InferDataTypeMatmulAbftVerify);
+ } // namespace ops
+diff --git a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
+index 72b0ead15713cb4e1ddb30b9227c26efb32689dc..307277b5005189fc79bead4d0cb86066134dbc24 100644
+--- a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
++++ b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
+@@ -29,6 +29,8 @@ namespace {
+ constexpr size_t SYSTEM_WORKSPACE_SIZE = 16UL * 1024UL * 1024UL;
+ constexpr uint64_t WORKSPACE_ALIGNMENT = 32;
+ constexpr uint64_t FLOAT_BYTES = sizeof(float);
++constexpr int64_t L1_TILE_N = 256;
++constexpr int64_t COMP_PACK = 8;
+ 
+ bool AddWorkspaceTensor(uint64_t elements, uint64_t elementBytes, uint64_t& workspaceBytes)
+ {
+@@ -50,8 +52,7 @@ bool AddWorkspaceTensor(uint64_t elements, uint64_t elementBytes, uint64_t& work
+ uint32_t FloatBits(float value)
+ {
+     uint32_t bits;
+-    std::copy_n(reinterpret_cast<const unsigned char *>(&value), sizeof(value),
+-        reinterpret_cast<unsigned char *>(&bits));
++    std::copy_n(reinterpret_cast<const unsigned char*>(&value), sizeof(value), reinterpret_cast<unsigned char*>(&bits));
+     return bits;
+ }
+ 
+@@ -83,93 +84,119 @@ uint16_t FloatToFp16Bits(float value)
+     }
+     return static_cast<uint16_t>((halfExponent << 10U) | (mantissa >> 13U));
+ }
+-}
++} // namespace
++
++struct MatmulAbftVerifyTilingParams {
++    uint32_t splitNNum;
++    uint32_t splitReduceM;
++    uint32_t splitReduceN;
++    uint32_t nRemainSplit;
++    uint32_t totalInputElements;
++    uint32_t totalOutputElements;
++    uint32_t rowOutputElements;
++    uint32_t colOutputElements;
++    uint32_t xLen;
++    float commonSize;
++    float commonStdFactor;
++    float remainStdFactor;
++    float remainKnRatio;
++    float remainKnSqrtRatio;
++    float remainKSqrtNRatio;
++};
+ 
+ template <typename Policy>
+-MatmulAbftVerifyComputeTilingData BuildComputeTiling(uint32_t m, uint32_t n, uint32_t k,
+-    float eMax, uint32_t reduceCores, uint32_t splitKs)
++MatmulAbftVerifyTilingParams BuildTilingParams(uint32_t m, uint32_t n, uint32_t k, uint32_t reduceCores)
+ {
+     // DIVISOR_GUARDED[585]: keep the reduction divisor non-zero for all caller inputs.
+     const uint32_t safeReduceCores = reduceCores == 0U ? 1U : reduceCores;
+     const uint32_t splitNNum = (n + Policy::L1TileShape_N - 1) / Policy::L1TileShape_N;
+-    const uint32_t firstBlockN = splitNNum;
+-    const uint32_t remainBlockN = n;
+-
+-    const uint32_t totalInputElements = m + n;
+-    const uint32_t totalOutputElements = (m + 7) / 8 + (n + 7) / 8;
+-    const uint32_t rowOutputElements = (m + 7) / 8;
+-    const uint32_t colOutputElements = (n + 7) / 8;
+-    const uint32_t xLen = m > n ? m : n;
+-
+     uint32_t splitReduceM = (splitNNum + safeReduceCores - 1U) / safeReduceCores;
+     splitReduceM = splitReduceM >= Policy::UBTileShapeforBRed_M ? Policy::UBTileShapeforBRed_M : splitReduceM;
+     splitReduceM = splitReduceM < 2 ? 2 : splitReduceM;
+ 
+     const uint32_t splitReduceNNum = (k + Policy::UBTileShapeforBRed_N - 1) / Policy::UBTileShapeforBRed_N;
+-    uint32_t splitReduceN = Policy::UBTileShapeforBRed_N;
+-    if (splitReduceNNum < 2) {
+-        splitReduceN = (k + 1) / 2;
+-    }
+-
++    const uint32_t splitReduceN = splitReduceNNum < 2 ? (k + 1) / 2 : Policy::UBTileShapeforBRed_N;
+     const uint32_t nRemainSplit = n % Policy::L1TileShape_N;
+     const float commonSize = static_cast<float>(k) * Policy::L1TileShape_N;
+     const float remainSize = static_cast<float>(k) * nRemainSplit;
+-
+     const float commonStdFactor = std::sqrt(2.0f * std::log(commonSize));
+-    float remainStdFactor = commonStdFactor;
+-    float remainKnRatio = commonSize;
+-    float remainKnSqrtRatio = std::sqrt(commonSize);
+-    float remainKSqrtNRatio = std::sqrt(static_cast<float>(k)) * Policy::L1TileShape_N;
+-    if (nRemainSplit > 0) {
+-        remainStdFactor = std::sqrt(2.0f * std::log(remainSize));
+-        remainKnRatio = remainSize;
+-        remainKnSqrtRatio = std::sqrt(static_cast<float>(nRemainSplit));
+-        remainKSqrtNRatio = std::sqrt(static_cast<float>(k)) * nRemainSplit;
+-    }
++    const bool hasRemain = nRemainSplit > 0;
++    const float remainStdFactor = hasRemain ? std::sqrt(2.0f * std::log(remainSize)) : commonStdFactor;
++    const float remainKnRatio = hasRemain ? remainSize : commonSize;
++    const float remainKnSqrtRatio = hasRemain ? std::sqrt(static_cast<float>(nRemainSplit)) : std::sqrt(commonSize);
++    const float remainKSqrtNRatio = hasRemain ? std::sqrt(static_cast<float>(k)) * nRemainSplit :
++                                                std::sqrt(static_cast<float>(k)) * Policy::L1TileShape_N;
++    return {
++        splitNNum,     splitReduceM,      splitReduceN,     nRemainSplit, m + n,           (m + 7) / 8 + (n + 7) / 8,
++        (m + 7) / 8,   (n + 7) / 8,       m > n ? m : n,    commonSize,   commonStdFactor, remainStdFactor,
++        remainKnRatio, remainKnSqrtRatio, remainKSqrtNRatio};
++}
+ 
+-    MatmulAbftVerifyComputeTilingData tiling{};
++void SetTilingShapeFields(
++    MatmulAbftVerifyComputeTilingData& tiling, const MatmulAbftVerifyTilingParams& params, uint32_t m, uint32_t n,
++    uint32_t k)
++{
+     tiling.problemGemmShape = {m, n, k};
+-    tiling.problemGemmShapeFirst = {m, firstBlockN, k};
+-    tiling.problemGemmShapeRemain = {m, remainBlockN, k};
++    tiling.problemGemmShapeFirst = {m, params.splitNNum, k};
++    tiling.problemGemmShapeRemain = {m, n, k};
+     tiling.problemShape = {m, n};
+     tiling.problemShapeCol = {n, m};
+-    tiling.problemCompShape = {1, totalInputElements};
+-    tiling.problemSliceShape = {splitNNum, m};
+-    tiling.totalInputElements = totalInputElements;
+-    tiling.totalOutputElements = totalOutputElements;
+-    tiling.rowOutputElements = rowOutputElements;
+-    tiling.colOutputElements = colOutputElements;
+-    tiling.xLen = xLen;
++    tiling.problemCompShape = {1, params.totalInputElements};
++    tiling.problemSliceShape = {params.splitNNum, m};
++    tiling.totalInputElements = params.totalInputElements;
++    tiling.totalOutputElements = params.totalOutputElements;
++    tiling.rowOutputElements = params.rowOutputElements;
++    tiling.colOutputElements = params.colOutputElements;
++    tiling.xLen = params.xLen;
+     tiling.layoutThreLen = m;
+-    tiling.roundingAlpha = 1.0f;
+-    tiling.eMax = eMax * 6 * std::sqrt(static_cast<float>(k) / 1024.0f);
+-    tiling.stdEstARowRatio = 1.0f / std::sqrt(2.0f * std::log(static_cast<float>(k)));
+-    tiling.aRowScaleRatio = 1.0f / static_cast<float>(k);
++}
+ 
+-    tiling.stdEstRatios[0] = commonStdFactor == 0.0f ? 0.0f : 1.0f / commonStdFactor;
+-    tiling.stdEstRatios[1] = remainStdFactor == 0.0f ? 0.0f : 1.0f / remainStdFactor;
+-    tiling.knRatios[0] = commonSize;
+-    tiling.knRatios[1] = remainKnRatio;
+-    tiling.knScaleRatios[0] = 1.0f / commonSize;
+-    tiling.knScaleRatios[1] = 1.0f / remainKnRatio;
+-    tiling.knSqrtRatios[0] = std::sqrt(commonSize);
+-    tiling.knSqrtRatios[1] = remainKnSqrtRatio;
++template <typename Policy>
++void SetTilingRatioFields(
++    MatmulAbftVerifyComputeTilingData& tiling, const MatmulAbftVerifyTilingParams& params, uint32_t k)
++{
++    tiling.stdEstRatios[0] = params.commonStdFactor == 0.0f ? 0.0f : 1.0f / params.commonStdFactor;
++    tiling.stdEstRatios[1] = params.remainStdFactor == 0.0f ? 0.0f : 1.0f / params.remainStdFactor;
++    tiling.knRatios[0] = params.commonSize;
++    tiling.knRatios[1] = params.remainKnRatio;
++    tiling.knScaleRatios[0] = 1.0f / params.commonSize;
++    tiling.knScaleRatios[1] = 1.0f / params.remainKnRatio;
++    tiling.knSqrtRatios[0] = std::sqrt(params.commonSize);
++    tiling.knSqrtRatios[1] = params.remainKnSqrtRatio;
+     tiling.kSqrtNRatios[0] = std::sqrt(static_cast<float>(k)) * Policy::L1TileShape_N;
+-    tiling.kSqrtNRatios[1] = remainKSqrtNRatio;
++    tiling.kSqrtNRatios[1] = params.remainKSqrtNRatio;
++}
+ 
++template <typename Policy>
++void SetTilingColumnRatios(MatmulAbftVerifyComputeTilingData& tiling, const MatmulAbftVerifyTilingParams& params)
++{
++    const uint32_t remainN = params.nRemainSplit > 0 ? params.nRemainSplit : Policy::L1TileShape_N;
+     tiling.nScaleRatios[0] = 1.0f / Policy::L1TileShape_N;
+     tiling.nRatios[0] = static_cast<float>(Policy::L1TileShape_N);
+     tiling.nSqrtRatios[0] = std::sqrt(static_cast<float>(Policy::L1TileShape_N));
+     tiling.nSquareRatios[0] = static_cast<float>(Policy::L1TileShape_N * Policy::L1TileShape_N);
+-    const uint32_t remainN = nRemainSplit > 0 ? nRemainSplit : Policy::L1TileShape_N;
+     tiling.nScaleRatios[1] = 1.0f / remainN;
+     tiling.nRatios[1] = static_cast<float>(remainN);
+     tiling.nSqrtRatios[1] = std::sqrt(static_cast<float>(remainN));
+     tiling.nSquareRatios[1] = static_cast<float>(remainN * remainN);
++}
+ 
+-    tiling.splitNNum = splitNNum;
+-    tiling.splitReduceM = splitReduceM;
+-    tiling.splitReduceN = splitReduceN;
++template <typename Policy>
++MatmulAbftVerifyComputeTilingData BuildComputeTiling(
++    uint32_t m, uint32_t n, uint32_t k, float eMax, uint32_t reduceCores, uint32_t splitKs)
++{
++    const auto params = BuildTilingParams<Policy>(m, n, k, reduceCores);
++    MatmulAbftVerifyComputeTilingData tiling{};
++    SetTilingShapeFields(tiling, params, m, n, k);
++    tiling.roundingAlpha = 1.0f;
++    tiling.eMax = eMax * 6 * std::sqrt(static_cast<float>(k) / 1024.0f);
++    tiling.stdEstARowRatio = 1.0f / std::sqrt(2.0f * std::log(static_cast<float>(k)));
++    tiling.aRowScaleRatio = 1.0f / static_cast<float>(k);
++    SetTilingRatioFields<Policy>(tiling, params, k);
++    SetTilingColumnRatios<Policy>(tiling, params);
++    tiling.splitNNum = params.splitNNum;
++    tiling.splitReduceM = params.splitReduceM;
++    tiling.splitReduceN = params.splitReduceN;
+     tiling.splitKNum = splitKs;
+     tiling.outputThre = 1;
+     tiling.outputCE = 1;
+@@ -177,27 +204,48 @@ MatmulAbftVerifyComputeTilingData BuildComputeTiling(uint32_t m, uint32_t n, uin
+     return tiling;
+ }
+ 
+-
+ static ge::graphStatus MatmulAbftVerifyTilingFunc(gert::TilingContext* context)
+ {
+     const gert::StorageShape* aShape = context->GetInputShape(0);
+     const gert::StorageShape* bShape = context->GetInputShape(1);
++    const gert::StorageShape* cShape = context->GetInputShape(2);
++    const gert::StorageShape* weightShape = context->GetInputShape(3);
++    const gert::StorageShape* compRowShape = context->GetOutputShape(0);
+     OP_CHECK_NULL_WITH_CONTEXT(context, aShape);
+     OP_CHECK_NULL_WITH_CONTEXT(context, bShape);
++    OP_CHECK_NULL_WITH_CONTEXT(context, cShape);
++    OP_CHECK_NULL_WITH_CONTEXT(context, weightShape);
++    OP_CHECK_NULL_WITH_CONTEXT(context, compRowShape);
+ 
+     const gert::Shape& aStorageShape = aShape->GetStorageShape();
+     const gert::Shape& bStorageShape = bShape->GetStorageShape();
+-    OP_CHECK_IF(aStorageShape.GetDimNum() != 2 || bStorageShape.GetDimNum() != 2,
++    const gert::Shape& cStorageShape = cShape->GetStorageShape();
++    const gert::Shape& weightStorageShape = weightShape->GetStorageShape();
++    OP_CHECK_IF(
++        aStorageShape.GetDimNum() != 2 || bStorageShape.GetDimNum() != 2,
+         OP_LOGE(context, "MatmulAbftVerify expects rank-2 A and B"), return ge::GRAPH_FAILED);
+ 
+     const int64_t m = aStorageShape.GetDim(0);
+     const int64_t k = aStorageShape.GetDim(1);
+     const int64_t bK = bStorageShape.GetDim(0);
+     const int64_t n = bStorageShape.GetDim(1);
+-    OP_CHECK_IF(m <= 0 || n <= 0 || k <= 0 || k != bK,
+-        OP_LOGE(context, "invalid MatmulAbftVerify problem shape"), return ge::GRAPH_FAILED);
+-    OP_CHECK_IF(m > UINT32_MAX || n > UINT32_MAX || k > UINT32_MAX,
++    OP_CHECK_IF(
++        cStorageShape.GetDimNum() != 2 || cStorageShape.GetDim(0) != m || cStorageShape.GetDim(1) != n,
++        OP_LOGE(context, "C must have shape [A.M, B.N]"), return ge::GRAPH_PARAM_INVALID);
++    OP_CHECK_IF(
++        weightStorageShape.GetDimNum() != 1 || weightStorageShape.GetDim(0) != n,
++        OP_LOGE(context, "checksum_weight must have shape [B.N]"), return ge::GRAPH_PARAM_INVALID);
++    OP_CHECK_IF(
++        m <= 0 || n <= 0 || k <= 0 || k != bK, OP_LOGE(context, "invalid MatmulAbftVerify problem shape"),
++        return ge::GRAPH_FAILED);
++    OP_CHECK_IF(
++        m > UINT32_MAX || n > UINT32_MAX || k > UINT32_MAX,
+         OP_LOGE(context, "MatmulAbftVerify shape exceeds uint32 range"), return ge::GRAPH_FAILED);
++    const gert::Shape& compRowStorageShape = compRowShape->GetStorageShape();
++    const int64_t expectedCompRowLength = ((m + COMP_PACK - 1) / COMP_PACK) * ((n + L1_TILE_N - 1) / L1_TILE_N);
++    OP_CHECK_IF(
++        compRowStorageShape.GetDimNum() != 1 || compRowStorageShape.GetDim(0) != expectedCompRowLength,
++        OP_LOGE(context, "comp_row must have the inferred output length"), return ge::GRAPH_PARAM_INVALID);
+ 
+     auto attrs = context->GetAttrs();
+     OP_CHECK_NULL_WITH_CONTEXT(context, attrs);
+@@ -206,34 +254,45 @@ static ge::graphStatus MatmulAbftVerifyTilingFunc(gert::TilingContext* context)
+     OP_CHECK_NULL_WITH_CONTEXT(context, eMaxAttr);
+ 
+     const float eMax = *eMaxAttr;
++    OP_CHECK_IF(
++        !std::isfinite(eMax) || eMax < 0.0f, OP_LOGE(context, "e_max must be a finite non-negative value"),
++        return ge::GRAPH_PARAM_INVALID);
+     const uint32_t splitKs = 1;
+     const auto* aDesc = context->GetInputDesc(0);
++    const auto* bDesc = context->GetInputDesc(1);
++    const auto* cDesc = context->GetInputDesc(2);
++    const auto* weightDesc = context->GetInputDesc(3);
+     OP_CHECK_NULL_WITH_CONTEXT(context, aDesc);
++    OP_CHECK_NULL_WITH_CONTEXT(context, bDesc);
++    OP_CHECK_NULL_WITH_CONTEXT(context, cDesc);
++    OP_CHECK_NULL_WITH_CONTEXT(context, weightDesc);
+     const ge::DataType aDtype = aDesc->GetDataType();
++    OP_CHECK_IF(
++        aDtype != ge::DT_FLOAT16 && aDtype != ge::DT_BF16 && aDtype != ge::DT_FLOAT,
++        OP_LOGE(context, "unsupported A data type"), return ge::GRAPH_PARAM_INVALID);
++    OP_CHECK_IF(
++        bDesc->GetDataType() != aDtype || weightDesc->GetDataType() != aDtype || cDesc->GetDataType() != ge::DT_FLOAT,
++        OP_LOGE(context, "MatmulAbftVerify requires matching A/B/checksum_weight types and FLOAT32 C"),
++        return ge::GRAPH_PARAM_INVALID);
+ 
+     auto platformInfoPtr = context->GetPlatformInfo();
+-    OP_CHECK_IF(platformInfoPtr == nullptr,
+-        OP_LOGE(context, "platformInfoPtr is null"), return ge::GRAPH_FAILED);
++    OP_CHECK_IF(platformInfoPtr == nullptr, OP_LOGE(context, "platformInfoPtr is null"), return ge::GRAPH_FAILED);
+     auto ascendcPlatform = platform_ascendc::PlatformAscendC(platformInfoPtr);
+     const uint32_t aicNum = ascendcPlatform.GetCoreNumAic();
+-    OP_CHECK_IF(aicNum == 0,
+-        OP_LOGE(context, "invalid AIC core count"), return ge::GRAPH_FAILED);
++    OP_CHECK_IF(aicNum == 0, OP_LOGE(context, "invalid AIC core count"), return ge::GRAPH_FAILED);
+     const uint32_t reduceCores = std::min(aicNum, 8U);
+ 
+     MatmulAbftVerifyTilingData* tiling = context->GetTilingData<MatmulAbftVerifyTilingData>();
+     OP_CHECK_NULL_WITH_CONTEXT(context, tiling);
+     if (aDtype == ge::DT_FLOAT16) {
+         tiling->compute = BuildComputeTiling<MatmulAbftVerifyFp16TilingPolicy>(
+-            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k),
+-            eMax, reduceCores, splitKs);
++            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k), eMax, reduceCores, splitKs);
+     } else if (aDtype == ge::DT_FLOAT) {
+         tiling->compute = BuildComputeTiling<MatmulAbftVerifyFp32TilingPolicy>(
+-            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k),
+-            eMax, reduceCores, splitKs);
++            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k), eMax, reduceCores, splitKs);
+     } else {
+         tiling->compute = BuildComputeTiling<MatmulAbftVerifyBf16TilingPolicy>(
+-            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k),
+-            eMax, reduceCores, splitKs);
++            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k), eMax, reduceCores, splitKs);
+     }
+     const float aMeanFactor = 1.0f / static_cast<float>(k);
+     if (aDtype == ge::DT_FLOAT16) {
+@@ -261,19 +320,18 @@ static ge::graphStatus MatmulAbftVerifyTilingFunc(gert::TilingContext* context)
+         workspaceValid &= AddWorkspaceTensor(bStatElements, FLOAT_BYTES, userWorkspaceBytes);
+     }
+     workspaceValid &= AddWorkspaceTensor(beElements, precisionBytes, userWorkspaceBytes); // be
+-    workspaceValid &= AddWorkspaceTensor(beElements, ceBytes, userWorkspaceBytes); // be_for_aiv
+-    for (uint32_t i = 0; i < 2; ++i) { // b_max_slice, b_min_slice
++    workspaceValid &= AddWorkspaceTensor(beElements, ceBytes, userWorkspaceBytes);        // be_for_aiv
++    for (uint32_t i = 0; i < 2; ++i) {                                                    // b_max_slice, b_min_slice
+         workspaceValid &= AddWorkspaceTensor(beElements, FLOAT_BYTES, userWorkspaceBytes);
+     }
+     for (uint32_t i = 0; i < 3; ++i) { // a_max, a_mean, a_min
+         workspaceValid &= AddWorkspaceTensor(m, FLOAT_BYTES, userWorkspaceBytes);
+     }
+-    const uint64_t internalWorkspaceElements =
+-        static_cast<uint64_t>(m) * (splitN + 1) * tiling->compute.splitKNum;
++    const uint64_t internalWorkspaceElements = static_cast<uint64_t>(m) * (splitN + 1) * tiling->compute.splitKNum;
+     workspaceValid &= AddWorkspaceTensor(internalWorkspaceElements, FLOAT_BYTES, userWorkspaceBytes);
+ 
+-    OP_CHECK_IF(!workspaceValid || userWorkspaceBytes >
+-            std::numeric_limits<size_t>::max() - SYSTEM_WORKSPACE_SIZE,
++    OP_CHECK_IF(
++        !workspaceValid || userWorkspaceBytes > std::numeric_limits<size_t>::max() - SYSTEM_WORKSPACE_SIZE,
+         OP_LOGE(context, "MatmulAbftVerify workspace size overflow"), return ge::GRAPH_FAILED);
+     size_t* workspaceSizes = context->GetWorkspaceSizes(1);
+     OP_CHECK_NULL_WITH_CONTEXT(context, workspaceSizes);
+diff --git a/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_infershape.cpp b/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_infershape.cpp
+index c27e84c5d3fb5d4ecdb2b09c2fa2607f54cfef99..c20fa2c10385bcbd5ef28d46bffcc1415344e01f 100644
+--- a/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_infershape.cpp
++++ b/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_infershape.cpp
+@@ -19,9 +19,9 @@ constexpr int64_t L1_TILE_N = 256;
+ constexpr int64_t COMP_PACK = 8;
+ constexpr char OP_TYPE[] = "MatmulAbftVerify";
+ 
+-ge::graphStatus RunInferShape(const std::vector<std::vector<int64_t>>& inputDims,
+-                              const std::vector<ge::DataType>& inputTypes,
+-                              std::vector<int64_t>* outputDims)
++ge::graphStatus RunInferShape(
++    const std::vector<std::vector<int64_t>>& inputDims, const std::vector<ge::DataType>& inputTypes,
++    std::vector<int64_t>* outputDims)
+ {
+     std::vector<gert::Shape> inputShapes;
+     inputShapes.reserve(inputDims.size());
+@@ -84,16 +84,49 @@ TEST(MatmulAbftVerifyInfershape, infer_shape_fp16_single_n_tile)
+     ExpectSuccessfulInfer(64, 128, 128, ge::DT_FLOAT16);
+ }
+ 
+-TEST(MatmulAbftVerifyInfershape, infer_shape_bf16_multi_n_tile)
+-{
+-    ExpectSuccessfulInfer(129, 513, 512, ge::DT_BF16);
+-}
++TEST(MatmulAbftVerifyInfershape, infer_shape_bf16_multi_n_tile) { ExpectSuccessfulInfer(129, 513, 512, ge::DT_BF16); }
+ 
+ TEST(MatmulAbftVerifyInfershape, infer_shape_fp32_large_n_tile)
+ {
+     ExpectSuccessfulInfer(1024, 4097, 1024, ge::DT_FLOAT);
+ }
+ 
++TEST(MatmulAbftVerifyInfershape, infer_shape_skips_k_mismatch_when_a_k_is_unknown)
++{
++    const std::vector<std::vector<int64_t>> inputs = {{64, -1}, {128, 256}, {64, 256}, {256}};
++    const std::vector<ge::DataType> types = {ge::DT_FLOAT16, ge::DT_FLOAT16, ge::DT_FLOAT, ge::DT_FLOAT16};
++    std::vector<int64_t> outputDims;
++    ASSERT_EQ(RunInferShape(inputs, types, &outputDims), ge::GRAPH_SUCCESS);
++    EXPECT_EQ(outputDims, std::vector<int64_t>({8}));
++}
++
++TEST(MatmulAbftVerifyInfershape, infer_shape_skips_k_mismatch_when_b_k_is_unknown)
++{
++    const std::vector<std::vector<int64_t>> inputs = {{64, 128}, {-1, 256}, {64, 256}, {256}};
++    const std::vector<ge::DataType> types = {ge::DT_FLOAT16, ge::DT_FLOAT16, ge::DT_FLOAT, ge::DT_FLOAT16};
++    std::vector<int64_t> outputDims;
++    ASSERT_EQ(RunInferShape(inputs, types, &outputDims), ge::GRAPH_SUCCESS);
++    EXPECT_EQ(outputDims, std::vector<int64_t>({8}));
++}
++
++TEST(MatmulAbftVerifyInfershape, infer_shape_preserves_unknown_m_in_comp_row)
++{
++    const std::vector<std::vector<int64_t>> inputs = {{-1, 128}, {128, 256}, {-1, 256}, {256}};
++    const std::vector<ge::DataType> types = {ge::DT_FLOAT16, ge::DT_FLOAT16, ge::DT_FLOAT, ge::DT_FLOAT16};
++    std::vector<int64_t> outputDims;
++    ASSERT_EQ(RunInferShape(inputs, types, &outputDims), ge::GRAPH_SUCCESS);
++    EXPECT_EQ(outputDims, std::vector<int64_t>({-1}));
++}
++
++TEST(MatmulAbftVerifyInfershape, infer_shape_preserves_unknown_n_in_comp_row)
++{
++    const std::vector<std::vector<int64_t>> inputs = {{64, 128}, {128, -1}, {64, -1}, {-1}};
++    const std::vector<ge::DataType> types = {ge::DT_FLOAT16, ge::DT_FLOAT16, ge::DT_FLOAT, ge::DT_FLOAT16};
++    std::vector<int64_t> outputDims;
++    ASSERT_EQ(RunInferShape(inputs, types, &outputDims), ge::GRAPH_SUCCESS);
++    EXPECT_EQ(outputDims, std::vector<int64_t>({-1}));
++}
++
+ TEST(MatmulAbftVerifyInfershape, infer_shape_fails_when_k_mismatch)
+ {
+     const std::vector<std::vector<int64_t>> inputs = {{64, 128}, {256, 128}, {64, 128}, {128}};
+@@ -107,3 +140,24 @@ TEST(MatmulAbftVerifyInfershape, infer_shape_fails_when_a_is_not_rank2)
+     const std::vector<ge::DataType> types(4, ge::DT_FLOAT16);
+     EXPECT_EQ(RunInferShape(inputs, types, nullptr), ge::GRAPH_FAILED);
+ }
++
++TEST(MatmulAbftVerifyInfershape, infer_shape_fails_when_c_shape_mismatches)
++{
++    const std::vector<std::vector<int64_t>> inputs = {{64, 128}, {128, 256}, {64, 255}, {256}};
++    const std::vector<ge::DataType> types = {ge::DT_FLOAT16, ge::DT_FLOAT16, ge::DT_FLOAT, ge::DT_FLOAT16};
++    EXPECT_EQ(RunInferShape(inputs, types, nullptr), ge::GRAPH_PARAM_INVALID);
++}
++
++TEST(MatmulAbftVerifyInfershape, infer_shape_fails_when_checksum_weight_shape_mismatches)
++{
++    const std::vector<std::vector<int64_t>> inputs = {{64, 128}, {128, 256}, {64, 256}, {255}};
++    const std::vector<ge::DataType> types = {ge::DT_FLOAT16, ge::DT_FLOAT16, ge::DT_FLOAT, ge::DT_FLOAT16};
++    EXPECT_EQ(RunInferShape(inputs, types, nullptr), ge::GRAPH_PARAM_INVALID);
++}
++
++TEST(MatmulAbftVerifyInfershape, infer_shape_fails_when_checksum_weight_is_not_vector)
++{
++    const std::vector<std::vector<int64_t>> inputs = {{64, 128}, {128, 256}, {64, 256}, {16, 16}};
++    const std::vector<ge::DataType> types = {ge::DT_FLOAT16, ge::DT_FLOAT16, ge::DT_FLOAT, ge::DT_FLOAT16};
++    EXPECT_EQ(RunInferShape(inputs, types, nullptr), ge::GRAPH_PARAM_INVALID);
++}
+diff --git a/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp b/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
+index 69c59a9185469bc66d1edfba75ee77b4983d3aec..f502c25aa23202a9787eba52425090b77d425d83 100644
+--- a/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
++++ b/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
+@@ -14,11 +14,15 @@
+ #include <cstring>
+ #include <gtest/gtest.h>
+ #include <iostream>
++#include <memory>
++#include <utility>
+ #include <vector>
+ 
+ #include "../../../op_kernel/matmul_abft_verify_tiling_data.h"
+ #include "../../../op_kernel/matmul_abft_verify_tiling_key.h"
+ #include "any_value.h"
++#include "base/registry/op_impl_space_registry_v2.h"
++#include "platform/platform_infos_def.h"
+ #include "tiling_context_faker.h"
+ #include "tiling_case_executor.h"
+ 
+@@ -55,15 +59,13 @@ std::vector<TilingTensorDesc> MakeOutputDescs(const MatmulAbftVerifyCase& param)
+ {
+     const uint32_t splitN = (param.n + L1_TILE_N - 1) / L1_TILE_N;
+     return {
+-        {{{((param.m + COMP_PACK - 1) / COMP_PACK) * splitN},
+-          {((param.m + COMP_PACK - 1) / COMP_PACK) * splitN}}, ge::DT_UINT8, ge::FORMAT_ND},
++        {{{((param.m + COMP_PACK - 1) / COMP_PACK) * splitN}, {((param.m + COMP_PACK - 1) / COMP_PACK) * splitN}},
++         ge::DT_UINT8,
++         ge::FORMAT_ND},
+     };
+ }
+ 
+-std::vector<TilingAttr> MakeAttrs(float eMax)
+-{
+-    return {{"e_max", Ops::Ras::AnyValue::CreateFrom<float>(eMax)}};
+-}
++std::vector<TilingAttr> MakeAttrs(float eMax) { return {{"e_max", Ops::Ras::AnyValue::CreateFrom<float>(eMax)}}; }
+ 
+ uint32_t CalcSplitReduceM(uint32_t splitN, int64_t reduceCores)
+ {
+@@ -72,10 +74,7 @@ uint32_t CalcSplitReduceM(uint32_t splitN, int64_t reduceCores)
+     return std::max<uint32_t>(splitReduceM, 2);
+ }
+ 
+-uint32_t CalcSplitReduceN(uint32_t k)
+-{
+-    return ((k + 255) / 256) < 2 ? (k + 1) / 2 : 256;
+-}
++uint32_t CalcSplitReduceN(uint32_t k) { return ((k + 255) / 256) < 2 ? (k + 1) / 2 : 256; }
+ 
+ void AddTensor(size_t elements, size_t elementBytes, size_t& bytes)
+ {
+@@ -91,16 +90,90 @@ size_t CalcWorkspaceSize(const MatmulAbftVerifyCase& param, uint32_t splitN)
+     const size_t precisionBytes = param.precisionType == ge::DT_FLOAT ? sizeof(float) : sizeof(uint16_t);
+     const size_t ceBytes = param.precisionType == ge::DT_FLOAT16 ? sizeof(uint16_t) : sizeof(float);
+     size_t bytes = 0;
+-    for (uint32_t i = 0; i < 3; ++i) AddTensor(rowSplitElements, sizeof(float), bytes);
+-    for (uint32_t i = 0; i < 3; ++i) AddTensor(bStatElements, sizeof(float), bytes);
++    for (uint32_t i = 0; i < 3; ++i)
++        AddTensor(rowSplitElements, sizeof(float), bytes);
++    for (uint32_t i = 0; i < 3; ++i)
++        AddTensor(bStatElements, sizeof(float), bytes);
+     AddTensor(beElements, precisionBytes, bytes);
+     AddTensor(beElements, ceBytes, bytes);
+-    for (uint32_t i = 0; i < 2; ++i) AddTensor(beElements, sizeof(float), bytes);
+-    for (uint32_t i = 0; i < 3; ++i) AddTensor(param.m, sizeof(float), bytes);
++    for (uint32_t i = 0; i < 2; ++i)
++        AddTensor(beElements, sizeof(float), bytes);
++    for (uint32_t i = 0; i < 3; ++i)
++        AddTensor(param.m, sizeof(float), bytes);
+     AddTensor(static_cast<size_t>(param.m) * (splitN + 1), sizeof(float), bytes);
+     return SYSTEM_WORKSPACE_SIZE + bytes;
+ }
+ 
++ge::graphStatus InvokeMatmulAbftVerifyTiling(gert::TilingContext* context, const char* opName)
++{
++    auto spaceRegistry = gert::DefaultOpImplSpaceRegistryV2::GetInstance().GetSpaceRegistry();
++    if (spaceRegistry == nullptr) {
++        ADD_FAILURE() << "not found spaceRegistry";
++        return ge::GRAPH_FAILED;
++    }
++    auto* functionStruct = spaceRegistry->GetOpImpl(opName);
++    if (functionStruct == nullptr || functionStruct->tiling == nullptr) {
++        ADD_FAILURE() << "not found tiling function for " << opName;
++        return ge::GRAPH_FAILED;
++    }
++    return functionStruct->tiling(context);
++}
++
++ge::graphStatus RunMatmulAbftVerifyTiling(const gert::TilingContextPara& para)
++{
++    auto contextFaker = gert::TilingContextFaker();
++    const size_t inputNum = para.inputTensorDesc_.size();
++    const size_t outputNum = para.outputTensorDesc_.size();
++    contextFaker.IrInstanceNum(std::vector<uint32_t>(inputNum, 1), std::vector<uint32_t>(outputNum, 1));
++
++    std::vector<gert::Tensor*> inputTensors;
++    std::vector<gert::Tensor*> outputTensors;
++    std::vector<std::unique_ptr<gert::Tensor>> inputTensorsKeepAlive;
++    std::vector<std::unique_ptr<gert::Tensor>> outputTensorsKeepAlive;
++    for (const auto& desc : para.inputTensorDesc_) {
++        auto tensor = std::make_unique<gert::Tensor>(
++            desc.shape_, gert::StorageFormat(desc.originFormat_, desc.format_, gert::ExpandDimsType()),
++            gert::TensorPlacement::kOnHost, desc.dtype_, desc.isConst_ ? desc.constValue_ : nullptr);
++        inputTensors.push_back(tensor.get());
++        inputTensorsKeepAlive.push_back(std::move(tensor));
++    }
++    for (const auto& desc : para.outputTensorDesc_) {
++        auto tensor = std::make_unique<gert::Tensor>(
++            desc.shape_, gert::StorageFormat(desc.originFormat_, desc.format_, gert::ExpandDimsType()),
++            gert::TensorPlacement::kOnHost, desc.dtype_, desc.isConst_ ? desc.constValue_ : nullptr);
++        outputTensors.push_back(tensor.get());
++        outputTensorsKeepAlive.push_back(std::move(tensor));
++    }
++    contextFaker.InputTensors(inputTensors).OutputTensors(outputTensors);
++
++    if (para.attrs_.size() != 1 || para.attrs_[0].attr_.type_ != Ops::Ras::AnyValue::ValueType::VT_FLOAT ||
++        para.attrs_[0].attr_.valuePtr_ == nullptr) {
++        ADD_FAILURE() << "MatmulAbftVerify test requires one float e_max attribute";
++        return ge::GRAPH_FAILED;
++    }
++    const auto& attrInfo = para.attrs_[0];
++    const auto* value = reinterpret_cast<const float*>(attrInfo.attr_.valuePtr_.get());
++    contextFaker.Attr(attrInfo.attrName_, *value);
++
++    fe::PlatFormInfos platformInfo;
++    platformInfo.Init();
++    auto tilingData = gert::TilingData::CreateCap(para.tilingDataSize_);
++    auto workspace = gert::ContinuousVector::Create<size_t>(4096);
++    auto contextHolder = contextFaker.SetOpType(para.opName_.c_str())
++                             .CompileInfo(para.compileInfo_)
++                             .PlatformInfo(reinterpret_cast<char*>(&platformInfo))
++                             .TilingData(tilingData.get())
++                             .Workspace(reinterpret_cast<gert::ContinuousVector*>(workspace.get()))
++                             .Build();
++    auto* context = contextHolder.GetContext<gert::TilingContext>();
++    if (context == nullptr) {
++        ADD_FAILURE() << "failed to build MatmulAbftVerify tiling context";
++        return ge::GRAPH_FAILED;
++    }
++
++    return InvokeMatmulAbftVerifyTiling(context, para.opName_.c_str());
++}
++
+ void ExpectCoord(const MatmulAbftVerifyGemmCoordTilingData& actual, uint32_t m, uint32_t n, uint32_t k)
+ {
+     EXPECT_EQ(actual.m, m);
+@@ -132,8 +205,9 @@ void ExpectTilingFields(const MatmulAbftVerifyCase& param)
+     EXPECT_EQ(info.workspaceSizes[0], CalcWorkspaceSize(param, splitN));
+ 
+     MatmulAbftVerifyTilingData tiling = {};
+-    std::copy_n(reinterpret_cast<const unsigned char *>(info.tilingData.get()), sizeof(MatmulAbftVerifyTilingData),
+-        reinterpret_cast<unsigned char *>(&tiling));
++    std::copy_n(
++        reinterpret_cast<const unsigned char*>(info.tilingData.get()), sizeof(MatmulAbftVerifyTilingData),
++        reinterpret_cast<unsigned char*>(&tiling));
+     const auto& compute = tiling.compute;
+     ExpectCoord(compute.problemGemmShape, param.m, param.n, param.k);
+     ExpectCoord(compute.problemGemmShapeFirst, param.m, splitN, param.k);
+@@ -162,15 +236,9 @@ void ExpectTilingFields(const MatmulAbftVerifyCase& param)
+ 
+ class MatmulAbftVerifyTiling : public testing::Test {
+ protected:
+-    static void SetUpTestCase()
+-    {
+-        std::cout << "MatmulAbftVerifyTiling SetUp" << std::endl;
+-    }
++    static void SetUpTestCase() { std::cout << "MatmulAbftVerifyTiling SetUp" << std::endl; }
+ 
+-    static void TearDownTestCase()
+-    {
+-        std::cout << "MatmulAbftVerifyTiling TearDown" << std::endl;
+-    }
++    static void TearDownTestCase() { std::cout << "MatmulAbftVerifyTiling TearDown" << std::endl; }
+ };
+ 
+ TEST_F(MatmulAbftVerifyTiling, tiling_fp16_small_problem)
+@@ -178,15 +246,9 @@ TEST_F(MatmulAbftVerifyTiling, tiling_fp16_small_problem)
+     ExpectTilingFields({64, 128, 128, ge::DT_FLOAT16, 0.001f});
+ }
+ 
+-TEST_F(MatmulAbftVerifyTiling, tiling_bf16_non_aligned_n)
+-{
+-    ExpectTilingFields({129, 513, 512, ge::DT_BF16, 0.002f});
+-}
++TEST_F(MatmulAbftVerifyTiling, tiling_bf16_tail_n) { ExpectTilingFields({129, 513, 512, ge::DT_BF16, 0.002f}); }
+ 
+-TEST_F(MatmulAbftVerifyTiling, tiling_fp32_large_n)
+-{
+-    ExpectTilingFields({1024, 4097, 1024, ge::DT_FLOAT, 0.001f});
+-}
++TEST_F(MatmulAbftVerifyTiling, tiling_fp32_large) { ExpectTilingFields({1024, 4097, 1024, ge::DT_FLOAT, 0.001f}); }
+ 
+ TEST_F(MatmulAbftVerifyTiling, tiling_fails_when_k_mismatch)
+ {
+@@ -199,3 +261,99 @@ TEST_F(MatmulAbftVerifyTiling, tiling_fails_when_k_mismatch)
+     gert::TilingContextPara contextPara("MatmulAbftVerify", inputs, outputs, attrs, &compileInfo);
+     ExecuteTestCase(contextPara, ge::GRAPH_FAILED);
+ }
++
++TEST_F(MatmulAbftVerifyTiling, tiling_fails_when_c_shape_mismatches)
++{
++    MatmulAbftVerifyCase param = {64, 128, 128, ge::DT_FLOAT16, 0.001f};
++    auto inputs = MakeInputDescs(param);
++    auto outputs = MakeOutputDescs(param);
++    auto attrs = MakeAttrs(param.eMax);
++    inputs[2] = {{{param.m, param.n - 1}, {param.m, param.n - 1}}, ge::DT_FLOAT, ge::FORMAT_ND};
++    MatmulAbftVerifyCompileInfo compileInfo = {};
++    gert::TilingContextPara contextPara("MatmulAbftVerify", inputs, outputs, attrs, &compileInfo);
++    EXPECT_EQ(RunMatmulAbftVerifyTiling(contextPara), ge::GRAPH_PARAM_INVALID);
++}
++
++TEST_F(MatmulAbftVerifyTiling, tiling_fails_when_checksum_weight_shape_mismatches)
++{
++    MatmulAbftVerifyCase param = {64, 128, 128, ge::DT_FLOAT16, 0.001f};
++    auto inputs = MakeInputDescs(param);
++    auto outputs = MakeOutputDescs(param);
++    auto attrs = MakeAttrs(param.eMax);
++    inputs[3] = {{{param.n - 1}, {param.n - 1}}, param.precisionType, ge::FORMAT_ND};
++    MatmulAbftVerifyCompileInfo compileInfo = {};
++    gert::TilingContextPara contextPara("MatmulAbftVerify", inputs, outputs, attrs, &compileInfo);
++    EXPECT_EQ(RunMatmulAbftVerifyTiling(contextPara), ge::GRAPH_PARAM_INVALID);
++}
++
++TEST_F(MatmulAbftVerifyTiling, tiling_fails_when_input_types_do_not_match_documented_contract)
++{
++    MatmulAbftVerifyCase param = {64, 128, 128, ge::DT_FLOAT16, 0.001f};
++    auto inputs = MakeInputDescs(param);
++    auto outputs = MakeOutputDescs(param);
++    auto attrs = MakeAttrs(param.eMax);
++    inputs[1].dtype_ = ge::DT_FLOAT;
++    MatmulAbftVerifyCompileInfo compileInfo = {};
++    gert::TilingContextPara contextPara("MatmulAbftVerify", inputs, outputs, attrs, &compileInfo);
++    EXPECT_EQ(RunMatmulAbftVerifyTiling(contextPara), ge::GRAPH_PARAM_INVALID);
++}
++
++TEST_F(MatmulAbftVerifyTiling, tiling_fails_when_checksum_weight_type_does_not_match_a)
++{
++    MatmulAbftVerifyCase param = {64, 128, 128, ge::DT_FLOAT16, 0.001f};
++    auto inputs = MakeInputDescs(param);
++    auto outputs = MakeOutputDescs(param);
++    auto attrs = MakeAttrs(param.eMax);
++    inputs[3].dtype_ = ge::DT_BF16;
++    MatmulAbftVerifyCompileInfo compileInfo = {};
++    gert::TilingContextPara contextPara("MatmulAbftVerify", inputs, outputs, attrs, &compileInfo);
++    EXPECT_EQ(RunMatmulAbftVerifyTiling(contextPara), ge::GRAPH_PARAM_INVALID);
++}
++
++TEST_F(MatmulAbftVerifyTiling, tiling_fails_when_c_type_is_not_float32)
++{
++    MatmulAbftVerifyCase param = {64, 128, 128, ge::DT_FLOAT16, 0.001f};
++    auto inputs = MakeInputDescs(param);
++    auto outputs = MakeOutputDescs(param);
++    auto attrs = MakeAttrs(param.eMax);
++    inputs[2].dtype_ = ge::DT_FLOAT16;
++    MatmulAbftVerifyCompileInfo compileInfo = {};
++    gert::TilingContextPara contextPara("MatmulAbftVerify", inputs, outputs, attrs, &compileInfo);
++    EXPECT_EQ(RunMatmulAbftVerifyTiling(contextPara), ge::GRAPH_PARAM_INVALID);
++}
++
++TEST_F(MatmulAbftVerifyTiling, tiling_fails_when_e_max_is_negative)
++{
++    MatmulAbftVerifyCase param = {64, 128, 128, ge::DT_FLOAT16, -0.001f};
++    auto inputs = MakeInputDescs(param);
++    auto outputs = MakeOutputDescs(param);
++    auto attrs = MakeAttrs(param.eMax);
++    MatmulAbftVerifyCompileInfo compileInfo = {};
++    gert::TilingContextPara contextPara("MatmulAbftVerify", inputs, outputs, attrs, &compileInfo);
++    EXPECT_EQ(RunMatmulAbftVerifyTiling(contextPara), ge::GRAPH_PARAM_INVALID);
++}
++
++TEST_F(MatmulAbftVerifyTiling, tiling_fails_when_e_max_is_not_finite)
++{
++    MatmulAbftVerifyCase param = {64, 128, 128, ge::DT_FLOAT16, std::numeric_limits<float>::infinity()};
++    auto inputs = MakeInputDescs(param);
++    auto outputs = MakeOutputDescs(param);
++    auto attrs = MakeAttrs(param.eMax);
++    MatmulAbftVerifyCompileInfo compileInfo = {};
++    gert::TilingContextPara contextPara("MatmulAbftVerify", inputs, outputs, attrs, &compileInfo);
++    EXPECT_EQ(RunMatmulAbftVerifyTiling(contextPara), ge::GRAPH_PARAM_INVALID);
++}
++
++TEST_F(MatmulAbftVerifyTiling, tiling_zero_e_max) { ExpectTilingFields({64, 128, 128, ge::DT_FLOAT16, 0.0f}); }
++
++TEST_F(MatmulAbftVerifyTiling, tiling_fails_when_comp_row_shape_is_too_small)
++{
++    MatmulAbftVerifyCase param = {64, 64, 64, ge::DT_FLOAT16, 0.001f};
++    auto inputs = MakeInputDescs(param);
++    auto outputs = MakeOutputDescs(param);
++    outputs[0] = {{{1}, {1}}, ge::DT_UINT8, ge::FORMAT_ND};
++    auto attrs = MakeAttrs(param.eMax);
++    MatmulAbftVerifyCompileInfo compileInfo = {};
++    gert::TilingContextPara contextPara("MatmulAbftVerify", inputs, outputs, attrs, &compileInfo);
++    EXPECT_EQ(RunMatmulAbftVerifyTiling(contextPara), ge::GRAPH_PARAM_INVALID);
++}

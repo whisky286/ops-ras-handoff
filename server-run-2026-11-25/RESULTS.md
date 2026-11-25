@@ -75,3 +75,16 @@
 - 行和故障:目标行 117/117 检出(13 例原已误报,新增检出 104/104)
 - 相对 10% 故障:目标行 85/117,32 例漏检(新增检出 72/104)
 - 以 results/C1_118.md 的更正表为准
+
+## 2026-11-26 增补
+### #56/#57(!129 本地应用)
+- 修复前:非法参数 8/8 被阶段一接受;defect rc=0,fix rc=5
+- 修复后:非法参数 0/8 接受;defect rc=4,fix rc=0;Host UT 28/28
+- 库哈希:liboptiling.so eceb666f→9cec83f2;libcust_opapi 未变
+- 边界:未合入、未推送 GitCode;文档 hunk 未应用
+### #118
+- threshold floor 实验证伪:误报 891→14,但目标行检出 117/117→57/117(负结果)
+- 根因进一步定位到 kernel half 精度阈值路径(tile_threshold_simplified.hpp),尚未修复
+### 验证程序
+- 参数探针退出码语义化:0 期望一致 / 3 内部失败 / 4 未复现 / 5 修复未生效
+- run_probe_v2.sh / run_param_v2.sh 均传递真实退出码

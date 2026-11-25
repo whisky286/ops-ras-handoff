@@ -15,4 +15,6 @@ g++ -std=c++17 -O1 -fPIC -I"$OPP/op_api/include" -I"$A/include" -I"$A/include/ac
   -Wl,-rpath="$OPP/op_api/lib" -Wl,-rpath,/usr/local/Ascend/driver/lib64 \
   -o "$R/results/harness/probe_v2_$TAG" || { echo "COMPILE_FAILED"; exit 9; }
 "$R/results/harness/probe_v2_$TAG" 0 "$MODE"
-echo "PROBE_EXIT=$?"
+rc=$?
+echo "PROBE_EXIT=$rc"
+exit $rc

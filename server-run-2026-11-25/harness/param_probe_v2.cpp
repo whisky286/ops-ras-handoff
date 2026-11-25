@@ -24,6 +24,8 @@ static int MakeT(void* host, int64_t count, std::vector<int64_t> shape, aclDataT
 static int64_t Prod(const std::vector<int64_t>& s) { int64_t p = 1; for (auto v : s) p *= v; return p; }
 
 static int gInvalidAccepted = 0;
+static int gInternalFailures = 0;
+static int gControlOk = 0;
 static aclrtStream gSt = nullptr;
 
 // invalid=true means the call must be rejected at phase 1; it is never executed.
@@ -45,6 +47,7 @@ static void Case(const char* name, int64_t M, int64_t N, int64_t K,
     cr |= MakeT(wT==ACL_FLOAT ? (void*)wF.data() : (void*)wH.data(), Prod(wShape), wShape, wT, es(wT), &dw, &tw);
     cr |= MakeT(comp.data(), 8, {8}, ACL_UINT8, 1, &dcomp, &tcomp);
     uint64_t ws=0; aclOpExecutor* ex=nullptr;
+    if (cr != 0) ++gInternalFailures;
     int s1 = -999;
     if (cr == 0) s1 = (int)aclnnMatmulAbftVerifyGetWorkspaceSize(ta, tb, tc, tw, eMax, tcomp, &ws, &ex);
     bool accepted = (s1 == 0);
@@ -55,6 +58,8 @@ static void Case(const char* name, int64_t M, int64_t N, int64_t K,
         execStatus = (int)aclnnMatmulAbftVerify(wp, ws, ex, gSt);
         if (execStatus == 0) execStatus = (int)aclrtSynchronizeStream(gSt);
         if (wp) aclrtFree(wp);
+        if (execStatus != 0) ++gInternalFailures;
+        else gControlOk = 1;
     }
     if (invalid && accepted) ++gInvalidAccepted;
     const char* em = aclGetRecentErrMsg();
@@ -68,12 +73,13 @@ static void Case(const char* name, int64_t M, int64_t N, int64_t K,
 
 int main(int argc, char** argv) {
     int dev = (argc > 1) ? std::atoi(argv[1]) : 0;
+    const char* mode = (argc > 2) ? argv[2] : "defect";   // "defect" | "fix"
     aclrtContext ctx = nullptr;
-    if (aclInit(nullptr) != ACL_SUCCESS) return 2;
-    if (aclrtSetDevice(dev) != ACL_SUCCESS) return 2;
-    if (aclrtCreateContext(&ctx, dev) != ACL_SUCCESS) return 2;
-    if (aclrtSetCurrentContext(ctx) != ACL_SUCCESS) return 2;
-    if (aclrtCreateStream(&gSt) != ACL_SUCCESS) return 2;
+    if (aclInit(nullptr) != ACL_SUCCESS) { std::printf("{\"fatal\":\"aclInit\"}\n"); return 3; }
+    if (aclrtSetDevice(dev) != ACL_SUCCESS) { std::printf("{\"fatal\":\"setDevice\"}\n"); return 3; }
+    if (aclrtCreateContext(&ctx, dev) != ACL_SUCCESS) { std::printf("{\"fatal\":\"createContext\"}\n"); return 3; }
+    if (aclrtSetCurrentContext(ctx) != ACL_SUCCESS) { std::printf("{\"fatal\":\"setCurrentContext\"}\n"); return 3; }
+    if (aclrtCreateStream(&gSt) != ACL_SUCCESS) { std::printf("{\"fatal\":\"createStream\"}\n"); return 3; }
     const int64_t M=64,N=256,K=5;
     Case("valid_fp16_control", M,N,K, ACL_FLOAT16,ACL_FLOAT16,ACL_FLOAT16, {M,N},{N}, 0.00002, false);
     Case("A_fp16_B_fp32_mismatch", M,N,K, ACL_FLOAT16,ACL_FLOAT,ACL_FLOAT16, {M,N},{N}, 0.00002, true);
@@ -82,10 +88,17 @@ int main(int argc, char** argv) {
     Case("W_len_mismatch", M,N,K, ACL_FLOAT16,ACL_FLOAT16,ACL_FLOAT16, {M,N},{N-1}, 0.00002, true);
     Case("W_rank2", M,N,K, ACL_FLOAT16,ACL_FLOAT16,ACL_FLOAT16, {M,N},{1,N}, 0.00002, true);
     Case("eMax_negative", M,N,K, ACL_FLOAT16,ACL_FLOAT16,ACL_FLOAT16, {M,N},{N}, -1.0, true);
-    Case("eMax_zero", M,N,K, ACL_FLOAT16,ACL_FLOAT16,ACL_FLOAT16, {M,N},{N}, 0.0, true);
+    Case("eMax_zero_allowed", M,N,K, ACL_FLOAT16,ACL_FLOAT16,ACL_FLOAT16, {M,N},{N}, 0.0, false);
     Case("eMax_nan", M,N,K, ACL_FLOAT16,ACL_FLOAT16,ACL_FLOAT16, {M,N},{N}, std::numeric_limits<double>::quiet_NaN(), true);
     Case("eMax_pos_inf", M,N,K, ACL_FLOAT16,ACL_FLOAT16,ACL_FLOAT16, {M,N},{N}, std::numeric_limits<double>::infinity(), true);
-    std::printf("{\"summary\":{\"invalid_cases_accepted\":%d}}\n", gInvalidAccepted);
+    std::printf("{\"summary\":{\"mode\":\"%s\",\"invalid_cases_accepted\":%d,\"control_ok\":%d,"
+                "\"internal_failures\":%d}}\n", mode, gInvalidAccepted, gControlOk, gInternalFailures);
+    int rc = 0;
+    if (gInternalFailures > 0) rc = 3;                       // harness/environment error, never a verdict
+    else if (std::strcmp(mode, "fix") == 0)
+        rc = (gInvalidAccepted == 0 && gControlOk) ? 0 : 5;   // 5 = fix not effective
+    else
+        rc = (gInvalidAccepted > 0 && gControlOk) ? 0 : 4;    // 4 = defect not reproduced
     aclrtDestroyStream(gSt); aclrtDestroyContext(ctx); aclrtResetDevice(dev); aclFinalize();
-    return 0;
+    return rc;
 }

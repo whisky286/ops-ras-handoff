@@ -1,0 +1,443 @@
+[2026-11-26 01:36:26] COMPUTE_UNIT: ascend910_93;
+[2026-11-26 01:36:26] CMAKE_ARGS: -DBUILD_PATH=/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build -DBISHENG_FLAGS= -DKERNEL_TEMPLATE_INPUT= -DENABLE_VALGRIND=FALSE -DCMAKE_BUILD_TYPE=Release -DENABLE_MSSANITIZER=FALSE -DENABLE_OOM=FALSE -DENABLE_DUMP_CCE=FALSE -DENABLE_COVERAGE=FALSE -DENABLE_TEST=TRUE -DENABLE_UT_EXEC=TRUE -DENABLE_CUSTOM=FALSE -DENABLE_STATIC=FALSE -DNO_AICPU=FALSE -DNO_ACLNN=FALSE -DMODULE_EXT= -DENABLE_CCACHE=TRUE -DASCEND_OP_NAME=matmul_abft_verify -UVENDOR_NAME -DENABLE_BINARY=FALSE -DENABLE_PACKAGE=FALSE -DPACKAGE_TYPE=run -DENABLE_EXPERIMENTAL=FALSE -DNO_FORCE=FALSE -DBUILD_MODE= -DOP_HOST_UT=TRUE -DOP_GRAPH_UT=FALSE -DOP_API_UT=FALSE -DOP_KERNEL_UT=FALSE -DOP_KERNEL_AICPU_UT=FALSE -DUT_TEST_ALL=FALSE -DASCEND_COMPUTE_UNIT=ascend910_93; -DCANN_3RD_LIB_PATH=/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party
+[2026-11-26 01:36:26] -- The C compiler identification is GNU 10.3.1
+[2026-11-26 01:36:26] -- The CXX compiler identification is GNU 10.3.1
+[2026-11-26 01:36:26] -- Detecting C compiler ABI info
+[2026-11-26 01:36:26] -- Detecting C compiler ABI info - done
+[2026-11-26 01:36:26] -- Check for working C compiler: /bin/cc - skipped
+[2026-11-26 01:36:26] -- Detecting C compile features
+[2026-11-26 01:36:26] -- Detecting C compile features - done
+[2026-11-26 01:36:26] -- Detecting CXX compiler ABI info
+[2026-11-26 01:36:26] -- Detecting CXX compiler ABI info - done
+[2026-11-26 01:36:26] -- Check for working CXX compiler: /bin/c++ - skipped
+[2026-11-26 01:36:26] -- Detecting CXX compile features
+[2026-11-26 01:36:26] -- Detecting CXX compile features - done
+[2026-11-26 01:36:26] -- compile project with library
+[2026-11-26 01:36:26] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-26 01:36:26] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-26 01:36:26] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-26 01:36:26] -- compile option:  -O2 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-26 01:36:26] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-26 01:36:26] -- Found dlog: /usr/local/Ascend/cann-9.0.0/pkg_inc/base  
+[2026-11-26 01:36:26] -- Variables in dlog module:
+[2026-11-26 01:36:26] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-26 01:36:26] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-26 01:36:26] -- 
+[2026-11-26 01:36:26]  Properties for TARGET dlog:
+[2026-11-26 01:36:26]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-26 01:36:26]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-26 01:36:26]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-26 01:36:26] 
+[2026-11-26 01:36:26] -- 
+[2026-11-26 01:36:26]  Properties for TARGET dlog_headers:
+[2026-11-26 01:36:26]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-26 01:36:26] 
+[2026-11-26 01:36:26] -- Found securec: /usr/local/Ascend/cann-9.0.0/include  
+[2026-11-26 01:36:26] -- Found OPBASE: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include  
+[2026-11-26 01:36:26] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-26 01:36:26] -- Found platform: /usr/local/Ascend/cann-9.0.0/include  
+[2026-11-26 01:36:26] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:26] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-26 01:36:26] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-26 01:36:26] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-26 01:36:26] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-26 01:36:26] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-26 01:36:26] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-26 01:36:26] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-26 01:36:26] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-26 01:36:26] -- Found metadef: /usr/local/Ascend/cann-9.0.0/include  
+[2026-11-26 01:36:26] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-26 01:36:26] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:26] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-26 01:36:26] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:26] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-26 01:36:26] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:26] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-26 01:36:26] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-26 01:36:26] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-26 01:36:26] -- Found json: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/json/include  
+[2026-11-26 01:36:26] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-26 01:36:26] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-26 01:36:26] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-26 01:36:26] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-26 01:36:26] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-26 01:36:26] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-26 01:36:26] -- [ThirdParty][protobuf] protoc build.
+[2026-11-26 01:36:26] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-26 01:36:26] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-26 01:36:26] -- System processor: aarch64
+[2026-11-26 01:36:26] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-26 01:36:27] -- Package dlog has been found.
+[2026-11-26 01:36:27] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-26 01:36:27] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-26 01:36:27] -- Ops for this compilation contains: crypto;matmul_abft_verify;obfuscation_calculate;obfuscation_setup
+[2026-11-26 01:36:27] -- Opbuild generating sources
+[2026-11-26 01:36:28] -- Opbuild generating sources - done
+[2026-11-26 01:36:28] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-26 01:36:28] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-26 01:36:28] -- create aclnn master header file: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/aclnn_ops_ras.h
+[2026-11-26 01:36:28] -- No RAS op_graph proto sources found, skipping opgraph_ras and es_ras.
+[2026-11-26 01:36:28] -- No onnx plugin object target found, skipping oponnx_plugin_ras.
+[2026-11-26 01:36:28] -- No tf plugin object target found, skipping optf_plugin_ras.
+[2026-11-26 01:36:28] -- All host targets: 
+[2026-11-26 01:36:28] -- No builtin host aicpu targets found, skipping.
+[2026-11-26 01:36:28] -- Configuring done
+[2026-11-26 01:36:28] -- Generating done
+[2026-11-26 01:36:28] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-26 01:36:28] ----------------------------------------------------------------
+[2026-11-26 01:36:28] Start to parse op dependencies for matmul_abft_verify
+[2026-11-26 01:36:28] INFO:root:op_dependencies:matmul_abft_verify, reverse_op_dependencies:matmul_abft_verify
+[2026-11-26 01:36:28] -- compile project with library
+[2026-11-26 01:36:28] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-26 01:36:28] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-26 01:36:28] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-26 01:36:28] -- compile option:  -O2 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-26 01:36:28] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-26 01:36:28] -- Variables in dlog module:
+[2026-11-26 01:36:28] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-26 01:36:28] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-26 01:36:28] -- 
+[2026-11-26 01:36:28]  Properties for TARGET dlog:
+[2026-11-26 01:36:28]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-26 01:36:28]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-26 01:36:28]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-26 01:36:28] 
+[2026-11-26 01:36:28] -- 
+[2026-11-26 01:36:28]  Properties for TARGET dlog_headers:
+[2026-11-26 01:36:28]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-26 01:36:28] 
+[2026-11-26 01:36:28] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-26 01:36:28] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:28] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-26 01:36:28] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-26 01:36:28] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-26 01:36:28] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-26 01:36:28] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-26 01:36:28] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-26 01:36:28] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-26 01:36:28] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-26 01:36:28] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-26 01:36:28] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:28] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-26 01:36:28] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:28] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-26 01:36:28] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:28] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-26 01:36:28] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-26 01:36:28] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-26 01:36:28] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-26 01:36:28] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-26 01:36:28] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-26 01:36:28] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-26 01:36:28] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-26 01:36:28] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-26 01:36:28] -- [ThirdParty][protobuf] protoc build.
+[2026-11-26 01:36:28] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-26 01:36:28] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-26 01:36:28] -- System processor: aarch64
+[2026-11-26 01:36:28] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-26 01:36:28] -- Package dlog has been found.
+[2026-11-26 01:36:28] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-26 01:36:28] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-26 01:36:28] -- Ops for this compilation contains: crypto;matmul_abft_verify;obfuscation_calculate;obfuscation_setup
+[2026-11-26 01:36:28] -- Opbuild generating sources
+[2026-11-26 01:36:29] -- Opbuild generating sources - done
+[2026-11-26 01:36:29] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-26 01:36:29] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-26 01:36:29] -- create aclnn master header file: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/aclnn_ops_ras.h
+[2026-11-26 01:36:29] -- No RAS op_graph proto sources found, skipping opgraph_ras and es_ras.
+[2026-11-26 01:36:29] -- No onnx plugin object target found, skipping oponnx_plugin_ras.
+[2026-11-26 01:36:29] -- No tf plugin object target found, skipping optf_plugin_ras.
+[2026-11-26 01:36:29] -- All host targets: 
+[2026-11-26 01:36:29] -- No builtin host aicpu targets found, skipping.
+[2026-11-26 01:36:29] -- Configuring done
+[2026-11-26 01:36:29] -- Generating done
+[2026-11-26 01:36:29] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-26 01:36:29] ----------------------------------------------------------------
+[2026-11-26 01:36:29] End to parse op dependencies
+[2026-11-26 01:36:29] -- compile project with library
+[2026-11-26 01:36:29] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-26 01:36:29] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-26 01:36:29] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-26 01:36:29] -- compile option:  -O0 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-26 01:36:29] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-26 01:36:29] -- Variables in dlog module:
+[2026-11-26 01:36:29] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-26 01:36:29] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-26 01:36:29] -- 
+[2026-11-26 01:36:29]  Properties for TARGET dlog:
+[2026-11-26 01:36:29]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-26 01:36:29]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-26 01:36:29]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-26 01:36:29] 
+[2026-11-26 01:36:29] -- 
+[2026-11-26 01:36:29]  Properties for TARGET dlog_headers:
+[2026-11-26 01:36:29]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-26 01:36:29] 
+[2026-11-26 01:36:29] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-26 01:36:29] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:29] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-26 01:36:29] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-26 01:36:29] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-26 01:36:29] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-26 01:36:29] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-26 01:36:29] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-26 01:36:29] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-26 01:36:29] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-26 01:36:29] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-26 01:36:29] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:29] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-26 01:36:29] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:29] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-26 01:36:29] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:29] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-26 01:36:29] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-26 01:36:29] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-26 01:36:29] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-26 01:36:29] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-26 01:36:29] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-26 01:36:29] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-26 01:36:29] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-26 01:36:29] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-26 01:36:29] -- [ThirdParty][protobuf] protoc build.
+[2026-11-26 01:36:29] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-26 01:36:29] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-26 01:36:29] -- System processor: aarch64
+[2026-11-26 01:36:29] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-26 01:36:29] -- Package dlog has been found.
+[2026-11-26 01:36:29] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-26 01:36:30] -- Found gtest: /homCMake Warning:
+  Manually-specified variables were not used by the project:
+
+    BISHENG_FLAGS
+    KERNEL_TEMPLATE_INPUT
+    MODULE_EXT
+    NO_FORCE
+
+
+e/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/gtest/include  
+[2026-11-26 01:36:30] -- [ThirdParty][gtest] GTest found in /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/gtest, and not force rebuild
+[2026-11-26 01:36:30] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-26 01:36:30] -- === Debug<add_modules_ut_sources>: ras_op_tiling_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host
+[2026-11-26 01:36:30] -- === Debug<add_modules_ut_sources>: ras_op_tiling_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
+[2026-11-26 01:36:30] -- === Debug<add_modules_ut_sources>: ras_op_infershape_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host
+[2026-11-26 01:36:30] -- === Debug<add_modules_ut_sources>: ras_op_infershape_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_infershape.cpp
+[2026-11-26 01:36:30] -- Ops for this compilation contains: matmul_abft_verify
+[2026-11-26 01:36:30] -- Configuring done
+[2026-11-26 01:36:30] -- Generating done
+[2026-11-26 01:36:30] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-26 01:36:30] ----------------------------------------------------------------
+[2026-11-26 01:36:30] Start to build ut
+[2026-11-26 01:36:30] -- compile project with library
+[2026-11-26 01:36:30] -- Find opbase source dir: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase
+[2026-11-26 01:36:30] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-26 01:36:30] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/cmake/modules
+[2026-11-26 01:36:30] -- compile option:  -O0 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-26 01:36:30] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-26 01:36:30] -- Variables in dlog module:
+[2026-11-26 01:36:30] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-26 01:36:30] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-26 01:36:30] -- 
+[2026-11-26 01:36:30]  Properties for TARGET dlog:
+[2026-11-26 01:36:30]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-26 01:36:30]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-26 01:36:30]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-26 01:36:30] 
+[2026-11-26 01:36:30] -- 
+[2026-11-26 01:36:30]  Properties for TARGET dlog_headers:
+[2026-11-26 01:36:30]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-26 01:36:30] 
+[2026-11-26 01:36:30] -- Found OPABSE include:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/opbase/include
+[2026-11-26 01:36:30] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:30] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-26 01:36:30] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-26 01:36:30] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-26 01:36:30] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-26 01:36:30] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-26 01:36:30] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-26 01:36:30] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-26 01:36:30] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-26 01:36:30] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-26 01:36:30] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:30] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-26 01:36:30] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:30] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-26 01:36:30] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-26 01:36:30] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-26 01:36:30] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-26 01:36:30] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-26 01:36:30] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-26 01:36:30] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-26 01:36:30] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-26 01:36:30] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-26 01:36:30] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-26 01:36:30] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-26 01:36:30] -- [ThirdParty][protobuf] protoc build.
+[2026-11-26 01:36:30] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-26 01:36:30] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-26 01:36:30] -- System processor: aarch64
+[2026-11-26 01:36:30] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-26 01:36:30] -- Package dlog has been found.
+[2026-11-26 01:36:30] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-26 01:36:30] -- [ThirdParty][gtest] GTest found in /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/third_party/lib_cache/gtest, and not force rebuild
+[2026-11-26 01:36:30] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-26 01:36:30] -- === Debug<add_modules_ut_sources>: ras_op_tiling_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host
+[2026-11-26 01:36:30] -- === Debug<add_modules_ut_sources>: ras_op_tiling_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
+[2026-11-26 01:36:30] -- === Debug<add_modules_ut_sources>: ras_op_infershape_ut PRIVATE /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host
+[2026-11-26 01:36:30] -- === Debug<add_modules_ut_sources>: ras_op_infershape_ut_cases_obj /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_infershape.cpp
+[2026-11-26 01:36:30] -- Ops for this compilation contains: matmul_abft_verify
+[2026-11-26 01:36:30] -- Configuring done
+[2026-11-26 01:36:30] -- Generating done
+[2026-11-26 01:36:30] -- Build files have been written to: /home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build
+[2026-11-26 01:36:30] Consolidate compiler generated dependencies of target ras_op_infershape_ut_cases_obj
+[2026-11-26 01:36:30] Consolidate compiler generated dependencies of target opbase_infer_objs
+[2026-11-26 01:36:30] Consolidate compiler generated dependencies of target opbase_util_objs
+[2026-11-26 01:36:30] Consolidate compiler generated dependencies of target ras_op_tiling_ut_cases_obj
+[2026-11-26 01:36:30] Consolidate compiler generated dependencies of target ras_op_infershape_ut_common_obj
+[2026-11-26 01:36:30] Consolidate compiler generated dependencies of target ras_op_tiling_ut_common_obj
+[2026-11-26 01:36:30] Consolidate compiler generated dependencies of target opbase_tiling_objs
+[2026-11-26 01:36:30] [  2%] Building CXX object reliability/matmul_abft_verify/tests/ut/op_host/CMakeFiles/ras_op_infershape_ut_cases_obj.dir/test_matmul_abft_verify_infershape.cpp.o
+[2026-11-26 01:36:30] [  8%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_infer_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/infershape_elewise_util.cpp.o
+[2026-11-26 01:36:30] [  8%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_infer_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/infershape_broadcast_util.cpp.o
+[2026-11-26 01:36:30] [ 11%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/log/log.cpp.o
+[2026-11-26 01:36:30] [ 14%] Building CXX object reliability/matmul_abft_verify/tests/ut/op_host/CMakeFiles/ras_op_tiling_ut_cases_obj.dir/test_matmul_abft_verify_tiling.cpp.o
+[2026-11-26 01:36:30] [ 17%] Building CXX object tests/ut/common/CMakeFiles/ras_op_tiling_ut_common_obj.dir/test_cube_util.cpp.o
+[2026-11-26 01:36:30] [ 22%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_tiling_objs.dir/__/__/__/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling.cpp.o
+[2026-11-26 01:36:30] [ 22%] Building CXX object tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/infer_datatype_context_faker.cpp.o
+[2026-11-26 01:36:31] [ 25%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/util/fp16.cpp.o
+[2026-11-26 01:36:32] [ 28%] Building CXX object tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/infer_shape_context_faker.cpp.o
+[2026-11-26 01:36:32] [ 31%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/util/math_util.cpp.o
+[2026-11-26 01:36:32] [ 34%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_infer_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/infershape_reduce_util.cpp.o
+[2026-11-26 01:36:32] [ 37%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/util/op_arch_helper.cpp.o
+[2026-11-26 01:36:32] [ 40%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_util_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/util/shape_util.cpp.o
+[2026-11-26 01:36:32] [ 42%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_tiling_objs.dir/__/__/__/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling_base.cpp.o
+[2026-11-26 01:36:33] [ 45%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_tiling_objs.dir/__/__/__/third_party/opbase/src/op_common/atvoss/broadcast/broadcast_tiling_noncontiguous.cpp.o
+[2026-11-26 01:36:33] [ 45%] Built target opbase_infer_objs
+[2026-11-26 01:36:33] [ 48%] Building CXX object tests/ut/common/CMakeFiles/ras_op_tiling_ut_common_obj.dir/tiling_case_executor.cpp.o
+[2026-11-26 01:36:33] [ 48%] Built target ras_op_infershape_ut_cases_obj
+[2026-11-26 01:36:33] [ 51%] Building CXX object tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/infer_shaperange_context_faker.cpp.o
+[2026-11-26 01:36:33] [ 54%] Building CXX object tests/ut/common/CMakeFiles/ras_op_tiling_ut_common_obj.dir/tiling_context_faker.cpp.o
+[2026-11-26 01:36:33] [ 57%] Building CXX object tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/infershape_test_util.cpp.o
+[2026-11-26 01:36:34] [ 57%] Built target opbase_util_objs
+[2026-11-26 01:36:34] [ 60%] Building CXX object tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/ut_op_common.cpp.o
+[2026-11-26 01:36:34] [ 60%] Built target ras_op_tiling_ut_cases_obj
+[2026-11-26 01:36:34] Consolidate compiler generated dependencies of target ophost_ras_infer_obj
+[2026-11-26 01:36:34] [ 62%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/ophost_ras_infer_obj.dir/matmul_abft_verify_infershape.cpp.o
+[2026-11-26 01:36:34] [ 65%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_tiling_objs.dir/__/__/__/third_party/opbase/src/op_common/atvoss/elewise/elewise_tiling.cpp.o
+[2026-11-26 01:36:34] [ 68%] Building CXX object tests/ut/common/CMakeFiles/ras_op_tiling_ut_common_obj.dir/tiling_parse_context_faker.cpp.o
+[2026-11-26 01:36:35] [ 71%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_tiling_objs.dir/__/__/__/third_party/opbase/src/op_common/atvoss/reduce/reduce_tiling.cpp.o
+[2026-11-26 01:36:35] [ 74%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/opbase_tiling_objs.dir/__/__/__/third_party/opbase/src/op_common/op_host/tiling_util.cpp.o
+[2026-11-26 01:36:35] [ 77%] Building CXX object tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/ut_op_util.cpp.o
+[2026-11-26 01:36:36] [ 77%] Built target ophost_ras_infer_obj
+[2026-11-26 01:36:37] [ 77%] Built target ras_op_infershape_ut_common_obj
+[2026-11-26 01:36:38] [ 77%] Built target opbase_tiling_objs
+[2026-11-26 01:36:38] Consolidate compiler generated dependencies of target ophost_ras_tiling_obj
+[2026-11-26 01:36:39] [ 77%] Linking CXX static library libopbase_ut_common.a
+[2026-11-26 01:36:39] [ 80%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/ophost_ras_tiling_obj.dir/__/__/__/common/src/op_host/lock.cpp.o
+[2026-11-26 01:36:39] [ 85%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/ophost_ras_tiling_obj.dir/__/__/__/common/src/op_host/hash.cpp.o
+[2026-11-26 01:36:39] [ 85%] Building CXX object reliability/matmul_abft_verify/op_host/CMakeFiles/ophost_ras_tiling_obj.dir/matmul_abft_verify_tiling.cpp.o
+[2026-11-26 01:36:39] [ 85%] Built target opbase_ut_common
+[2026-11-26 01:36:39] [ 88%] Linking CXX static library libras_op_infershape_ut_static_lib.a
+[2026-11-26 01:36:39] [ 88%] Built target ras_op_infershape_ut_static_lib
+[2026-11-26 01:36:39] [ 88%] Built target ras_op_tiling_ut_common_obj
+[2026-11-26 01:36:42] [ 88%] Built target ophost_ras_tiling_obj
+[2026-11-26 01:36:42] [ 91%] Linking CXX static library libras_op_tiling_ut_static_lib.a
+[2026-11-26 01:36:42] [ 91%] Built target ras_op_tiling_ut_static_lib
+[2026-11-26 01:36:42] Consolidate compiler generated dependencies of target ras_op_host_ut_bin
+[2026-11-26 01:36:42] [ 94%] Building CXX object tests/ut/op_host/CMakeFiles/ras_op_host_ut_bin.dir/test_op_host_main.cpp.o
+[2026-11-26 01:36:42] [ 94%] Building CXX object tests/ut/op_host/CMakeFiles/ras_op_host_ut_bin.dir/test_host_common.cpp.o
+[2026-11-26 01:36:44] [ 97%] Linking CXX executable ras_op_host_ut_bin
+[2026-11-26 01:36:44] [ 97%] Built target ras_op_host_ut_bin
+[2026-11-26 01:36:44] [100%] Run ops op_host utest
+[2026-11-26 01:36:44] [==========] Running 28 tests from 3 test suites.
+[2026-11-26 01:36:44] [----------] Global test environment set-up.
+[2026-11-26 01:36:44] [----------] 3 tests from RasHostHash
+[2026-11-26 01:36:44] [ RUN      ] RasHostHash.IsDeterministicForTheSameInput
+[2026-11-26 01:36:44] [       OK ] RasHostHash.IsDeterministicForTheSameInput (0 ms)
+[2026-11-26 01:36:44] [ RUN      ] RasHostHash.ChangesWhenThePayloadChanges
+[2026-11-26 01:36:44] [       OK ] RasHostHash.ChangesWhenThePayloadChanges (0 ms)
+[2026-11-26 01:36:44] [ RUN      ] RasHostHash.ChangesWhenTheSeedChanges
+[2026-11-26 01:36:44] [       OK ] RasHostHash.ChangesWhenTheSeedChanges (0 ms)
+[2026-11-26 01:36:44] [----------] 3 tests from RasHostHash (0 ms total)
+[2026-11-26 01:36:44] 
+[2026-11-26 01:36:44] [----------] 13 tests from MatmulAbftVerifyTiling
+[2026-11-26 01:36:44] MatmulAbftVerifyTiling SetUp
+[2026-11-26 01:36:44] [ RUN      ] MatmulAbftVerifyTiling.tiling_fp16_small_problem
+[2026-11-26 01:36:44] [       OK ] MatmulAbftVerifyTiling.tiling_fp16_small_problem (0 ms)
+[2026-11-26 01:36:44] [ RUN      ] MatmulAbftVerifyTiling.tiling_bf16_tail_n
+[2026-11-26 01:36:44] [       OK ] MatmulAbftVerifyTiling.tiling_bf16_tail_n (0 ms)
+[2026-11-26 01:36:44] [ RUN      ] MatmulAbftVerifyTiling.tiling_fp32_large
+[2026-11-26 01:36:44] [       OK ] MatmulAbftVerifyTiling.tiling_fp32_large (0 ms)
+[2026-11-26 01:36:44] [ RUN      ] MatmulAbftVerifyTiling.tiling_fails_when_k_mismatch
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyTiling.tiling_fails_when_k_mismatch (6 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyTiling.tiling_fails_when_c_shape_mismatches
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyTiling.tiling_fails_when_c_shape_mismatches (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyTiling.tiling_fails_when_checksum_weight_shape_mismatches
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyTiling.tiling_fails_when_checksum_weight_shape_mismatches (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyTiling.tiling_fails_when_input_types_do_not_match_documented_contract
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyTiling.tiling_fails_when_input_types_do_not_match_documented_contract (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyTiling.tiling_fails_when_checksum_weight_type_does_not_match_a
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyTiling.tiling_fails_when_checksum_weight_type_does_not_match_a (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyTiling.tiling_fails_when_c_type_is_not_float32
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyTiling.tiling_fails_when_c_type_is_not_float32 (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyTiling.tiling_fails_when_e_max_is_negative
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyTiling.tiling_fails_when_e_max_is_negative (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyTiling.tiling_fails_when_e_max_is_not_finite
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyTiling.tillibgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/reliability/matmul_abft_verify/tests/ut/op_host/CMakeFiles/ras_op_infershape_ut_cases_obj.dir/test_matmul_abft_verify_infershape.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/ut_op_util.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/ut_op_common.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/infershape_test_util.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/infer_shaperange_context_faker.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/infer_shape_context_faker.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/common/CMakeFiles/ras_op_infershape_ut_common_obj.dir/infer_datatype_context_faker.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/reliability/matmul_abft_verify/op_host/CMakeFiles/ophost_ras_infer_obj.dir/matmul_abft_verify_infershape.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/reliability/matmul_abft_verify/tests/ut/op_host/CMakeFiles/ras_op_tiling_ut_cases_obj.dir/test_matmul_abft_verify_tiling.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/common/CMakeFiles/ras_op_tiling_ut_common_obj.dir/tiling_parse_context_faker.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/common/CMakeFiles/ras_op_tiling_ut_common_obj.dir/tiling_context_faker.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/common/CMakeFiles/ras_op_tiling_ut_common_obj.dir/tiling_case_executor.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/common/CMakeFiles/ras_op_tiling_ut_common_obj.dir/test_cube_util.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/reliability/matmul_abft_verify/op_host/CMakeFiles/ophost_ras_tiling_obj.dir/matmul_abft_verify_tiling.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/reliability/matmul_abft_verify/op_host/CMakeFiles/ophost_ras_tiling_obj.dir/__/__/__/common/src/op_host/lock.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/reliability/matmul_abft_verify/op_host/CMakeFiles/ophost_ras_tiling_obj.dir/__/__/__/common/src/op_host/hash.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/op_host/CMakeFiles/ras_op_host_ut_bin.dir/test_host_common.cpp.gcda:overwriting an existing profile data with a different timestamp
+libgcov profiling error:/home/hww/projects/ops-ras/ops-ras-handoff/ops-ras-npu-handoff-2026-11-23/ops-ras-candidate/build/tests/ut/op_host/CMakeFiles/ras_op_host_ut_bin.dir/test_op_host_main.cpp.gcda:overwriting an existing profile data with a different timestamp
+ing_fails_when_e_max_is_not_finite (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyTiling.tiling_zero_e_max
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyTiling.tiling_zero_e_max (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyTiling.tiling_fails_when_comp_row_shape_is_too_small
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyTiling.tiling_fails_when_comp_row_shape_is_too_small (0 ms)
+[2026-11-26 01:36:45] MatmulAbftVerifyTiling TearDown
+[2026-11-26 01:36:45] [----------] 13 tests from MatmulAbftVerifyTiling (8 ms total)
+[2026-11-26 01:36:45] 
+[2026-11-26 01:36:45] [----------] 12 tests from MatmulAbftVerifyInfershape
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyInfershape.infer_shape_fp16_single_n_tile
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyInfershape.infer_shape_fp16_single_n_tile (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyInfershape.infer_shape_bf16_multi_n_tile
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyInfershape.infer_shape_bf16_multi_n_tile (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyInfershape.infer_shape_fp32_large_n_tile
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyInfershape.infer_shape_fp32_large_n_tile (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyInfershape.infer_shape_skips_k_mismatch_when_a_k_is_unknown
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyInfershape.infer_shape_skips_k_mismatch_when_a_k_is_unknown (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyInfershape.infer_shape_skips_k_mismatch_when_b_k_is_unknown
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyInfershape.infer_shape_skips_k_mismatch_when_b_k_is_unknown (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyInfershape.infer_shape_preserves_unknown_m_in_comp_row
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyInfershape.infer_shape_preserves_unknown_m_in_comp_row (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyInfershape.infer_shape_preserves_unknown_n_in_comp_row
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyInfershape.infer_shape_preserves_unknown_n_in_comp_row (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyInfershape.infer_shape_fails_when_k_mismatch
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyInfershape.infer_shape_fails_when_k_mismatch (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyInfershape.infer_shape_fails_when_a_is_not_rank2
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyInfershape.infer_shape_fails_when_a_is_not_rank2 (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyInfershape.infer_shape_fails_when_c_shape_mismatches
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyInfershape.infer_shape_fails_when_c_shape_mismatches (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyInfershape.infer_shape_fails_when_checksum_weight_shape_mismatches
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyInfershape.infer_shape_fails_when_checksum_weight_shape_mismatches (0 ms)
+[2026-11-26 01:36:45] [ RUN      ] MatmulAbftVerifyInfershape.infer_shape_fails_when_checksum_weight_is_not_vector
+[2026-11-26 01:36:45] [       OK ] MatmulAbftVerifyInfershape.infer_shape_fails_when_checksum_weight_is_not_vector (0 ms)
+[2026-11-26 01:36:45] [----------] 12 tests from MatmulAbftVerifyInfershape (0 ms total)
+[2026-11-26 01:36:45] 
+[2026-11-26 01:36:45] [----------] Global test environment tear-down
+[2026-11-26 01:36:45] [==========] 28 tests from 3 test suites ran. (8 ms total)
+[2026-11-26 01:36:45] [  PASSED  ] 28 tests.
+[2026-11-26 01:36:45] [100%] Built target ras_op_host_ut
+UT_FIX_EXIT=0
