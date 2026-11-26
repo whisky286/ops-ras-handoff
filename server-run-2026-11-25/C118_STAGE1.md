@@ -64,3 +64,14 @@ K=1/2 属 `log(k)` 退化,不是阈值幅度问题。
 ## 当前可交付
 - 调试手段已建立(workspace dump),下一步应在 `tileCompare` 处记录 X/C/thre 三个输入及比较结果。
 - 阶段 1 候选(log clamp + kmin=512)仍为"未采纳";K=1 未解决前不能宣称修复。
+
+## 比较实现核对(2026-11-26)
+- `tile_fault_compare.hpp` 的 RSUB 路径:`dst = CompareScalar(|x - y| - thre, <= 0)`,与我们的 dump 判据一致。
+- 但仓库里存在多个独立比较点:`block_threshold_compare_fused.hpp`、`block_sum_aiv_ceft_no_splitk_thre_robust_preload.hpp`、`block_large_local_compare.hpp` 各自持有 TileCompare。
+- 推论:实际生效的比较不在我们 dump 的那个 block,需要在 `block_sum_aiv_ceft_*` 的 tileCompare 调用处抓 X/C/thre 与结果位。
+- 下一步(需新会话):在该 block 加临时 dump,再做 K=1 观测;在此之前 K=1 残余无定论。
+
+## 比较实现核对(2026-11-26)
+- tile_fault_compare.hpp 的 RSUB 路径:dst=CompareScalar(|x-y|-thre, LE 0),与 dump 判据一致。
+- 仓库存在多个独立比较点:block_threshold_compare_fused、block_sum_aiv_ceft_no_splitk_thre_robust_preload、block_large_local_compare。
+- 推论:实际生效的比较不在已 dump 的 block,需在 block_sum_aiv_ceft 的 tileCompare 调用处抓 X/C/thre 与结果位。
