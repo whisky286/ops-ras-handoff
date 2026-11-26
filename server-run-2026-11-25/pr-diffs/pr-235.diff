@@ -1,0 +1,610 @@
+diff --git a/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify.md b/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify.md
+index d9af65029951312406558a59cd6202a7e78a23a4..e641e5880e50b60922dc0504cfec117cf760e253 100644
+--- a/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify.md
++++ b/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify.md
+@@ -324,7 +324,7 @@ align32(x)  = ceil(x / 32) * 32
+ | 4 | b_mean_square | `W + O4` | FLOAT32 | `bStatLen` |
+ | 5 | b_var | `W + O5` | FLOAT32 | `bStatLen` |
+ | 6 | be | `W + O6` | 与a相同 | `beLen` |
+-| 7 | be_for_aiv | `W + O7` | a为FLOAT16时是FLOAT16，否则是FLOAT32 | `beLen` |
++| 7 | be_for_aiv | `W + O7` | FLOAT32 | `beLen` |
+ | 8 | b_max_slice | `W + O8` | FLOAT32 | `beLen` |
+ | 9 | b_min_slice | `W + O9` | FLOAT32 | `beLen` |
+ | 10 | a_max | `W + O10` | FLOAT32 | `M` |
+diff --git a/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify_en.md b/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify_en.md
+index 8fb402c2a57f6c3be92935e051720b5e0534ec23..00ea81d680612cc451f90bf3f4f82e6ec6f4e1ac 100644
+--- a/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify_en.md
++++ b/reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify_en.md
+@@ -166,7 +166,7 @@ All offsets below are relative to `W`. Let `S0 = 0`. The starting offset of each
+ | 4 | b_mean_square | `W + O4` | FLOAT32 | `bStatLen` |
+ | 5 | b_var | `W + O5` | FLOAT32 | `bStatLen` |
+ | 6 | be | `W + O6` | Same as `a` | `beLen` |
+-| 7 | be_for_aiv | `W + O7` | FLOAT16 when `a` is FLOAT16; otherwise FLOAT32 | `beLen` |
++| 7 | be_for_aiv | `W + O7` | FLOAT32 | `beLen` |
+ | 8 | b_max_slice | `W + O8` | FLOAT32 | `beLen` |
+ | 9 | b_min_slice | `W + O9` | FLOAT32 | `beLen` |
+ | 10 | a_max | `W + O10` | FLOAT32 | `M` |
+diff --git a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
+index 72b0ead15713cb4e1ddb30b9227c26efb32689dc..5fe971e849c306a5a22556c32f74affb37c8c618 100644
+--- a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
++++ b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
+@@ -50,8 +50,7 @@ bool AddWorkspaceTensor(uint64_t elements, uint64_t elementBytes, uint64_t& work
+ uint32_t FloatBits(float value)
+ {
+     uint32_t bits;
+-    std::copy_n(reinterpret_cast<const unsigned char *>(&value), sizeof(value),
+-        reinterpret_cast<unsigned char *>(&bits));
++    std::copy_n(reinterpret_cast<const unsigned char*>(&value), sizeof(value), reinterpret_cast<unsigned char*>(&bits));
+     return bits;
+ }
+ 
+@@ -83,11 +82,11 @@ uint16_t FloatToFp16Bits(float value)
+     }
+     return static_cast<uint16_t>((halfExponent << 10U) | (mantissa >> 13U));
+ }
+-}
++} // namespace
+ 
+ template <typename Policy>
+-MatmulAbftVerifyComputeTilingData BuildComputeTiling(uint32_t m, uint32_t n, uint32_t k,
+-    float eMax, uint32_t reduceCores, uint32_t splitKs)
++MatmulAbftVerifyComputeTilingData BuildComputeTiling(
++    uint32_t m, uint32_t n, uint32_t k, float eMax, uint32_t reduceCores, uint32_t splitKs)
+ {
+     // DIVISOR_GUARDED[585]: keep the reduction divisor non-zero for all caller inputs.
+     const uint32_t safeReduceCores = reduceCores == 0U ? 1U : reduceCores;
+@@ -143,7 +142,8 @@ MatmulAbftVerifyComputeTilingData BuildComputeTiling(uint32_t m, uint32_t n, uin
+     tiling.layoutThreLen = m;
+     tiling.roundingAlpha = 1.0f;
+     tiling.eMax = eMax * 6 * std::sqrt(static_cast<float>(k) / 1024.0f);
+-    tiling.stdEstARowRatio = 1.0f / std::sqrt(2.0f * std::log(static_cast<float>(k)));
++    // std::log(1) is 0 and would make the ratio infinite for K=1.
++    tiling.stdEstARowRatio = 1.0f / std::sqrt(2.0f * std::log(std::max(static_cast<float>(k), 2.0f)));
+     tiling.aRowScaleRatio = 1.0f / static_cast<float>(k);
+ 
+     tiling.stdEstRatios[0] = commonStdFactor == 0.0f ? 0.0f : 1.0f / commonStdFactor;
+@@ -177,7 +177,6 @@ MatmulAbftVerifyComputeTilingData BuildComputeTiling(uint32_t m, uint32_t n, uin
+     return tiling;
+ }
+ 
+-
+ static ge::graphStatus MatmulAbftVerifyTilingFunc(gert::TilingContext* context)
+ {
+     const gert::StorageShape* aShape = context->GetInputShape(0);
+@@ -187,16 +186,19 @@ static ge::graphStatus MatmulAbftVerifyTilingFunc(gert::TilingContext* context)
+ 
+     const gert::Shape& aStorageShape = aShape->GetStorageShape();
+     const gert::Shape& bStorageShape = bShape->GetStorageShape();
+-    OP_CHECK_IF(aStorageShape.GetDimNum() != 2 || bStorageShape.GetDimNum() != 2,
++    OP_CHECK_IF(
++        aStorageShape.GetDimNum() != 2 || bStorageShape.GetDimNum() != 2,
+         OP_LOGE(context, "MatmulAbftVerify expects rank-2 A and B"), return ge::GRAPH_FAILED);
+ 
+     const int64_t m = aStorageShape.GetDim(0);
+     const int64_t k = aStorageShape.GetDim(1);
+     const int64_t bK = bStorageShape.GetDim(0);
+     const int64_t n = bStorageShape.GetDim(1);
+-    OP_CHECK_IF(m <= 0 || n <= 0 || k <= 0 || k != bK,
+-        OP_LOGE(context, "invalid MatmulAbftVerify problem shape"), return ge::GRAPH_FAILED);
+-    OP_CHECK_IF(m > UINT32_MAX || n > UINT32_MAX || k > UINT32_MAX,
++    OP_CHECK_IF(
++        m <= 0 || n <= 0 || k <= 0 || k != bK, OP_LOGE(context, "invalid MatmulAbftVerify problem shape"),
++        return ge::GRAPH_FAILED);
++    OP_CHECK_IF(
++        m > UINT32_MAX || n > UINT32_MAX || k > UINT32_MAX,
+         OP_LOGE(context, "MatmulAbftVerify shape exceeds uint32 range"), return ge::GRAPH_FAILED);
+ 
+     auto attrs = context->GetAttrs();
+@@ -212,28 +214,23 @@ static ge::graphStatus MatmulAbftVerifyTilingFunc(gert::TilingContext* context)
+     const ge::DataType aDtype = aDesc->GetDataType();
+ 
+     auto platformInfoPtr = context->GetPlatformInfo();
+-    OP_CHECK_IF(platformInfoPtr == nullptr,
+-        OP_LOGE(context, "platformInfoPtr is null"), return ge::GRAPH_FAILED);
++    OP_CHECK_IF(platformInfoPtr == nullptr, OP_LOGE(context, "platformInfoPtr is null"), return ge::GRAPH_FAILED);
+     auto ascendcPlatform = platform_ascendc::PlatformAscendC(platformInfoPtr);
+     const uint32_t aicNum = ascendcPlatform.GetCoreNumAic();
+-    OP_CHECK_IF(aicNum == 0,
+-        OP_LOGE(context, "invalid AIC core count"), return ge::GRAPH_FAILED);
++    OP_CHECK_IF(aicNum == 0, OP_LOGE(context, "invalid AIC core count"), return ge::GRAPH_FAILED);
+     const uint32_t reduceCores = std::min(aicNum, 8U);
+ 
+     MatmulAbftVerifyTilingData* tiling = context->GetTilingData<MatmulAbftVerifyTilingData>();
+     OP_CHECK_NULL_WITH_CONTEXT(context, tiling);
+     if (aDtype == ge::DT_FLOAT16) {
+         tiling->compute = BuildComputeTiling<MatmulAbftVerifyFp16TilingPolicy>(
+-            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k),
+-            eMax, reduceCores, splitKs);
++            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k), eMax, reduceCores, splitKs);
+     } else if (aDtype == ge::DT_FLOAT) {
+         tiling->compute = BuildComputeTiling<MatmulAbftVerifyFp32TilingPolicy>(
+-            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k),
+-            eMax, reduceCores, splitKs);
++            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k), eMax, reduceCores, splitKs);
+     } else {
+         tiling->compute = BuildComputeTiling<MatmulAbftVerifyBf16TilingPolicy>(
+-            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k),
+-            eMax, reduceCores, splitKs);
++            static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k), eMax, reduceCores, splitKs);
+     }
+     const float aMeanFactor = 1.0f / static_cast<float>(k);
+     if (aDtype == ge::DT_FLOAT16) {
+@@ -249,7 +246,9 @@ static ge::graphStatus MatmulAbftVerifyTilingFunc(gert::TilingContext* context)
+     const uint64_t bStatElements = ((splitN + 7) / 8) * 8 + 8;
+     const uint64_t beElements = static_cast<uint64_t>(k) * splitN;
+     const uint64_t precisionBytes = aDtype == ge::DT_FLOAT ? sizeof(float) : sizeof(uint16_t);
+-    const uint64_t ceBytes = aDtype == ge::DT_FLOAT16 ? sizeof(uint16_t) : sizeof(float);
++    // be_for_aiv is always FP32: the CE checksum path keeps FP32 precision for
++    // FP16/BF16 inputs to avoid half-precision rounding being flagged as faults.
++    const uint64_t ceBytes = sizeof(float);
+ 
+     uint64_t userWorkspaceBytes = 0;
+     bool workspaceValid = true;
+@@ -261,19 +260,18 @@ static ge::graphStatus MatmulAbftVerifyTilingFunc(gert::TilingContext* context)
+         workspaceValid &= AddWorkspaceTensor(bStatElements, FLOAT_BYTES, userWorkspaceBytes);
+     }
+     workspaceValid &= AddWorkspaceTensor(beElements, precisionBytes, userWorkspaceBytes); // be
+-    workspaceValid &= AddWorkspaceTensor(beElements, ceBytes, userWorkspaceBytes); // be_for_aiv
+-    for (uint32_t i = 0; i < 2; ++i) { // b_max_slice, b_min_slice
++    workspaceValid &= AddWorkspaceTensor(beElements, ceBytes, userWorkspaceBytes);        // be_for_aiv
++    for (uint32_t i = 0; i < 2; ++i) {                                                    // b_max_slice, b_min_slice
+         workspaceValid &= AddWorkspaceTensor(beElements, FLOAT_BYTES, userWorkspaceBytes);
+     }
+     for (uint32_t i = 0; i < 3; ++i) { // a_max, a_mean, a_min
+         workspaceValid &= AddWorkspaceTensor(m, FLOAT_BYTES, userWorkspaceBytes);
+     }
+-    const uint64_t internalWorkspaceElements =
+-        static_cast<uint64_t>(m) * (splitN + 1) * tiling->compute.splitKNum;
++    const uint64_t internalWorkspaceElements = static_cast<uint64_t>(m) * (splitN + 1) * tiling->compute.splitKNum;
+     workspaceValid &= AddWorkspaceTensor(internalWorkspaceElements, FLOAT_BYTES, userWorkspaceBytes);
+ 
+-    OP_CHECK_IF(!workspaceValid || userWorkspaceBytes >
+-            std::numeric_limits<size_t>::max() - SYSTEM_WORKSPACE_SIZE,
++    OP_CHECK_IF(
++        !workspaceValid || userWorkspaceBytes > std::numeric_limits<size_t>::max() - SYSTEM_WORKSPACE_SIZE,
+         OP_LOGE(context, "MatmulAbftVerify workspace size overflow"), return ge::GRAPH_FAILED);
+     size_t* workspaceSizes = context->GetWorkspaceSizes(1);
+     OP_CHECK_NULL_WITH_CONTEXT(context, workspaceSizes);
+diff --git a/reliability/matmul_abft_verify/op_kernel/matmul_abft_verify.cpp b/reliability/matmul_abft_verify/op_kernel/matmul_abft_verify.cpp
+index 795937e1749d7b0bf64e0ac6c6d06a06c6fa1f51..b79ec6bb61bd4b1507fcc392ce3def405ccc6a02 100644
+--- a/reliability/matmul_abft_verify/op_kernel/matmul_abft_verify.cpp
++++ b/reliability/matmul_abft_verify/op_kernel/matmul_abft_verify.cpp
+@@ -23,8 +23,8 @@
+ #include "FT_self/gemv/tile/tile_fault_sum.hpp"
+ #include "FT_self/gemv/block/block_gemv.hpp"
+ #include "FT_self/gemv/tile/tile_matmul_elem_add.hpp"
+-#include "FT_self/gemv/tile/tile_threshold.hpp"      // TileThreCalc
+-#include "FT_self/gemv/tile/tile_std_estimate.hpp"   // TileStdEstRobust
++#include "FT_self/gemv/tile/tile_threshold.hpp"    // TileThreCalc
++#include "FT_self/gemv/tile/tile_std_estimate.hpp" // TileStdEstRobust
+ #include "FT_self/gemv/helper.hpp"
+ 
+ #include "FT_self/gemm/tile/gemm_tile_copy.hpp"
+@@ -40,18 +40,16 @@ using GemmInTypeN = DTYPE_A;
+ using GemmOutTypeC = float;
+ using GemmOutTypeN = float;
+ 
+-#if (ORIG_DTYPE_A == DT_FLOAT16)
+-using GemvInTypeCforCE = DTYPE_A;
+-using GemvInTypeNforCE = DTYPE_A;
+-#else
++// The CE checksum path must keep FP32 precision for FP16/BF16 inputs. Using
++// the input dtype here makes FP16 checksum sums carry half-precision rounding
++// error, which the ABFT threshold (derived from the input tolerance) treats
++// as faults.
+ using GemvInTypeCforCE = float;
+ using GemvInTypeNforCE = float;
+-#endif
+ 
+ using GemvInTypeCforAB = DTYPE_CHECKSUM_WEIGHT;
+ using GemvInTypeNforAB = DTYPE_CHECKSUM_WEIGHT;
+ 
+-
+ using GemvOutTypeC = float;
+ using GemvOutTypeN = float;
+ 
+@@ -70,7 +68,7 @@ __aicore__ inline uint64_t AlignWorkspaceOffset(uint64_t offset)
+ }
+ 
+ __aicore__ inline GM_ADDR TakeWorkspaceTensor(
+-    GM_ADDR workspace, uint64_t &offset, uint64_t elements, uint64_t elementBytes)
++    GM_ADDR workspace, uint64_t& offset, uint64_t elements, uint64_t elementBytes)
+ {
+     offset = AlignWorkspaceOffset(offset);
+     GM_ADDR tensor = workspace + offset;
+@@ -80,8 +78,7 @@ __aicore__ inline GM_ADDR TakeWorkspaceTensor(
+ 
+ template <uint32_t schMode>
+ __global__ __aicore__ void matmul_abft_verify(
+-    GM_ADDR a, GM_ADDR b, GM_ADDR c, GM_ADDR checksumWeight,
+-    GM_ADDR compRow, GM_ADDR workspace, GM_ADDR tiling)
++    GM_ADDR a, GM_ADDR b, GM_ADDR c, GM_ADDR checksumWeight, GM_ADDR compRow, GM_ADDR workspace, GM_ADDR tiling)
+ {
+     REGISTER_TILING_DEFAULT(MatmulAbftVerifyTilingData);
+     GET_TILING_DATA_WITH_STRUCT(MatmulAbftVerifyTilingData, tilingData, tiling);
+@@ -99,11 +96,7 @@ __global__ __aicore__ void matmul_abft_verify(
+ #else
+     constexpr uint64_t precisionBytes = sizeof(uint16_t);
+ #endif
+-#if (ORIG_DTYPE_A == DT_FLOAT16)
+-    constexpr uint64_t ceBytes = sizeof(uint16_t);
+-#else
+     constexpr uint64_t ceBytes = sizeof(float);
+-#endif
+ 
+     // Workspace ABI. Keep this order synchronized with host tiling and the operator document.
+     uint64_t workspaceOffset = 0;
+@@ -136,10 +129,8 @@ __global__ __aicore__ void matmul_abft_verify(
+     } aMeanFactorStorage;
+     aMeanFactorStorage.bits = tilingData.compute.aMeanFactorBits;
+     const GemmInTypeN aMeanFactor = aMeanFactorStorage.value;
+-    using L1TileShape =
+-        FTSelf::GemmShape<128, 256, TilingPolicy::L1TileShape_K>;
+-    using L0TileShape =
+-        FTSelf::GemmShape<128, 256, TilingPolicy::L0TileShape_K>;
++    using L1TileShape = FTSelf::GemmShape<128, 256, TilingPolicy::L1TileShape_K>;
++    using L0TileShape = FTSelf::GemmShape<128, 256, TilingPolicy::L0TileShape_K>;
+ 
+     using LayoutX = FTSelf::layout::VectorLayout;
+     using LayoutY = FTSelf::layout::VectorLayout;
+@@ -157,7 +148,6 @@ __global__ __aicore__ void matmul_abft_verify(
+     using LayoutZ = FTSelf::layout::VectorLayout;
+     using FT_COMP_TYPE = FTSelf::Gemv::helper::FT_COMP_TYPE;
+ 
+-
+     using ArchTag = FTSelf::Arch::AtlasA2;
+     using FT_REDUCE_TYPE = FTSelf::Gemv::helper::FT_REDUCE_TYPE;
+ 
+@@ -169,14 +159,16 @@ __global__ __aicore__ void matmul_abft_verify(
+     using FT_L02L1_TYPE = FTSelf::Gemv::helper::FT_L02L1_TYPE;
+     using FT_AIC_BE_SCHEME = FTSelf::Gemv::helper::FT_AIC_BE_SCHEME;
+ 
+-    #if (ORIG_DTYPE_A == DT_FLOAT16 || ORIG_DTYPE_A == DT_FLOAT)
+-        constexpr FT_AIC_BE_SCHEME BlockFTGemvAIC_BE_SCHEME = FT_AIC_BE_SCHEME::ROWCOMPLETE;
+-        constexpr FTSelf::Gemv::helper::FT_AIV_PIPE_FUSE_TYPE BlockFTSum_A_B = FTSelf::Gemv::helper::FT_AIV_PIPE_FUSE_TYPE::A_B_MIXED;
+-    #else
+-        constexpr FT_AIC_BE_SCHEME BlockFTGemvAIC_BE_SCHEME = FT_AIC_BE_SCHEME::ROWCOMPLETE_BF;
+-        constexpr FTSelf::Gemv::helper::FT_AIV_PIPE_FUSE_TYPE BlockFTSum_A_B = FTSelf::Gemv::helper::FT_AIV_PIPE_FUSE_TYPE::A_B_MIXED_BF;
+-    #endif
+-
++#if (ORIG_DTYPE_A == DT_FLOAT)
++    constexpr FT_AIC_BE_SCHEME BlockFTGemvAIC_BE_SCHEME = FT_AIC_BE_SCHEME::ROWCOMPLETE;
++    constexpr FTSelf::Gemv::helper::FT_AIV_PIPE_FUSE_TYPE BlockFTSum_A_B =
++        FTSelf::Gemv::helper::FT_AIV_PIPE_FUSE_TYPE::A_B_MIXED;
++#else
++    // FP16 and BF16 both use the FP32 checksum path (ROWCOMPLETE_BF).
++    constexpr FT_AIC_BE_SCHEME BlockFTGemvAIC_BE_SCHEME = FT_AIC_BE_SCHEME::ROWCOMPLETE_BF;
++    constexpr FTSelf::Gemv::helper::FT_AIV_PIPE_FUSE_TYPE BlockFTSum_A_B =
++        FTSelf::Gemv::helper::FT_AIV_PIPE_FUSE_TYPE::A_B_MIXED_BF;
++#endif
+ 
+     // using L1TileShapeC = GemvShape<32, 512>;
+     // using L0TileShapeC = GemvShape<32, 256>;
+@@ -184,12 +176,10 @@ __global__ __aicore__ void matmul_abft_verify(
+     using L1TileShapeAB = FTSelf::GemmShape<128, 128, 128>;
+     using L0TileShapeAB = FTSelf::GemmShape<128, 128, 128>;
+ 
+-    using L1TileShapeBE =
+-        FTSelf::GemvShape<TilingPolicy::L1TileShapeBE_M, 256>;
+-    using L0TileShapeBE =
+-        FTSelf::GemvShape<TilingPolicy::L0TileShapeBE_M, 64>;
++    using L1TileShapeBE = FTSelf::GemvShape<TilingPolicy::L1TileShapeBE_M, 256>;
++    using L0TileShapeBE = FTSelf::GemvShape<TilingPolicy::L0TileShapeBE_M, 64>;
+ 
+-    using UBBlockShapeBE = FTSelf::GemvShape<L1TileShapeBE::M*2, L1TileShapeBE::N*1>;
++    using UBBlockShapeBE = FTSelf::GemvShape<L1TileShapeBE::M * 2, L1TileShapeBE::N * 1>;
+ 
+     using AType = FTSelf::GemmType<GemmInTypeN, LayoutA>;
+     using BType = FTSelf::GemmType<GemmInTypeN, LayoutB>;
+@@ -206,13 +196,13 @@ __global__ __aicore__ void matmul_abft_verify(
+     using COMPDispatchPolicy = FTSelf::Gemv::GemvAtlasA2;
+     using BeAICDispatchPolicy = FTSelf::Gemv::MmadAtlasA2Preload<enableUnitFlag, enableShuffleK>;
+     using GEMVAICDispatchPolicy = FTSelf::Gemv::MmadAtlasA2Preload<enableUnitFlag, enableShuffleK>;
+-    using TileCopyGemvAic = FTSelf::Gemv::Tile::TileCopyGemvAic<typename BeAICDispatchPolicy::ArchTag, BType, XTypeAIC, YTypeBEAIC, BiasType>;
++    using TileCopyGemvAic = FTSelf::Gemv::Tile::TileCopyGemvAic<
++        typename BeAICDispatchPolicy::ArchTag, BType, XTypeAIC, YTypeBEAIC, BiasType>;
+     using TileMmadGemvAic = FTSelf::Gemm::Tile::TileMmad<FTSelf::Arch::AtlasA2, XTypeAIC, BType, BiasType>;
+ 
+-    using BlockFTGemvAIC = FTSelf::Gemv::Block::BlockFTGemvBe<BeAICDispatchPolicy,
+-        BlockFTGemvAIC_BE_SCHEME,
+-        UBBlockShapeBE, L1TileShapeBE, L0TileShapeBE,
+-        BType, XTypeAIC, YTypeBEAIC, BiasType, TileCopyGemvAic, TileMmadGemvAic>;
++    using BlockFTGemvAIC = FTSelf::Gemv::Block::BlockFTGemvBe<
++        BeAICDispatchPolicy, BlockFTGemvAIC_BE_SCHEME, UBBlockShapeBE, L1TileShapeBE, L0TileShapeBE, BType, XTypeAIC,
++        YTypeBEAIC, BiasType, TileCopyGemvAic, TileMmadGemvAic>;
+ 
+     using ZType = FTSelf::GemmType<GemvOutTypeN, LayoutZ>;
+ 
+@@ -227,11 +217,8 @@ __global__ __aicore__ void matmul_abft_verify(
+ 
+     using MmadDispatchPolicy = FTSelf::Gemm::MmadAtlasA2Pingpong<enableUnitFlag>;
+ 
+-
+-    using L1TileShapeFirst = FTSelf::GemmShape<
+-        256, 256, TilingPolicy::L1TileShapeFirst_K>;
+-    using L0TileShapeFirst = FTSelf::GemmShape<
+-        256, 256, TilingPolicy::L0TileShapeFirst_K>;
++    using L1TileShapeFirst = FTSelf::GemmShape<256, 256, TilingPolicy::L1TileShapeFirst_K>;
++    using L0TileShapeFirst = FTSelf::GemmShape<256, 256, TilingPolicy::L0TileShapeFirst_K>;
+ 
+     using L1TileShapeforFT = FTSelf::GemmShape<L1TileShapeFirst::M, 16, L1TileShapeFirst::K>;
+     using L0TileShapeforFT = FTSelf::GemmShape<L0TileShapeFirst::M, 16, L0TileShapeFirst::K>;
+@@ -240,109 +227,86 @@ __global__ __aicore__ void matmul_abft_verify(
+     using MYType = FTSelf::GemmType<GemvOutTypeN, LayoutMY>;
+ 
+     using BlockMmadABe = FTSelf::Gemm::Block::BlockMmadSpecABeNoSplitKRobust<
+-        MmadDispatchPolicy,
+-        L1TileShapeforFT,
+-        L0TileShapeforFT,
+-        AType, BType, CType, MXType, MYType, BiasType>;
++        MmadDispatchPolicy, L1TileShapeforFT, L0TileShapeforFT, AType, BType, CType, MXType, MYType, BiasType>;
+ 
+-    using BlockMmadPreload = FTSelf::Gemm::Block::BlockMmadPreload<
+-        MmadDispatchPolicy, L1TileShape, L0TileShape, AType, BType, CType>;
++    using BlockMmadPreload =
++        FTSelf::Gemm::Block::BlockMmadPreload<MmadDispatchPolicy, L1TileShape, L0TileShape, AType, BType, CType>;
+ 
+-    using TileFaultCopyRedAiv = FTSelf::Gemv::Tile::TileCopyFTRedAiv<FTSelf::Gemv::Arch::AtlasA2,
+-        AType, BType, YType, ZType>;
++    using TileFaultCopyRedAiv =
++        FTSelf::Gemv::Tile::TileCopyFTRedAiv<FTSelf::Gemv::Arch::AtlasA2, AType, BType, YType, ZType>;
+ 
+-    using UBTileShapeforB =
+-        FTSelf::GemvShape<TilingPolicy::UBTileShapeforB_M, L0TileShape::N>;
+-    using UBBlockShapeforB = FTSelf::GemvShape<UBTileShapeforB::M*2, UBTileShapeforB::N*2>;
++    using UBTileShapeforB = FTSelf::GemvShape<TilingPolicy::UBTileShapeforB_M, L0TileShape::N>;
++    using UBBlockShapeforB = FTSelf::GemvShape<UBTileShapeforB::M * 2, UBTileShapeforB::N * 2>;
+ 
+-    using UBTileShapeforA =
+-        FTSelf::GemvShape<TilingPolicy::UBTileShapeforA_M, 256>;
++    using UBTileShapeforA = FTSelf::GemvShape<TilingPolicy::UBTileShapeforA_M, 256>;
+ 
+     using ARedType = FTSelf::GemmType<GemvInTypeNforCE, LayoutA>;
+-    using TileFaultSum = FTSelf::Gemv::Tile::TileFaultSum<FTSelf::Gemv::Arch::AtlasA2, FT_REDUCE_TYPE::MAX_MIN, ARedType, ZType>;
++    using TileFaultSum =
++        FTSelf::Gemv::Tile::TileFaultSum<FTSelf::Gemv::Arch::AtlasA2, FT_REDUCE_TYPE::MAX_MIN, ARedType, ZType>;
+ 
+     using BlockFTSum = FTSelf::Gemv::Block::BlockFTSumNoSplitK<
+-        GemvDispatchPolicy,
+-        FTSelf::Gemv::helper::FT_THRESHOLD_ALGORITHM::ASVAR_ROBUST,
+-        BlockFTSum_A_B,
+-        UBTileShapeforB, UBBlockShapeforB, UBTileShapeforA,
+-        L1TileShape, AType, BType, YType, ZType, void,
+-        TileFaultCopyRedAiv, TileFaultSum>;
++        GemvDispatchPolicy, FTSelf::Gemv::helper::FT_THRESHOLD_ALGORITHM::ASVAR_ROBUST, BlockFTSum_A_B, UBTileShapeforB,
++        UBBlockShapeforB, UBTileShapeforA, L1TileShape, AType, BType, YType, ZType, void, TileFaultCopyRedAiv,
++        TileFaultSum>;
+ 
+     using SliceSumDispatchPolicy = FTSelf::Gemv::GemvAtlasA2;
+ 
+     using SliceSumUBTileShape = FTSelf::GemvShape<8, 256>;
+-    using TileMatrixAddforABEReduce = FTSelf::Gemv::Tile::TileMatmulAdd<
+-        typename SliceSumDispatchPolicy::ArchTag, MYType, MYType, void>;
+-    using TileCopyMatrixAddforABEReduce = FTSelf::Gemv::Tile::TileCopyMatrixAddAiv<
+-        typename SliceSumDispatchPolicy::ArchTag, MYType, MYType, void>;
++    using TileMatrixAddforABEReduce =
++        FTSelf::Gemv::Tile::TileMatmulAdd<typename SliceSumDispatchPolicy::ArchTag, MYType, MYType, void>;
++    using TileCopyMatrixAddforABEReduce =
++        FTSelf::Gemv::Tile::TileCopyMatrixAddAiv<typename SliceSumDispatchPolicy::ArchTag, MYType, MYType, void>;
+ 
+-    using BlockSliceSum = FTSelf::Gemv::Block::BlockSliceKMNSum<SliceSumDispatchPolicy,
+-        FTSelf::Gemv::helper::FT_AIV_PIPE_FUSE_TYPE::ABE_FUSED_THRE,
+-        SliceSumUBTileShape, MYType, MYType, void, TileCopyMatrixAddforABEReduce, TileMatrixAddforABEReduce>;
++    using BlockSliceSum = FTSelf::Gemv::Block::BlockSliceKMNSum<
++        SliceSumDispatchPolicy, FTSelf::Gemv::helper::FT_AIV_PIPE_FUSE_TYPE::ABE_FUSED_THRE, SliceSumUBTileShape,
++        MYType, MYType, void, TileCopyMatrixAddforABEReduce, TileMatrixAddforABEReduce>;
+ 
+     using MeanMaxTileVmuls = FTSelf::Gemv::Tile::TileVmuls<FTSelf::Arch::AtlasA2, ZType>;
+     using UBTileShapeforBRed =
+         FTSelf::GemvShape<TilingPolicy::UBTileShapeforBRed_M, TilingPolicy::UBTileShapeforBRed_N>;
+-    using TileFaultSumBReduce = FTSelf::Gemv::Tile::TileFaultSum<FTSelf::Gemv::Arch::AtlasA2, FT_REDUCE_TYPE::SUM_MAX, BRedType, ZType>;
+-    using TileFaultCopyBReduce = FTSelf::Gemv::Tile::TileCopyGemvAiv<FTSelf::Gemv::Arch::AtlasA2, BRedType, YType, ZType>;
++    using TileFaultSumBReduce =
++        FTSelf::Gemv::Tile::TileFaultSum<FTSelf::Gemv::Arch::AtlasA2, FT_REDUCE_TYPE::SUM_MAX, BRedType, ZType>;
++    using TileFaultCopyBReduce =
++        FTSelf::Gemv::Tile::TileCopyGemvAiv<FTSelf::Gemv::Arch::AtlasA2, BRedType, YType, ZType>;
+ 
+     using BlockSliceRed = FTSelf::Gemv::Block::BlockSliceKMNSum<
+-        SliceSumDispatchPolicy,
+-        FTSelf::Gemv::helper::FT_AIV_PIPE_FUSE_TYPE::A_B_ROBUST,
+-        SliceSumUBTileShape,
+-        UBTileShapeforBRed,
+-        MYType, BRedType, ZType,
+-        MYType, void,
+-        TileCopyMatrixAddforABEReduce,
+-        TileFaultCopyBReduce,
+-        TileMatrixAddforABEReduce,
+-        TileFaultSumBReduce,
+-        MeanMaxTileVmuls>;
++        SliceSumDispatchPolicy, FTSelf::Gemv::helper::FT_AIV_PIPE_FUSE_TYPE::A_B_ROBUST, SliceSumUBTileShape,
++        UBTileShapeforBRed, MYType, BRedType, ZType, MYType, void, TileCopyMatrixAddforABEReduce, TileFaultCopyBReduce,
++        TileMatrixAddforABEReduce, TileFaultSumBReduce, MeanMaxTileVmuls>;
+ 
+     using UBTileShapeCE = FTSelf::GemvShape<64, L1TileShape::N>;
+     using UBBlockShapeCE = FTSelf::GemvShape<L1TileShape::M, UBTileShapeCE::N>;
+ 
+     using COMPZType = FTSelf::GemmType<uint8_t, LayoutZ>;
+-    using TileFaultCopyCE = FTSelf::Gemv::Tile::TileCopyGemvThreCompFusedAiv<FTSelf::Gemv::Arch::AtlasA2,
+-        CType, CType, XTypeAIV, ZType, COMPZType, void>;
++    using TileFaultCopyCE = FTSelf::Gemv::Tile::TileCopyGemvThreCompFusedAiv<
++        FTSelf::Gemv::Arch::AtlasA2, CType, CType, XTypeAIV, ZType, COMPZType, void>;
+ 
+     using ThreCalcDispatchPolicy = FTSelf::Gemv::GemvAtlasA2;
+     using TileThreCalc = FTSelf::Gemv::Tile::TileThreCalc<
+-        typename ThreCalcDispatchPolicy::ArchTag,
+-        FTSelf::Gemv::helper::FT_THRESHOLD_ALGORITHM::ASVAR_ROBUST,
+-        CType, ZType, ZType, BiasType>;
++        typename ThreCalcDispatchPolicy::ArchTag, FTSelf::Gemv::helper::FT_THRESHOLD_ALGORITHM::ASVAR_ROBUST, CType,
++        ZType, ZType, BiasType>;
+ 
+-    using TileStdEst = FTSelf::Gemv::Tile::TileStdEstRobust<
+-        typename ThreCalcDispatchPolicy::ArchTag,
+-        ZType,
+-        ZType
+-    >;
++    using TileStdEst = FTSelf::Gemv::Tile::TileStdEstRobust<typename ThreCalcDispatchPolicy::ArchTag, ZType, ZType>;
+ 
+-    using TileFaultSumCSum = FTSelf::Gemv::Tile::TileFaultSum<FTSelf::Gemv::Arch::AtlasA2, FT_REDUCE_TYPE::SUM, CType, ZType>;
++    using TileFaultSumCSum =
++        FTSelf::Gemv::Tile::TileFaultSum<FTSelf::Gemv::Arch::AtlasA2, FT_REDUCE_TYPE::SUM, CType, ZType>;
+ 
+     using BlockFTGemvAIV = FTSelf::Gemv::Block::BlockFTGemvCENoSplitKPreload<
+-        GemvDispatchPolicy,
+-        FTSelf::Gemv::helper::FT_THRESHOLD_ALGORITHM::ASVAR_ROBUST,
+-        FTSelf::Gemv::helper::FT_AIV_PIPE_FUSE_TYPE::THRE_FUSED,
+-        FTSelf::Gemv::helper::FT_ENC_TYPE::RCE,
+-        FTSelf::Gemv::helper::FT_COMP_TYPE::RSUB,
+-        FTSelf::Gemv::helper::FT_ABE_TYPE::CENTRAL_BLOCK,
+-        UBTileShapeCE, UBBlockShapeCE, L1TileShape,
+-        CType, XTypeAIV, ZType, COMPZType, void,
+-        TileFaultCopyCE, TileFaultSumCSum,
++        GemvDispatchPolicy, FTSelf::Gemv::helper::FT_THRESHOLD_ALGORITHM::ASVAR_ROBUST,
++        FTSelf::Gemv::helper::FT_AIV_PIPE_FUSE_TYPE::THRE_FUSED, FTSelf::Gemv::helper::FT_ENC_TYPE::RCE,
++        FTSelf::Gemv::helper::FT_COMP_TYPE::RSUB, FTSelf::Gemv::helper::FT_ABE_TYPE::CENTRAL_BLOCK, UBTileShapeCE,
++        UBBlockShapeCE, L1TileShape, CType, XTypeAIV, ZType, COMPZType, void, TileFaultCopyCE, TileFaultSumCSum,
+         TileThreCalc, TileStdEst>;
+ 
+     using UBTileShape = FTSelf::GemmShape<L1TileShapeAB::M, L1TileShapeAB::N, L1TileShapeAB::K>;
+     using TileFaultCopy = FTSelf::Gemv::Tile::TileCopyGemvAiv<FTSelf::Gemv::Arch::AtlasA2, AType, XTypeAIV, ZType>;
+     using TileFaultVmad = FTSelf::Gemv::Tile::TileVmad<FTSelf::Gemv::Arch::AtlasA2, AType, XTypeAIV, ZType>;
+ 
+-    using BlockSumGemv = FTSelf::Gemv::Block::BlockSumGemv<GemvDispatchPolicy, UBTileShape, AType, XTypeAIV, ZType, void, TileFaultCopy, TileFaultVmad, TileVmuls>;
++    using BlockSumGemv = FTSelf::Gemv::Block::BlockSumGemv<
++        GemvDispatchPolicy, UBTileShape, AType, XTypeAIV, ZType, void, TileFaultCopy, TileFaultVmad, TileVmuls>;
+ 
+     using BlockConfig = MatfulFTKernel::BlockConfig<
+-        BlockMmadABe, BlockMmadPreload,
+-        BlockFTGemvAIC, BlockFTSum, BlockFTGemvAIV,
+-        BlockSliceRed, BlockSliceSum>;
++        BlockMmadABe, BlockMmadPreload, BlockFTGemvAIC, BlockFTSum, BlockFTGemvAIV, BlockSliceRed, BlockSliceSum>;
+ 
+     using MatmulFTKernel = MatfulFTKernel::MatmulAsVarABonAicSplitRobustPreload<BlockConfig>;
+ 
+@@ -350,8 +314,7 @@ __global__ __aicore__ void matmul_abft_verify(
+     if constexpr (schMode == MATMUL_ABFT_VERIFY_TPL_SCH_MODE_BF16) {
+         typename MatmulFTKernel::Arguments arguments{
+             FTSelf::GemmCoord{
+-                tilingData.compute.problemGemmShape.m,
+-                tilingData.compute.problemGemmShape.n,
++                tilingData.compute.problemGemmShape.m, tilingData.compute.problemGemmShape.n,
+                 tilingData.compute.problemGemmShape.k},
+             FTSelf::GemvCoord{tilingData.compute.problemShape.m, tilingData.compute.problemShape.n},
+             sizeof(GemmInTypeN),
+@@ -382,8 +345,7 @@ __global__ __aicore__ void matmul_abft_verify(
+             tilingData.compute.eMax,
+             static_cast<bool>(tilingData.compute.outputThre),
+             static_cast<bool>(tilingData.compute.outputCE),
+-            tilingData.compute.splitKNum
+-        };
++            tilingData.compute.splitKNum};
+ 
+         typename MatmulFTKernel::Params params =
+             MatmulFTKernel::ToUnderlyingArguments(arguments, internalWorkspace, tilingData.compute);
+diff --git a/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp b/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
+index 69c59a9185469bc66d1edfba75ee77b4983d3aec..b698ed8b38fa8d2c2143f61849d3292ff81896c5 100644
+--- a/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
++++ b/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
+@@ -55,15 +55,13 @@ std::vector<TilingTensorDesc> MakeOutputDescs(const MatmulAbftVerifyCase& param)
+ {
+     const uint32_t splitN = (param.n + L1_TILE_N - 1) / L1_TILE_N;
+     return {
+-        {{{((param.m + COMP_PACK - 1) / COMP_PACK) * splitN},
+-          {((param.m + COMP_PACK - 1) / COMP_PACK) * splitN}}, ge::DT_UINT8, ge::FORMAT_ND},
++        {{{((param.m + COMP_PACK - 1) / COMP_PACK) * splitN}, {((param.m + COMP_PACK - 1) / COMP_PACK) * splitN}},
++         ge::DT_UINT8,
++         ge::FORMAT_ND},
+     };
+ }
+ 
+-std::vector<TilingAttr> MakeAttrs(float eMax)
+-{
+-    return {{"e_max", Ops::Ras::AnyValue::CreateFrom<float>(eMax)}};
+-}
++std::vector<TilingAttr> MakeAttrs(float eMax) { return {{"e_max", Ops::Ras::AnyValue::CreateFrom<float>(eMax)}}; }
+ 
+ uint32_t CalcSplitReduceM(uint32_t splitN, int64_t reduceCores)
+ {
+@@ -72,10 +70,7 @@ uint32_t CalcSplitReduceM(uint32_t splitN, int64_t reduceCores)
+     return std::max<uint32_t>(splitReduceM, 2);
+ }
+ 
+-uint32_t CalcSplitReduceN(uint32_t k)
+-{
+-    return ((k + 255) / 256) < 2 ? (k + 1) / 2 : 256;
+-}
++uint32_t CalcSplitReduceN(uint32_t k) { return ((k + 255) / 256) < 2 ? (k + 1) / 2 : 256; }
+ 
+ void AddTensor(size_t elements, size_t elementBytes, size_t& bytes)
+ {
+@@ -89,14 +84,18 @@ size_t CalcWorkspaceSize(const MatmulAbftVerifyCase& param, uint32_t splitN)
+     const size_t bStatElements = ((static_cast<size_t>(splitN) + 7) / 8) * 8 + 8;
+     const size_t beElements = static_cast<size_t>(param.k) * splitN;
+     const size_t precisionBytes = param.precisionType == ge::DT_FLOAT ? sizeof(float) : sizeof(uint16_t);
+-    const size_t ceBytes = param.precisionType == ge::DT_FLOAT16 ? sizeof(uint16_t) : sizeof(float);
++    const size_t ceBytes = sizeof(float);
+     size_t bytes = 0;
+-    for (uint32_t i = 0; i < 3; ++i) AddTensor(rowSplitElements, sizeof(float), bytes);
+-    for (uint32_t i = 0; i < 3; ++i) AddTensor(bStatElements, sizeof(float), bytes);
++    for (uint32_t i = 0; i < 3; ++i)
++        AddTensor(rowSplitElements, sizeof(float), bytes);
++    for (uint32_t i = 0; i < 3; ++i)
++        AddTensor(bStatElements, sizeof(float), bytes);
+     AddTensor(beElements, precisionBytes, bytes);
+     AddTensor(beElements, ceBytes, bytes);
+-    for (uint32_t i = 0; i < 2; ++i) AddTensor(beElements, sizeof(float), bytes);
+-    for (uint32_t i = 0; i < 3; ++i) AddTensor(param.m, sizeof(float), bytes);
++    for (uint32_t i = 0; i < 2; ++i)
++        AddTensor(beElements, sizeof(float), bytes);
++    for (uint32_t i = 0; i < 3; ++i)
++        AddTensor(param.m, sizeof(float), bytes);
+     AddTensor(static_cast<size_t>(param.m) * (splitN + 1), sizeof(float), bytes);
+     return SYSTEM_WORKSPACE_SIZE + bytes;
+ }
+@@ -132,8 +131,9 @@ void ExpectTilingFields(const MatmulAbftVerifyCase& param)
+     EXPECT_EQ(info.workspaceSizes[0], CalcWorkspaceSize(param, splitN));
+ 
+     MatmulAbftVerifyTilingData tiling = {};
+-    std::copy_n(reinterpret_cast<const unsigned char *>(info.tilingData.get()), sizeof(MatmulAbftVerifyTilingData),
+-        reinterpret_cast<unsigned char *>(&tiling));
++    std::copy_n(
++        reinterpret_cast<const unsigned char*>(info.tilingData.get()), sizeof(MatmulAbftVerifyTilingData),
++        reinterpret_cast<unsigned char*>(&tiling));
+     const auto& compute = tiling.compute;
+     ExpectCoord(compute.problemGemmShape, param.m, param.n, param.k);
+     ExpectCoord(compute.problemGemmShapeFirst, param.m, splitN, param.k);
+@@ -162,15 +162,9 @@ void ExpectTilingFields(const MatmulAbftVerifyCase& param)
+ 
+ class MatmulAbftVerifyTiling : public testing::Test {
+ protected:
+-    static void SetUpTestCase()
+-    {
+-        std::cout << "MatmulAbftVerifyTiling SetUp" << std::endl;
+-    }
++    static void SetUpTestCase() { std::cout << "MatmulAbftVerifyTiling SetUp" << std::endl; }
+ 
+-    static void TearDownTestCase()
+-    {
+-        std::cout << "MatmulAbftVerifyTiling TearDown" << std::endl;
+-    }
++    static void TearDownTestCase() { std::cout << "MatmulAbftVerifyTiling TearDown" << std::endl; }
+ };
+ 
+ TEST_F(MatmulAbftVerifyTiling, tiling_fp16_small_problem)
+@@ -178,15 +172,9 @@ TEST_F(MatmulAbftVerifyTiling, tiling_fp16_small_problem)
+     ExpectTilingFields({64, 128, 128, ge::DT_FLOAT16, 0.001f});
+ }
+ 
+-TEST_F(MatmulAbftVerifyTiling, tiling_bf16_non_aligned_n)
+-{
+-    ExpectTilingFields({129, 513, 512, ge::DT_BF16, 0.002f});
+-}
++TEST_F(MatmulAbftVerifyTiling, tiling_bf16_non_aligned_n) { ExpectTilingFields({129, 513, 512, ge::DT_BF16, 0.002f}); }
+ 
+-TEST_F(MatmulAbftVerifyTiling, tiling_fp32_large_n)
+-{
+-    ExpectTilingFields({1024, 4097, 1024, ge::DT_FLOAT, 0.001f});
+-}
++TEST_F(MatmulAbftVerifyTiling, tiling_fp32_large_n) { ExpectTilingFields({1024, 4097, 1024, ge::DT_FLOAT, 0.001f}); }
+ 
+ TEST_F(MatmulAbftVerifyTiling, tiling_fails_when_k_mismatch)
+ {

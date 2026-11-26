@@ -1,0 +1,43 @@
+diff --git a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
+index 72b0ead15713cb4e1ddb30b9227c26efb32689dc..a9d5c71fc49796f5504e581602961b37fd8dd256 100644
+--- a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
++++ b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
+@@ -66,7 +66,8 @@ uint16_t FloatToFp16Bits(float value)
+     const uint32_t bits = FloatBits(value);
+     const int32_t exponent = static_cast<int32_t>((bits >> 23U) & 0xFFU) - 127;
+     uint32_t mantissa = bits & 0x7FFFFFU;
+-    if (exponent < -24) {
++    // Preserve the exponent -25 path so rounding can produce the minimum half subnormal.
++    if (exponent < -25) {
+         return 0;
+     }
+     if (exponent < -14) {
+diff --git a/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp b/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
+index 69c59a9185469bc66d1edfba75ee77b4983d3aec..527009dee7d006e3979378ed93b58f29443d0b2c 100644
+--- a/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
++++ b/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
+@@ -178,6 +178,24 @@ TEST_F(MatmulAbftVerifyTiling, tiling_fp16_small_problem)
+     ExpectTilingFields({64, 128, 128, ge::DT_FLOAT16, 0.001f});
+ }
+ 
++TEST_F(MatmulAbftVerifyTiling, fp16_mean_factor_rounds_smallest_subnormal)
++{
++    MatmulAbftVerifyCase param = {1, 1, 20000000, ge::DT_FLOAT16, 0.001f};
++    TilingInfo info;
++    auto inputs = MakeInputDescs(param);
++    auto outputs = MakeOutputDescs(param);
++    auto attrs = MakeAttrs(param.eMax);
++    MatmulAbftVerifyCompileInfo compileInfo = {};
++    gert::TilingContextPara contextPara("MatmulAbftVerify", inputs, outputs, attrs, &compileInfo);
++    ASSERT_TRUE(ExecuteTiling(contextPara, info));
++    ASSERT_GE(info.tilingDataSize, sizeof(MatmulAbftVerifyTilingData));
++    MatmulAbftVerifyTilingData tiling = {};
++    std::copy_n(
++        reinterpret_cast<const unsigned char*>(info.tilingData.get()), sizeof(MatmulAbftVerifyTilingData),
++        reinterpret_cast<unsigned char*>(&tiling));
++    EXPECT_EQ(tiling.compute.aMeanFactorBits, 0x0001U);
++}
++
+ TEST_F(MatmulAbftVerifyTiling, tiling_bf16_non_aligned_n)
+ {
+     ExpectTilingFields({129, 513, 512, ge::DT_BF16, 0.002f});

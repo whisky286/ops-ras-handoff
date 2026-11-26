@@ -1,0 +1,430 @@
+diff --git a/build.sh b/build.sh
+index 4d7dd7d87cd68e0694840be00f4143a7a49f6d84..b8544787e6f04b4ff7df7945e1884dfbb4ebabb4 100644
+--- a/build.sh
++++ b/build.sh
+@@ -25,6 +25,7 @@ SUPPORTED_LONG_OPTS=(
+    "jit" "pkg" "asan" "make_clean_all" "make_clean" "no_force"
+   "ophost" "opgraph" "opapi" "run_example" "example_name=" "genop=" "genop_aicpu=" "experimental" "cann_3rd_lib_path=" "oom" "onnxplugin" "tfplugin" "dump_cce"
+   "module_extension=" "noaclnn" "mssanitizer" "rule_launch=" "ccache=" "pkg-type="
++  "valgrind" "simulator" "bisheng_flags=" "kernel_template_input="
+ )
+ 
+ in_array() {
+@@ -246,11 +247,11 @@ usage() {
+         echo "    --onnxplugin           Build onnxplugin library"
+         echo "    -j[n]                  Compile thread nums, default is 8, eg: -j8"
+         echo "    -O[n]                  Compile optimization options, support [O0 O1 O2 O3], eg:-O3"
+-        echo "    --debug                Build with debug mode"
++        echo "    --build-type=Debug     Build with debug mode"
+         echo $dotted_line
+         echo "Examples:"
+         echo "    bash build.sh --onnxplugin -j16 -O3"
+-        echo "    bash build.sh --onnxplugin --debug"
++        echo "    bash build.sh --onnxplugin --build-type=Debug"
+         return
+         ;;
+       tfplugin)
+@@ -259,11 +260,11 @@ usage() {
+         echo "    --tfplugin             Build TensorFlow plugin library"
+         echo "    -j[n]                  Compile thread nums, default is 8, eg: -j8"
+         echo "    -O[n]                  Compile optimization options, support [O0 O1 O2 O3], eg:-O3"
+-        echo "    --debug                Build with debug mode"
++        echo "    --build-type=Debug     Build with debug mode"
+         echo $dotted_line
+         echo "Examples:"
+         echo "    bash build.sh --tfplugin -j16 -O3"
+-        echo "    bash build.sh --tfplugin --debug"
++        echo "    bash build.sh --tfplugin --build-type=Debug"
+         return
+         ;;
+       opgraph)
+@@ -272,11 +273,11 @@ usage() {
+         echo "    --opgraph              Build opgraph library"
+         echo "    -j[n]                  Compile thread nums, default is 8"
+         echo "    -O[n]                  Compile optimization options, support [O0 O1 O2 O3]"
+-        echo "    --debug                Build with debug mode"
++        echo "    --build-type=Debug     Build with debug mode"
+         echo $dotted_line
+         echo "Examples:"
+         echo "    bash build.sh --opgraph -j16 -O3"
+-        echo "    bash build.sh --opgraph --debug"
++        echo "    bash build.sh --opgraph --build-type=Debug"
+         return
+         ;;
+       opapi)
+@@ -304,6 +305,7 @@ usage() {
+         echo "    bash build.sh --run_example add_example eager --example_name=add_example"
+         echo "    bash build.sh --run_example add_example eager cust"
+         echo "    bash build.sh --run_example add_example eager cust --vendor_name=custom"
++        echo "    bash build.sh --run_example add_example eager --soc=ascend910b --simulator"
+         return
+         ;;
+       genop)
+@@ -351,6 +353,10 @@ usage() {
+   echo "    --make_clean make clean"
+   echo "    --make_clean_all make clean and delete related file"
+   echo "    --asan enable asan on the host side"
++  echo "    --valgrind run ut with valgrind. This option will disable asan and direct execution (same as --noexec, ut is only run under valgrind)"
++  echo "    --simulator run example with simulator libraries (used with --run_example)"
++  echo "    --bisheng_flags Specify bisheng compiler config, like: --bisheng_flags=ccec_g,oom, use ',' to separate different compiler flags"
++  echo "    --kernel_template_input Specify kernel template input arguments, like: --kernel_template_input=\"args0=args0;args1=args1\""
+   echo ""
+   echo "    --ops Compile specified operator, use snake name, like: --ops=add,add_lora, use ',' to separate different operator"
+   echo "    --soc Compile binary with specified Ascend SoC, like: --soc=ascend910b"
+@@ -466,6 +472,25 @@ check_param() {
+     fi
+   fi
+ 
++  if [[ "$ENABLE_VALGRIND" == "TRUE" && "$ENABLE_ASAN" == "TRUE" ]]; then
++    echo "[INFO] --valgrind is enabled, disabling ASAN"
++    ENABLE_ASAN=FALSE
++  fi
++
++  if [ -n "$BISHENG_FLAGS" ]; then
++    if [[ "$ENABLE_MSSANITIZER" == "TRUE" || "$ENABLE_OOM" == "TRUE" || "$ENABLE_DUMP_CCE" == "TRUE" ]]; then
++      echo "[ERROR] --bisheng_flags= cannot be used with --mssanitizer, --oom, --dump_cce"
++      exit 1
++    fi
++  fi
++
++  if [ -n "$KERNEL_TEMPLATE_INPUT" ]; then
++    if [[ -z "${COMPILED_OPS}" || "$COMPILED_OPS" == *","* ]]; then
++      echo "[ERROR] --kernel_template_input must be used with --ops= and can only specify a single operator"
++      exit 1
++    fi
++  fi
++
+   if [[ "$ENABLE_MSSANITIZER" == "TRUE" && "$ENABLE_OOM" == "TRUE" ]]; then
+     echo "[ERROR] --mssanitizer cannot be used with --oom"
+     exit 1
+@@ -642,6 +667,9 @@ checkopts() {
+   ENABLE_UT_EXEC=TRUE
+   ENABLE_ASAN=FALSE
+   ENABLE_VALGRIND=FALSE
++  ENABLE_SIMULATOR=FALSE
++  BISHENG_FLAGS=""
++  KERNEL_TEMPLATE_INPUT=""
+   ENABLE_BINARY=FALSE
+   ENABLE_CUSTOM=FALSE
+   ENABLE_STATIC=FALSE
+@@ -814,6 +842,13 @@ checkopts() {
+         build-type=*)
+           BUILD_TYPE=${OPTARG#*=}
+           ;;
++        valgrind)
++          ENABLE_VALGRIND=TRUE
++          ENABLE_UT_EXEC=FALSE
++          ;;
++        simulator) ENABLE_SIMULATOR=TRUE ;;
++        bisheng_flags=*) BISHENG_FLAGS=${OPTARG#*=} ;;
++        kernel_template_input=*) KERNEL_TEMPLATE_INPUT=${OPTARG#*=} ;;
+         pkg-type=*)
+           PACKAGE_TYPE=${OPTARG#*=}
+           PACKAGE_TYPE_SET=TRUE
+@@ -967,6 +1002,14 @@ assemble_cmake_args() {
+   if [[ -n "$ENABLE_RULE_LAUNCH" ]]; then
+     CMAKE_ARGS="$CMAKE_ARGS -DRULE_LAUNCH=${ENABLE_RULE_LAUNCH}"
+   fi
++  if [[ "x$BISHENG_FLAGS" != "x" ]]; then
++    CMAKE_ARGS="$CMAKE_ARGS -DBISHENG_FLAGS=${BISHENG_FLAGS}"
++  fi
++  if [[ "x$KERNEL_TEMPLATE_INPUT" != "x" ]]; then
++    CMAKE_ARGS="$CMAKE_ARGS -DKERNEL_TEMPLATE_INPUT=${KERNEL_TEMPLATE_INPUT}"
++    NO_FORCE=TRUE
++    CMAKE_ARGS="$CMAKE_ARGS -DNO_FORCE=${NO_FORCE}"
++  fi
+   custom_cmake_args
+   if [[ "$ENABLE_ASAN" == "TRUE" ]]; then
+     set +e
+@@ -1316,6 +1359,33 @@ build_ut() {
+ build_single_example() {
+   echo "Start to run example,op_name:${OP_NAME} example_name:${example} mode:${EXAMPLE_MODE}."
+ 
++  if [[ "${ENABLE_SIMULATOR}" == "TRUE" ]]; then
++    if [[ "${EXAMPLE_MODE}" == "graph" ]]; then
++      usage "run_example"
++      exit 1
++    fi
++    local arch=$(cmake -P ${BASE_PATH}/cmake/query.cmake Func get_npu_arch_by_soc_version ${COMPUTE_UNIT} 2>&1)
++    if [[ "${arch}x" == "x" ]]; then
++      usage "run_example"
++      exit 1
++    fi
++    SIMULATOR_PATH="${ASCEND_HOME_PATH}/${ARCH_INFO}-linux/simulator/${arch}/lib"
++    if [[ ! -f ${SIMULATOR_PATH}/libruntime_camodel.so ]]; then
++      echo "[ERROR] ${SIMULATOR_PATH}/libruntime_camodel.so not found."
++      exit 1
++    fi
++    if [[ ! -f ${SIMULATOR_PATH}/libnpu_drv_camodel.so ]]; then
++      echo "[ERROR] ${SIMULATOR_PATH}/libnpu_drv_camodel.so not found."
++      exit 1
++    fi
++    rm -fr ${BUILD_PATH}/simulator
++    mkdir -p ${BUILD_PATH}/simulator
++    ln -sf ${SIMULATOR_PATH}/libruntime_camodel.so ${BUILD_PATH}/simulator/libruntime.so
++    ln -sf ${SIMULATOR_PATH}/libnpu_drv_camodel.so ${BUILD_PATH}/simulator/libascend_hal.so
++    echo "[INFO] Successfully linked simulator libraries: ${SIMULATOR_PATH}/libruntime_camodel.so, ${SIMULATOR_PATH}/libnpu_drv_camodel.so"
++    export LD_LIBRARY_PATH=${BUILD_PATH}/simulator:${SIMULATOR_PATH}:${LD_LIBRARY_PATH}
++  fi
++
+   if [[ "${EXAMPLE_MODE}" == "eager" ]]; then
+     if [[ "${PKG_MODE}" == "cust" ]]; then
+       if [[ "${VENDOR_NAME}" == "" ]]; then
+diff --git a/cmake/func.cmake b/cmake/func.cmake
+index 148b81849f3b43d508def23328cf5ac7c78d3513..a49a17f3758bc29739923a43fb5c375197dcfd3a 100644
+--- a/cmake/func.cmake
++++ b/cmake/func.cmake
+@@ -8,7 +8,7 @@
+ # See LICENSE in the root of the software repository for the full text of the License.
+ # ----------------------------------------------------------------------------
+ 
+-# 为target link依赖库 useage: add_modules(MODE SUB_LIBS EXTERNAL_LIBS) SUB_LIBS 为内部创建的target, EXTERNAL_LIBS为外部依赖的target
++# 为target link依赖库 usage: add_modules(MODE SUB_LIBS EXTERNAL_LIBS) SUB_LIBS 为内部创建的target, EXTERNAL_LIBS为外部依赖的target
+ function(add_modules)
+   set(oneValueArgs MODE)
+   set(multiValueArgs TARGETS SUB_LIBS EXTERNAL_LIBS)
+@@ -290,7 +290,7 @@ macro(add_op_subdirectory)
+   endforeach()
+ endmacro()
+ 
+-# useage: add_category_subdirectory 根据ASCEND_OP_NAME和ASCEND_COMPILE_OPS添加指定算子工程
++# usage: add_category_subdirectory 根据ASCEND_OP_NAME和ASCEND_COMPILE_OPS添加指定算子工程
+ # ASCEND_OP_NAME 指定的算子 ASCEND_COMPILE_OPS  编译需要的算子
+ macro(add_category_subdirectory)
+   foreach(op_category ${OP_CATEGORY_LIST})
+@@ -437,7 +437,7 @@ function(add_tiling_sources source_dir tiling_dir disable_in_opp)
+   endif()
+ endfunction()
+ 
+-# useage: add_modules_sources(DIR OPTYPE ACLNNTYPE ACLNN_EXTRA_VERSION DEPENDENCIES COMPUTE_UNIT TILING_DIR DISABLE_IN_OPP) ACLNNTYPE 支持类型aclnn/aclnn_inner/aclnn_exclude OPTYPE 和 ACLNNTYPE
++# usage: add_modules_sources(DIR OPTYPE ACLNNTYPE ACLNN_EXTRA_VERSION DEPENDENCIES COMPUTE_UNIT TILING_DIR DISABLE_IN_OPP) ACLNNTYPE 支持类型aclnn/aclnn_inner/aclnn_exclude OPTYPE 和 ACLNNTYPE
+ # DEPENDENCIES 算子依赖
+ # ACLNNEXTRAVERSION 算子版本(ex., v2, v3, 5, etc.)
+ # COMPUTE_UNIT 设置支持芯片版本号，必须与TILING_DIR一一对应，示例：ascend910b ascend950
+@@ -533,7 +533,7 @@ function(add_modules_sources)
+       elseif(${AclnnType} STREQUAL "no_need_aclnn")
+         message(STATUS "aicpu or host aicpu no need aclnn.")
+       else()
+-        message(FATAL_ERROR "ACLNN TYPE UNSPPORTED, ONLY SUPPORT aclnn/aclnn_inner/aclnn_exclude")
++        message(FATAL_ERROR "ACLNN TYPE UNSUPPORTED, ONLY SUPPORT aclnn/aclnn_inner/aclnn_exclude")
+       endif()
+     endforeach()
+   else()
+@@ -549,7 +549,7 @@ function(add_modules_sources)
+   endif()
+ endfunction()
+ 
+-# useage: add_graph_plugin_sources()
++# usage: add_graph_plugin_sources()
+ macro(add_graph_plugin_sources)
+   set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+ 
+@@ -662,6 +662,41 @@ function(get_target_dir compute_unit_long target_dir)
+     endif()
+ endfunction()
+ 
++####
++# get npuArch by socVersion, mapping is consistent with SOC_TO_ARCH in build.sh
++# 映射列表 ASCEND_ALL_COMPUTE_UNIT/SOC_TO_ARCH_VALUES 定义在 variables.cmake，两者按位置一一对应
++# usage: get_npu_arch_by_soc_version(<soc_version> <out_var>)
++# e.g.: get_npu_arch_by_soc_version("ascend910b" npu_arch) -> npu_arch is dav_2201
++# 未匹配的 socVersion（如 ascend910_55）返回空串
++###################################################################################################
++function(get_npu_arch_by_soc_version soc_version npu_arch)
++    string(TOLOWER "${soc_version}" soc_version_lower)
++    list(FIND ASCEND_ALL_COMPUTE_UNIT ${soc_version_lower} index)
++    if(NOT index EQUAL -1)
++        list(GET SOC_TO_ARCH_VALUES ${index} mapped_value)
++        set(${npu_arch} ${mapped_value} PARENT_SCOPE)
++    else()
++        set(${npu_arch} "" PARENT_SCOPE)
++    endif()
++endfunction()
++
++function(get_soc_version_by_npu_arch npu_arch soc_version)
++    set(index 0)
++    set(mapped_list)
++    foreach(arch ${SOC_TO_ARCH_VALUES})
++      if("${npu_arch}" STREQUAL "${arch}")
++        list(GET ASCEND_ALL_COMPUTE_UNIT ${index} mapped_value)
++        list(APPEND mapped_list ${mapped_value})
++      endif()
++      math(EXPR index "${index} + 1")
++    endforeach()
++    if(mapped_list)
++        set(${soc_version} ${mapped_list} PARENT_SCOPE)
++    else()
++        set(${soc_version} "" PARENT_SCOPE)
++    endif()
++endfunction()
++
+ function(protobuf_generate_external comp c_var h_var)
+   if (NOT ARGN)
+     message(SEND_ERROR "Error: protobuf_generate_external() called without any proto files")
+@@ -715,7 +750,7 @@ function(protobuf_generate_external comp c_var h_var)
+ 
+     if (_add_target)
+       add_custom_target(
+-        ${comp} DEPENDS ${${c_var}} ${${h_var}}) 
++        ${comp} DEPENDS ${${c_var}} ${${h_var}})
+     endif()
+ 
+     set_source_files_properties(${${c_var}} ${${h_var}} PROPERTIES GENERATED TRUE)
+@@ -728,7 +763,7 @@ function(add_onnx_plugin_modules)
+   if (NOT TARGET ${ONNX_PLUGIN_NAME}_obj)
+     set(ge_onnx_proto_srcs
+       ${ASCEND_DIR}/include/proto/ge_onnx.proto)
+-    
++
+     protobuf_generate_external(onnx ge_onnx_proto_cc ge_onnx_proto_h ${ge_onnx_proto_srcs})
+ 
+     if(BUILD_WITH_INSTALLED_DEPENDENCY_CANN_PKG)
+diff --git a/cmake/query.cmake b/cmake/query.cmake
+new file mode 100644
+index 0000000000000000000000000000000000000000..570fd124aa783a7fee6893263189fd350089ba11
+--- /dev/null
++++ b/cmake/query.cmake
+@@ -0,0 +1,72 @@
++# ----------------------------------------------------------------------------
++# Copyright (c) 2025-2026 Huawei Technologies Co., Ltd.
++# This program is free software, you can redistribute it and/or modify it under the terms and conditions of
++# CANN Open Software License Agreement Version 2.0 (the "License").
++# Please refer to the License for details. You may not use this file except in compliance with the License.
++# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED,
++# INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
++# See LICENSE in the root of the software repository for the full text of the License.
++# ----------------------------------------------------------------------------
++
++# 脚本模式命令行入口，供 bash 等外部脚本查询本仓 CMake 侧定义的变量与函数，三种用法：
++#   1. 缺省：按 socVersion 查询 npuArch（大小写不敏感，未匹配输出空串）
++#        npu_arch=$(cmake -P cmake/query.cmake ascend910b 2>&1)            # npu_arch=2201
++#   2. Func：按函数名调用，当前仅支持 get_npu_arch_by_soc_version/get_soc_version_by_npu_arch
++#        npu_arch=$(cmake -P cmake/query.cmake Func get_npu_arch_by_soc_version ascend910b 2>&1)
++#   3. Value：查询 variables.cmake 中定义的变量，列表值按行输出，bash 可直接分词
++#        soc_list=($(cmake -P cmake/query.cmake Value ASCEND_ALL_COMPUTE_UNIT 2>&1))
++# 注意：脚本模式 message() 输出到 stderr，bash 需用 2>&1 捕获；
++#       参数缺失/函数不支持/变量未定义等错误通过非零退出码报告。
++# variables.cmake 为纯变量定义（脚本模式安全，可直接 include）；
++# add_library/file/execute_process 等构建期副作用位于 targets.cmake，仅由顶层 CMakeLists 引入。
++
++if(NOT DEFINED CMAKE_SCRIPT_MODE_FILE)
++  message(FATAL_ERROR "query.cmake must run in script mode: cmake -P cmake/query.cmake <command>")
++endif()
++
++include("${CMAKE_CURRENT_LIST_DIR}/soc_arch_variables.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/func.cmake")
++
++string(CONCAT _usage
++  "usage: cmake -P cmake/query.cmake <soc_version>\n"
++  "       cmake -P cmake/query.cmake Func get_npu_arch_by_soc_version <soc_version>\n"
++  "       cmake -P cmake/query.cmake Value <variable_name>"
++)
++
++set(_command "${CMAKE_ARGV3}")
++
++if("${_command}" STREQUAL "")
++  # 无参数
++  message(FATAL_ERROR "${_usage}")
++elseif("${_command}" STREQUAL "Func")
++  # 按函数名调用：query.cmake Func <func_name> <func_args...>
++  set(_func "${CMAKE_ARGV4}")
++  if("${_func}" STREQUAL "")
++    message(FATAL_ERROR "${_usage}")
++  endif()
++  if("${_func}" STREQUAL "get_npu_arch_by_soc_version" AND NOT "${CMAKE_ARGV5}" STREQUAL "")
++    get_npu_arch_by_soc_version("${CMAKE_ARGV5}" _arch)
++    message("${_arch}")
++  elseif("${_func}" STREQUAL "get_soc_version_by_npu_arch" AND NOT "${CMAKE_ARGV5}" STREQUAL "")
++    get_soc_version_by_npu_arch("${CMAKE_ARGV5}" _soc)
++    message("${_soc}")
++  else()
++    message(FATAL_ERROR "unsupported function: ${_func}\n${_usage}")
++  endif()
++elseif("${_command}" STREQUAL "Value")
++  # 查询变量取值：query.cmake Value <variable_name>
++  set(_var_name "${CMAKE_ARGV4}")
++  if(${_var_name} STREQUAL "")
++    message(FATAL_ERROR "${_usage}")
++  elseif(NOT DEFINED "${_var_name}")
++    message(FATAL_ERROR "variable is not defined: ${_var_name}\n${_usage}")
++  else()
++    # 列表值按行输出，便于 bash 直接分词（避免分号分隔导致的单元素数组问题）
++    string(REPLACE ";" "\n" _value "${${_var_name}}")
++    message("${_value}")
++  endif()
++else()
++  # 缺省：按 socVersion 查询 npuArch（未匹配输出空串）
++  get_npu_arch_by_soc_version("${_command}" _arch)
++  message("${_arch}")
++endif()
+diff --git a/cmake/soc_arch_variables.cmake b/cmake/soc_arch_variables.cmake
+new file mode 100644
+index 0000000000000000000000000000000000000000..59afaca5f1aa815d30bfa7c6ff66c9fcfcdb4287
+--- /dev/null
++++ b/cmake/soc_arch_variables.cmake
+@@ -0,0 +1,19 @@
++# ----------------------------------------------------------------------------
++# Copyright (c) 2026 Huawei Technologies Co., Ltd.
++# This program is free software, you can redistribute it and/or modify it under the terms and conditions of
++# CANN Open Software License Agreement Version 2.0 (the "License").
++# Please refer to the License for details. You may not use this file except in compliance with the License.
++# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED,
++# INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
++# See LICENSE in the root of the software repository for the full text of the License.
++# ----------------------------------------------------------------------------
++
++# socVersion 与 npuArch 的映射关系
++set(ASCEND_ALL_COMPUTE_UNIT "ascend031" "ascend035" "ascend310b" "ascend310p" "ascend910_93"
++                             "ascend950" "ascend350" "ascend910b" "ascend910" "kirinx90" "kirin9030"
++                             "mc62" "ascend5162" "ascend960dt" "ascend960pr")
++set(SOC_TO_ARCH_VALUES "dav_3004" "dav_3505" "dav_3002" "dav_2002" "dav_2201" "dav_3510" "dav_3510" "dav_2201"
++                      "dav_1001" "dav_3003" "dav_3113" "dav_5102" "dav_5162" "dav_9201" "dav_9202")
++# npuArch 集合（由映射值去重得到）
++set(NPU_ARCH_LIST ${SOC_TO_ARCH_VALUES})
++list(REMOVE_DUPLICATES NPU_ARCH_LIST)
+diff --git a/docs/en/install/build.md b/docs/en/install/build.md
+index d6f45307748ee42cdbc54a0d822e5a75d96bb540..e84db0925f83b9eb81bf516367c3fb2ce028ec6f 100644
+--- a/docs/en/install/build.md
++++ b/docs/en/install/build.md
+@@ -46,14 +46,14 @@ bash build.sh --help
+ | --static         | Optional     | When configured, it means generating a static library file, including libcann_ras_static.a and aclnn interface header files. Combined with the --pkg parameter, it generates a static library compressed package.|
+ | --vendor_name    | Optional     | Specifies the name of the custom operator package. The default value is custom.                                                   |
+ | --build-type     | Optional     | Enables debug mode. Optional types: Release/Debug. The default is Release. When the value is Debug, it cannot be used with --mssanitizer, --oom, --dump_cce at the same time         |
+-| --debug          | Optional     | Enables debug mode.                                                                     |
+ | --cov            | Optional     | Reserved parameter, developers do not need to pay attention for now.                                                              |
+ | --noexec         | Optional     | Only compiles the unit test binary file without automatically executing the compiled UT executable file.                                              |
+ | --opkernel       | Optional     | Compiles the binary kernel.                                                     |
+ | --pkg            | Optional     | Generates the installation package. Cannot be used with -u (UT mode) or --ophost, --opapi at the same time.                           |
+ | --pkg-type       | Optional     | Package format: run/deb/rpm/all. Defaults to run and requires --pkg. deb/rpm/all support built-in, non-static packages only. |
+ | --asan           | Optional     | Enables host-side ASAN (AddressSanitizer) memory detection function.                                           |
+-| --valgrind       | Optional     | Reserved parameter, developers do not need to pay attention for now.                                                              |
++| --valgrind       | Optional     | Runs unit tests with valgrind for memory detection (use with -u); enabling it disables ASAN and --noexec.                                                              |
++| --simulator      | Optional     | Used with --run_example to run the task in simulator mode. In simulator mode, the corresponding simulator library is linked according to soc_version.          |
+ | --make_clean     | Optional     | Executes basic cleanup operations (cleans compilation products). The script exits after execution.                                          |
+ | --make_clean_all | Optional     | Executes complete cleanup operations (deletes all compilation-related files). The script exits after execution.                                   |
+ | --ophost         | Optional     | Compiles the libophost_ras.so library. Cannot be used with --pkg, --ops at the same time.                                      |
+@@ -66,6 +66,5 @@ bash build.sh --help
+ | --oom            | Optional     | Enables kernel-side oom memory detection function.                                                   |
+ | --dump_cce       | Optional     | Enables kernel-side dump precompiled file function.                                                      |
+ | --cann_3rd_lib_path| Optional   | The directory where third-party libraries are stored in the offline compilation scenario.                                                   |
+-| --simulator      | Optional     | Used in combination with --run_example to enable simulator mode to execute --run_example tasks. In simulator mode, the corresponding simulator library will be linked according to soc_version.          |
+-| --bisheng_flags  | Optional     | Specifies the BiSheng compiler compilation parameters. Multiple compilation parameters are separated by English commas ",". Cannot be used with --mssanitizer, --oom, --dump_cce at the same time.     |
+-| --kernel_template_input    | Optional     | Specifies the tilingKey template when compiling the kernel. Only one template can be specified. Used with --ops and only one operator can be specified. It will not compile the binary files of other operators that this operator depends on.     |
++| --bisheng_flags  | Optional     | Specifies BiSheng compiler parameters, separated by English commas ",". Cannot be used with --mssanitizer, --oom, --dump_cce.     |
++| --kernel_template_input    | Optional     | Specifies the tilingKey template when compiling the kernel. Only one template is supported. Use it with --ops and a single operator; binaries of other operators it depends on are not compiled.     |
+diff --git a/docs/zh/install/build.md b/docs/zh/install/build.md
+index 4d206be17851b4098aea313636538e62ddbb7ed5..7aa69d5114148f0559585f6951e6355259651caa 100644
+--- a/docs/zh/install/build.md
++++ b/docs/zh/install/build.md
+@@ -52,7 +52,10 @@ bash build.sh --help
+ | --pkg           | 可选     | 生成安装包，不可与-u（UT模式）或--ophost、--opapi、--opgraph同时使用。                         |
+ | --pkg-type      | 可选     | 安装包格式：run/deb/rpm/all，默认run，必须搭配--pkg；deb/rpm/all仅支持内置、非静态算子包。 |
+ | --asan          | 可选     | 开启host侧ASAN（AddressSanitizer）内存检测功能。                                           |
+-| --valgrind      | 可选     | 预留参数，开发者暂不需要关注。                                                           |
++| --valgrind      | 可选     | 使用valgrind运行单元测试进行内存检测（需配合-u使用），启用后会禁用ASAN和--noexec。             |
++| --simulator     | 可选     | 与--run_example组合使用，启用仿真器模式执行--run_example任务。仿真模式下，会根据soc_version链接对应的仿真库。 |
++| --bisheng_flags | 可选     | 指定毕昇编译器编译参数，多个编译参数用英文逗号“,”分隔，不可与--mssanitizer、--oom、--dump_cce同时使用。 |
++| --kernel_template_input | 可选 | 指定编译kernel时的tilingKey模板，仅支持指定一个模板，与--ops同时使用且只能指定一个算子，不会编译该算子所依赖的其他算子二进制文件。 |
+ | --make_clean    | 可选     | 执行基础清理操作（清理编译产物），执行后脚本退出。                                                 |
+ | --make_clean_all | 可选     | 执行完全清理操作（删除所有编译相关文件），执行后脚本退出。                                   |
+ | --ophost        | 可选     | 编译libophost_ras.so库，不可与--pkg、--ops同时使用。                                  |

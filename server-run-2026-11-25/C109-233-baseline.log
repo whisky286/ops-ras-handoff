@@ -1,0 +1,14 @@
+[BASE-233] help_has --valgrind = no
+[BASE-233] help_has --simulator = no
+[BASE-233] help_has --bisheng_flags = no
+[BASE-233] help_has --kernel_template_input = no
+[BASE-233] bisheng+oom rc=1 msg=[2026-11-26 19:27:49] [31m[ERROR] Invalid long option: --bisheng_flags[0m
+[BASE-233] template_no_ops rc=1 msg=[2026-11-26 19:27:49] [31m[ERROR] Invalid long option: --kernel_template_input[0m
+[BASE-233] template_multi_ops rc=1 msg=[2026-11-26 19:27:49] [31m[ERROR] Invalid long option: --kernel_template_input[0m
+[PR233] help_has --valgrind = yes
+[PR233] help_has --simulator = yes
+[PR233] help_has --bisheng_flags = yes
+[PR233] help_has --kernel_template_input = yes
+[PR233] bisheng+oom rc=1 msg=[2026-11-26 19:27:49] [ERROR] --bisheng_flags= cannot be used with --mssanitizer, --oom, -
+[PR233] template_no_ops rc=1 msg=[2026-11-26 19:27:49] [ERROR] --kernel_template_input must be used with --ops= and can onl
+[PR233] template_multi_ops rc=1 msg=[2026-11-26 19:27:49] [ERROR] --kernel_template_input must be used with --ops= and can onl
