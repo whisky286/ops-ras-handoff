@@ -108,3 +108,12 @@
 - log(max(k,2)) + kmin=512:总误报 891→14(仅 K=1),检出 116/117 → 候选未采纳
 - K=1 残余对 kmin 不敏感(512~4096 恒为 3/11)→ 疑统计退化(NaN/除零),需单独定位
 - 详见 C118_STAGE1.md;草稿 draft-issue118-logclamp-kmin-experiment.patch
+
+## #118 K=1 残余定位与修复（2026-11-27）
+- 在 `tileCompare` 处 dump 后确认：K=1 失败行 threshold = NaN，来源是 AIV 的 A 侧 aMax/aMin
+  在 K=1 时未取到唯一元素（读到未初始化 UB）；比较 X/C 与结果位本身正确。
+- 修复：CE block 增加 kActual；`k == 1` 时 aMax = aMin = aMean。
+- 与阶段 1 的 log-clamp + kmin=512 组合，117 用例：**无故障误报 0、行和故障检出 117/117**。
+- 详见 `C118_K1_DIAGNOSIS.md`；补丁 `patches/draft-issue118-k1-extrema-fix.patch`；
+  日志 `C1k1final-nofault.log`、`C1k1final-rowfault.log`。
+- 阶段 1 的 "kmin 候选未采纳（因 K=1 残余）" 结论已被本轮修复解除；剩余工作是固化 kmin 常量并走上游。
