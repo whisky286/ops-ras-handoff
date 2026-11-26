@@ -40,3 +40,10 @@ K=1/2 属 `log(k)` 退化,不是阈值幅度问题。
 - 下一步(阶段 2/3):定位 K=1 统计退化;再评估是否需要 kernel 侧改动
 - 草稿补丁:draft-issue118-logclamp-kmin-experiment.patch(含临时环境变量钩子)
 - 日志:C118s-scale*-nofault/rowfault.log、C118c-kmin*-nofault/rowfault.log
+
+## K=1 残余排查(只读代码)
+- `tile_std_estimate.hpp: TileStdEstRobust` 的 std 估计为 `sqrt(|(max-mean)*(mean-min)|)`,
+  没有除以 (k-1) 或 n 的路径,不存在 K=1 直接除零/NaN 的明显来源。
+- K=1 残余对 kmin(512~4096)完全不敏感,说明不是阈值幅度问题;
+  需要在 kernel 内观测 K=1 的 threshold / expected / actual 三个量才能定论(需调试输出,尚未实现)。
+- 当前最佳候选仍是 log 钳位 + kmin=512:总误报 14(仅 K=1),检出 116/117。
