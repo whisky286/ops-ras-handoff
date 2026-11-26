@@ -1,0 +1,7 @@
+{"dtype":"float32","K":128,"seed":42,"mode":0,"getws":0,"exec":0,"sync":0,"memcpy":0,"written":1,"bad":0,"faultBit":-1,"compRowHex":"ffffffffffffffff"}
+{"dtype":"float32","K":129,"seed":42,"mode":0,"getws":0,"exec":0,"sync":0,"memcpy":0,"written":1,"bad":0,"faultBit":-1,"compRowHex":"ffffffffffffffff"}
+{"dtype":"float16","K":128,"seed":42,"mode":0,"getws":0,"exec":0,"sync":507015,"memcpy":-1,"written":-1,"bad":-1,"faultBit":-1,"compRowHex":""}
+{"dtype":"float16","K":129,"seed":42,"mode":0,"getws":0,"exec":0,"sync":507015,"memcpy":-1,"written":-1,"bad":-1,"faultBit":-1,"compRowHex":""}
+{"dtype":"bfloat16","K":128,"seed":42,"mode":0,"getws":0,"exec":0,"sync":0,"memcpy":0,"written":1,"bad":0,"faultBit":-1,"compRowHex":"ffffffffffffffff"}
+{"dtype":"bfloat16","K":129,"seed":42,"mode":0,"getws":0,"exec":0,"sync":0,"memcpy":0,"written":1,"bad":0,"faultBit":-1,"compRowHex":"ffffffffffffffff"}
+{"summary":{"cases":6,"internal_failures":2,"mode":0}}
