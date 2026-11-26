@@ -1,0 +1,29 @@
+test_empty_result_contains_only_header (test_opcinfo_csv_truncation.TestOpcInfoCsvTruncation.test_empty_result_contains_only_header) ... FAIL
+test_multiple_inputs_and_dynamic_filter_remain_supported (test_opcinfo_csv_truncation.TestOpcInfoCsvTruncation.test_multiple_inputs_and_dynamic_filter_remain_supported) ... ok
+test_repeat_identical_result_is_stable (test_opcinfo_csv_truncation.TestOpcInfoCsvTruncation.test_repeat_identical_result_is_stable) ... ok
+test_shorter_result_removes_previous_rows (test_opcinfo_csv_truncation.TestOpcInfoCsvTruncation.test_shorter_result_removes_previous_rows) ... FAIL
+
+======================================================================
+FAIL: test_empty_result_contains_only_header (test_opcinfo_csv_truncation.TestOpcInfoCsvTruncation.test_empty_result_contains_only_header)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<temporary-workspace>/source/tests/ut/scripts/test_opcinfo_csv_truncation.py", line 59, in test_empty_result_contains_only_header
+    self.check_regeneration({})
+  File "<temporary-workspace>/source/tests/ut/scripts/test_opcinfo_csv_truncation.py", line 49, in check_regeneration
+    self.assertEqual(actual, expected)
+AssertionError: b'op_[23 chars]c\r\nOperatorWithLongName0,dynamic/operator_wi[643 chars]\r\n' != b'op_[23 chars]c\r\n'
+
+======================================================================
+FAIL: test_shorter_result_removes_previous_rows (test_opcinfo_csv_truncation.TestOpcInfoCsvTruncation.test_shorter_result_removes_previous_rows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<temporary-workspace>/source/tests/ut/scripts/test_opcinfo_csv_truncation.py", line 56, in test_shorter_result_removes_previous_rows
+    self.check_regeneration({"Add": {"dynamicShapeSupport": {"flag": "true"}}})
+  File "<temporary-workspace>/source/tests/ut/scripts/test_opcinfo_csv_truncation.py", line 49, in check_regeneration
+    self.assertEqual(actual, expected)
+AssertionError: b'op_[49 chars]d\r\nnamic/operator_with_long_name0.py,operato[619 chars]\r\n' != b'op_[49 chars]d\r\n'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.236s
+
+FAILED (failures=2)

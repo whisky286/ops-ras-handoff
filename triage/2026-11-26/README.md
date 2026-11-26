@@ -121,10 +121,10 @@
 | [#87](https://gitcode.com/cann/ops-ras/issues/87) | [!160](https://gitcode.com/cann/ops-ras/merge_requests/160) | 与 #88 同属 !160；优先复用已有带空格路径真实脚本回归，不能当成另一份需要 NPU 的任务。 |
 | [#86](https://gitcode.com/cann/ops-ras/issues/86) | [!159](https://gitcode.com/cann/ops-ras/merge_requests/159) | PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。 |
 | [#85](https://gitcode.com/cann/ops-ras/issues/85) | [!158](https://gitcode.com/cann/ops-ras/merge_requests/158) | PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。 |
-| [#84](https://gitcode.com/cann/ops-ras/issues/84) | [!157](https://gitcode.com/cann/ops-ras/merge_requests/157) | PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。 |
-| [#83](https://gitcode.com/cann/ops-ras/issues/83) | [!156](https://gitcode.com/cann/ops-ras/merge_requests/156) | PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。 |
+| [#84](https://gitcode.com/cann/ops-ras/issues/84) | [!157](https://gitcode.com/cann/ops-ras/merge_requests/157) | !157 的现有 4 个真实 CLI 回归已运行：原版缩短/清空 CSV 残留旧内容，2 项失败；候选 4 项通过，重复生成、多输入和动态筛选控制通过。 |
+| [#83](https://gitcode.com/cann/ops-ras/issues/83) | [!156](https://gitcode.com/cann/ops-ras/merge_requests/156) | !156 的现有 3 个真实 CLI 回归已运行：原版缺输入仍返回成功导致 1 个失败，候选 3 个方法全部通过；成功输出、空列表和输入不变控制保留。 |
 | [#82](https://gitcode.com/cann/ops-ras/issues/82) | [!155](https://gitcode.com/cann/ops-ras/merge_requests/155) | PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。 |
-| [#81](https://gitcode.com/cann/ops-ras/issues/81) | [!154](https://gitcode.com/cann/ops-ras/merge_requests/154) | PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。 |
+| [#81](https://gitcode.com/cann/ops-ras/issues/81) | [!154](https://gitcode.com/cann/ops-ras/merge_requests/154) | !154 的现有回归在固定基线复核：原版空任务场景有 5 处子测试失败，候选 3 个测试方法全部通过，覆盖空/缺省列表、归一化分片数、非空顺序与元数据；未运行 OPC/CANN/NPU。 |
 | [#80](https://gitcode.com/cann/ops-ras/issues/80) | [!153](https://gitcode.com/cann/ops-ras/merge_requests/153) | PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。 |
 | [#79](https://gitcode.com/cann/ops-ras/issues/79) | [!153](https://gitcode.com/cann/ops-ras/merge_requests/153) | PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。 |
 | [#78](https://gitcode.com/cann/ops-ras/issues/78) | [!152](https://gitcode.com/cann/ops-ras/merge_requests/152) | PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。 |

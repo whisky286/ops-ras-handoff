@@ -1,0 +1,8 @@
+test_absent_op_list_keeps_the_existing_empty_default (test_empty_opc_task_splitting.TestEmptyOpcTasks.test_absent_op_list_keeps_the_existing_empty_default) ... ok
+test_empty_workload_for_normalized_thread_counts (test_empty_opc_task_splitting.TestEmptyOpcTasks.test_empty_workload_for_normalized_thread_counts) ... ok
+test_nonempty_partitioning_preserves_order_and_metadata (test_empty_opc_task_splitting.TestEmptyOpcTasks.test_nonempty_partitioning_preserves_order_and_metadata) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.280s
+
+OK

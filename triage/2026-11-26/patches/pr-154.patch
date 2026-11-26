@@ -1,0 +1,138 @@
+diff --git a/scripts/kernel/binary_script/gen_opc_json_with_threadnum.py b/scripts/kernel/binary_script/gen_opc_json_with_threadnum.py
+--- a/scripts/kernel/binary_script/gen_opc_json_with_threadnum.py
++++ b/scripts/kernel/binary_script/gen_opc_json_with_threadnum.py
+@@ -13,6 +13,7 @@
+ """
+ gen_opc_json_with_impl_mode.py
+ """
++
+ import sys
+ import os
+ import json
+@@ -36,15 +37,22 @@ def main(ori_json, split_num):
+     op_list = binary_json.get("op_list", list())
+     op_list_num = len(op_list)
+     split_value = (op_list_num + split_num - 1) // split_num
+-    split_real_num = (op_list_num + split_value - 1) // split_value
+-    split_value_list = [split_value] * split_real_num + [0] * (split_num - split_real_num)
+-    split_tail_value = op_list_num - (split_real_num - 1) * split_value
+-    split_value_list[split_real_num - 1] = split_tail_value
++    split_real_num = (
++        (op_list_num + split_value - 1) // split_value if op_list_num else 0
++    )
++    split_value_list = [split_value] * split_real_num + [0] * (
++        split_num - split_real_num
++    )
++    if split_real_num:
++        split_tail_value = op_list_num - (split_real_num - 1) * split_value
++        split_value_list[split_real_num - 1] = split_tail_value
+     for idx, _split_value in enumerate(split_value_list):
+         new_binary_json = {"op_type": op_type}
+         new_binary_json["op_list"] = list()
+         if binary_json.get("optional_input_mode"):
+-            new_binary_json["optional_input_mode"] = binary_json.get("optional_input_mode")
++            new_binary_json["optional_input_mode"] = binary_json.get(
++                "optional_input_mode"
++            )
+         new_binary_file = ori_json + "_" + str(idx)
+         start_idx = idx * split_value
+         if start_idx < op_list_num:
+@@ -54,5 +62,5 @@ def main(ori_json, split_num):
+         wr_json(new_binary_json, new_binary_file)
+ 
+ 
+-if __name__ == '__main__':
++if __name__ == "__main__":
+     main(sys.argv[1], sys.argv[2])
+
+diff --git a/tests/ut/scripts/test_empty_opc_task_splitting.py b/tests/ut/scripts/test_empty_opc_task_splitting.py
+new file mode 100644
+--- /dev/null
++++ b/tests/ut/scripts/test_empty_opc_task_splitting.py
+@@ -0,0 +1,85 @@
++#!/usr/bin/env python3
++# -*- coding: utf-8 -*-
++# ----------------------------------------------------------------------------
++# Copyright (c) 2026 gcw_Z57idahf
++# This file is a part of the CANN Open Software.
++# This program is free software, you can redistribute it and/or modify it under the terms and conditions of
++# CANN Open Software License Agreement Version 2.0 (the "License").
++# Please refer to the License for details. You may not use this file except in compliance with the License.
++# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED,
++# INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
++# See LICENSE in the root of the software repository for the full text of the License.
++# ----------------------------------------------------------------------------
++"""Actual splitter CLI for empty workloads and ordinary partitioning."""
++
++import json
++from pathlib import Path
++import subprocess
++import sys
++import tempfile
++import unittest
++
++SCRIPT = (
++    Path(__file__).resolve().parents[3]
++    / "scripts/kernel/binary_script/gen_opc_json_with_threadnum.py"
++)
++
++
++class TestEmptyOpcTasks(unittest.TestCase):
++    def run_case(self, original, parts):
++        with tempfile.TemporaryDirectory() as temporary:
++            source = Path(temporary) / "config.json"
++            source.write_text(json.dumps(original), encoding="utf-8")
++            result = subprocess.run(
++                [sys.executable, str(SCRIPT), str(source), str(parts)],
++                capture_output=True,
++                text=True,
++                check=False,
++            )
++            self.assertEqual(result.returncode, 0, result.stderr)
++            count = max(1, parts)
++            outputs = [
++                json.loads(
++                    Path(str(source) + "_" + str(index)).read_text(encoding="utf-8")
++                )
++                for index in range(count)
++            ]
++            self.assertTrue(all(x["op_type"] == "FixtureOp" for x in outputs))
++            self.assertEqual(
++                [entry for x in outputs for entry in x["op_list"]],
++                original.get("op_list", []),
++            )
++            if original.get("optional_input_mode"):
++                self.assertTrue(all(x["optional_input_mode"] is True for x in outputs))
++            self.assertEqual(json.loads(source.read_text(encoding="utf-8")), original)
++
++    def test_empty_workload_for_normalized_thread_counts(self):
++        for parts in (1, 3, 0, -2):
++            with self.subTest(parts=parts):
++                self.run_case(
++                    {
++                        "op_type": "FixtureOp",
++                        "op_list": [],
++                        "optional_input_mode": True,
++                    },
++                    parts,
++                )
++
++    def test_absent_op_list_keeps_the_existing_empty_default(self):
++        self.run_case({"op_type": "FixtureOp"}, 2)
++
++    def test_nonempty_partitioning_preserves_order_and_metadata(self):
++        for size, parts in ((5, 2), (2, 5), (1, 0)):
++            with self.subTest(size=size, parts=parts):
++                self.run_case(
++                    {
++                        "op_type": "FixtureOp",
++                        "op_list": [{"bin_filename": f"item_{i}"} for i in range(size)],
++                        "optional_input_mode": True,
++                    },
++                    parts,
++                )
++
++
++if __name__ == "__main__":
++    unittest.main()
+

@@ -1,0 +1,17 @@
+test_empty_task_list_remains_supported (test_impl_mode_input_status.TestImplModeInputStatus.test_empty_task_list_remains_supported) ... ok
+test_missing_input_is_not_successful (test_impl_mode_input_status.TestImplModeInputStatus.test_missing_input_is_not_successful) ... FAIL
+test_valid_input_preserves_metadata_and_adds_requested_mode (test_impl_mode_input_status.TestImplModeInputStatus.test_valid_input_preserves_metadata_and_adds_requested_mode) ... ok
+
+======================================================================
+FAIL: test_missing_input_is_not_successful (test_impl_mode_input_status.TestImplModeInputStatus.test_missing_input_is_not_successful)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<temporary-workspace>/source/tests/ut/scripts/test_impl_mode_input_status.py", line 41, in test_missing_input_is_not_successful
+    self.assertNotEqual(result.returncode, 0, result.stdout)
+AssertionError: 0 == 0 : [ERROR]the ori_json doesnt exist
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.089s
+
+FAILED (failures=1)

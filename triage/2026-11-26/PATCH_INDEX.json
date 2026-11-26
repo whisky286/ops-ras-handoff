@@ -85,6 +85,57 @@
       "scope_note": "Includes shared UT/CMake or stub changes; verify complete diff scope before applying. Not a single-purpose runtime hunk."
     },
     {
+      "pr": 154,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/154",
+      "state": "open",
+      "target": "master",
+      "source_repository": "gcw_Z57idahf/ops-ras",
+      "head_sha": "edfb95ef8c101e6e029460c43cca081aa5348b86",
+      "patch": "patches/pr-154.patch",
+      "sha256": "2581e5f5de305d160fdc27a0712587346e311bd41d59b4019dce446acef0ad1a",
+      "files": [
+        "scripts/kernel/binary_script/gen_opc_json_with_threadnum.py",
+        "tests/ut/scripts/test_empty_opc_task_splitting.py"
+      ],
+      "applies_to_master": true,
+      "apply_diagnostic": "",
+      "cann_or_npu_execution": false
+    },
+    {
+      "pr": 156,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/156",
+      "state": "open",
+      "target": "master",
+      "source_repository": "gcw_Z57idahf/ops-ras",
+      "head_sha": "3f3e26f1e0dd8c990c6089d248a5c5983abad4cf",
+      "patch": "patches/pr-156.patch",
+      "sha256": "97ba894fcd154d4adf8403af0de9dbb0f037a06f4d52f31d479191e3a165cdf2",
+      "files": [
+        "scripts/kernel/binary_script/gen_opc_json_with_impl_mode.py",
+        "tests/ut/scripts/test_impl_mode_input_status.py"
+      ],
+      "applies_to_master": true,
+      "apply_diagnostic": "",
+      "cann_or_npu_execution": false
+    },
+    {
+      "pr": 157,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/157",
+      "state": "open",
+      "target": "master",
+      "source_repository": "gcw_Z57idahf/ops-ras",
+      "head_sha": "f5f9a9f9bfcdbcea1f0f9bbd3c0bf3f30acbcae4",
+      "patch": "patches/pr-157.patch",
+      "sha256": "df407950f916ec176824728b28b89bf6d5269bdf7b73635a2ee1aadd448b350f",
+      "files": [
+        "scripts/kernel/binary_script/gen_opcinfo_from_opinfo.py",
+        "tests/ut/scripts/test_opcinfo_csv_truncation.py"
+      ],
+      "applies_to_master": true,
+      "apply_diagnostic": "",
+      "cann_or_npu_execution": false
+    },
+    {
       "pr": 188,
       "url": "https://gitcode.com/cann/ops-ras/merge_requests/188",
       "state": "open",

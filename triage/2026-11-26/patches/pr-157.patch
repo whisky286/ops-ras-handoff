@@ -1,0 +1,157 @@
+diff --git a/scripts/kernel/binary_script/gen_opcinfo_from_opinfo.py b/scripts/kernel/binary_script/gen_opcinfo_from_opinfo.py
+--- a/scripts/kernel/binary_script/gen_opcinfo_from_opinfo.py
++++ b/scripts/kernel/binary_script/gen_opcinfo_from_opinfo.py
+@@ -13,6 +13,7 @@
+ """
+ gen_opcinfo_from_opinfo.py
+ """
++
+ import sys
+ import os
+ import json
+@@ -84,7 +85,7 @@ def get_res_from_file(json_file):
+     return output_res
+ 
+ 
+-if __name__ == '__main__':
++if __name__ == "__main__":
+     args = sys.argv
+ 
+     in_file_path_list = list()
+@@ -97,7 +98,7 @@ if __name__ == '__main__':
+             out_csv_file = arg
+ 
+     res = dict()
+-    wr_header = ['op_type', 'file_name', 'file_func']
++    wr_header = ["op_type", "file_name", "file_func"]
+     wr_data = list()
+     for ops_json_file in in_file_path_list:
+         _res = get_res_from_file(ops_json_file)
+@@ -106,7 +107,13 @@ if __name__ == '__main__':
+                 res[_op_type] = _op_value
+                 file_name = _op_value[0]
+                 func_name = _op_value[1]
+-                wr_data.append({wr_header[0]: _op_type, wr_header[1]: file_name, wr_header[2]: func_name})
++                wr_data.append(
++                    {
++                        wr_header[0]: _op_type,
++                        wr_header[1]: file_name,
++                        wr_header[2]: func_name,
++                    }
++                )
+                 continue
+             global_op_value = res.get(_op_type)
+             if global_op_value != _op_value:
+@@ -114,7 +121,7 @@ if __name__ == '__main__':
+ 
+     # wr result to output file
+     if out_csv_file is not None:
+-        fd = os.open(out_csv_file, os.O_RDWR | os.O_CREAT, 0o755)
++        fd = os.open(out_csv_file, os.O_RDWR | os.O_CREAT | os.O_TRUNC, 0o755)
+         with os.fdopen(fd, "w+") as f:
+             writer = csv.DictWriter(f, wr_header)
+             writer.writeheader()
+
+diff --git a/tests/ut/scripts/test_opcinfo_csv_truncation.py b/tests/ut/scripts/test_opcinfo_csv_truncation.py
+new file mode 100644
+--- /dev/null
++++ b/tests/ut/scripts/test_opcinfo_csv_truncation.py
+@@ -0,0 +1,97 @@
++#!/usr/bin/env python3
++# Copyright (c) 2026 gcw_Z57idahf
++# This program is free software, you can redistribute it and/or modify it under the terms and conditions of
++# CANN Open Software License Agreement Version 2.0 (the "License").
++# Please refer to the License for details. You may not use this file except in compliance with the License.
++# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED,
++# INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
++# See LICENSE in the root of the software repository for the full text of the License.
++"""Execute the production OPC-info CSV CLI and compare regenerated files."""
++
++import csv
++import json
++from pathlib import Path
++import subprocess
++import sys
++import tempfile
++import unittest
++
++SCRIPT = (
++    Path(__file__).resolve().parents[3]
++    / "scripts/kernel/binary_script/gen_opcinfo_from_opinfo.py"
++)
++
++
++class TestOpcInfoCsvTruncation(unittest.TestCase):
++    def generate(self, root, ops, output):
++        source = root / "input.json"
++        source.write_text(json.dumps(ops), encoding="utf-8")
++        p = subprocess.run(
++            [sys.executable, str(SCRIPT), str(source), str(output)],
++            capture_output=True,
++            text=True,
++        )
++        self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
++        return output.read_bytes()
++
++    def check_regeneration(self, new_ops):
++        with tempfile.TemporaryDirectory() as directory:
++            root = Path(directory)
++            old = {
++                "OperatorWithLongName" + str(i): {
++                    "dynamicShapeSupport": {"flag": "true"}
++                }
++                for i in range(8)
++            }
++            self.generate(root, old, root / "output.csv")
++            actual = self.generate(root, new_ops, root / "output.csv")
++            expected = self.generate(root, new_ops, root / "fresh.csv")
++            self.assertEqual(actual, expected)
++            with (root / "output.csv").open(newline="", encoding="utf-8") as stream:
++                self.assertEqual(
++                    [row["op_type"] for row in csv.DictReader(stream)], list(new_ops)
++                )
++
++    def test_shorter_result_removes_previous_rows(self):
++        self.check_regeneration({"Add": {"dynamicShapeSupport": {"flag": "true"}}})
++
++    def test_empty_result_contains_only_header(self):
++        self.check_regeneration({})
++
++    def test_repeat_identical_result_is_stable(self):
++        with tempfile.TemporaryDirectory() as directory:
++            root = Path(directory)
++            ops = {"Add": {"dynamicShapeSupport": {"flag": "true"}}}
++            self.assertEqual(
++                self.generate(root, ops, root / "output.csv"),
++                self.generate(root, ops, root / "output.csv"),
++            )
++
++    def test_multiple_inputs_and_dynamic_filter_remain_supported(self):
++        with tempfile.TemporaryDirectory() as directory:
++            root = Path(directory)
++            for name, ops in [
++                (
++                    "first",
++                    {"Add": {"dynamicShapeSupport": {"flag": "true"}}, "Static": {}},
++                ),
++                ("second", {"Sub": {"dynamicShapeSupport": {"flag": "true"}}}),
++            ]:
++                (root / (name + ".json")).write_text(json.dumps(ops), encoding="utf-8")
++            output = root / "out.csv"
++            p = subprocess.run(
++                [
++                    sys.executable,
++                    str(SCRIPT),
++                    str(root / "first.json"),
++                    str(root / "second.json"),
++                    str(output),
++                ],
++                capture_output=True,
++                text=True,
++            )
++            self.assertEqual(p.returncode, 0, p.stderr)
++            with output.open(newline="", encoding="utf-8") as stream:
++                rows = list(csv.DictReader(stream))
++            self.assertEqual([r["op_type"] for r in rows], ["Add", "Sub"])
++            self.assertEqual(rows[0]["file_name"], "dynamic/add.py")
+

@@ -1,0 +1,97 @@
+test_absent_op_list_keeps_the_existing_empty_default (test_empty_opc_task_splitting.TestEmptyOpcTasks.test_absent_op_list_keeps_the_existing_empty_default) ... FAIL
+test_empty_workload_for_normalized_thread_counts (test_empty_opc_task_splitting.TestEmptyOpcTasks.test_empty_workload_for_normalized_thread_counts) ... 
+  test_empty_workload_for_normalized_thread_counts (test_empty_opc_task_splitting.TestEmptyOpcTasks.test_empty_workload_for_normalized_thread_counts) (parts=1) ... FAIL
+  test_empty_workload_for_normalized_thread_counts (test_empty_opc_task_splitting.TestEmptyOpcTasks.test_empty_workload_for_normalized_thread_counts) (parts=3) ... FAIL
+  test_empty_workload_for_normalized_thread_counts (test_empty_opc_task_splitting.TestEmptyOpcTasks.test_empty_workload_for_normalized_thread_counts) (parts=0) ... FAIL
+  test_empty_workload_for_normalized_thread_counts (test_empty_opc_task_splitting.TestEmptyOpcTasks.test_empty_workload_for_normalized_thread_counts) (parts=-2) ... FAIL
+test_nonempty_partitioning_preserves_order_and_metadata (test_empty_opc_task_splitting.TestEmptyOpcTasks.test_nonempty_partitioning_preserves_order_and_metadata) ... ok
+
+======================================================================
+FAIL: test_absent_op_list_keeps_the_existing_empty_default (test_empty_opc_task_splitting.TestEmptyOpcTasks.test_absent_op_list_keeps_the_existing_empty_default)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<temporary-workspace>/source/tests/ut/scripts/test_empty_opc_task_splitting.py", line 69, in test_absent_op_list_keeps_the_existing_empty_default
+    self.run_case({"op_type": "FixtureOp"}, 2)
+  File "<temporary-workspace>/source/tests/ut/scripts/test_empty_opc_task_splitting.py", line 39, in run_case
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "<temporary-workspace>/source/scripts/kernel/binary_script/gen_opc_json_with_threadnum.py", line 58, in <module>
+    main(sys.argv[1], sys.argv[2])
+  File "<temporary-workspace>/source/scripts/kernel/binary_script/gen_opc_json_with_threadnum.py", line 39, in main
+    split_real_num = (op_list_num + split_value - 1) // split_value
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^~~~~~~~~~~~~
+ZeroDivisionError: integer division or modulo by zero
+
+
+======================================================================
+FAIL: test_empty_workload_for_normalized_thread_counts (test_empty_opc_task_splitting.TestEmptyOpcTasks.test_empty_workload_for_normalized_thread_counts) (parts=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<temporary-workspace>/source/tests/ut/scripts/test_empty_opc_task_splitting.py", line 59, in test_empty_workload_for_normalized_thread_counts
+    self.run_case(
+  File "<temporary-workspace>/source/tests/ut/scripts/test_empty_opc_task_splitting.py", line 39, in run_case
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "<temporary-workspace>/source/scripts/kernel/binary_script/gen_opc_json_with_threadnum.py", line 58, in <module>
+    main(sys.argv[1], sys.argv[2])
+  File "<temporary-workspace>/source/scripts/kernel/binary_script/gen_opc_json_with_threadnum.py", line 39, in main
+    split_real_num = (op_list_num + split_value - 1) // split_value
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^~~~~~~~~~~~~
+ZeroDivisionError: integer division or modulo by zero
+
+
+======================================================================
+FAIL: test_empty_workload_for_normalized_thread_counts (test_empty_opc_task_splitting.TestEmptyOpcTasks.test_empty_workload_for_normalized_thread_counts) (parts=3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<temporary-workspace>/source/tests/ut/scripts/test_empty_opc_task_splitting.py", line 59, in test_empty_workload_for_normalized_thread_counts
+    self.run_case(
+  File "<temporary-workspace>/source/tests/ut/scripts/test_empty_opc_task_splitting.py", line 39, in run_case
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "<temporary-workspace>/source/scripts/kernel/binary_script/gen_opc_json_with_threadnum.py", line 58, in <module>
+    main(sys.argv[1], sys.argv[2])
+  File "<temporary-workspace>/source/scripts/kernel/binary_script/gen_opc_json_with_threadnum.py", line 39, in main
+    split_real_num = (op_list_num + split_value - 1) // split_value
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^~~~~~~~~~~~~
+ZeroDivisionError: integer division or modulo by zero
+
+
+======================================================================
+FAIL: test_empty_workload_for_normalized_thread_counts (test_empty_opc_task_splitting.TestEmptyOpcTasks.test_empty_workload_for_normalized_thread_counts) (parts=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<temporary-workspace>/source/tests/ut/scripts/test_empty_opc_task_splitting.py", line 59, in test_empty_workload_for_normalized_thread_counts
+    self.run_case(
+  File "<temporary-workspace>/source/tests/ut/scripts/test_empty_opc_task_splitting.py", line 39, in run_case
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "<temporary-workspace>/source/scripts/kernel/binary_script/gen_opc_json_with_threadnum.py", line 58, in <module>
+    main(sys.argv[1], sys.argv[2])
+  File "<temporary-workspace>/source/scripts/kernel/binary_script/gen_opc_json_with_threadnum.py", line 39, in main
+    split_real_num = (op_list_num + split_value - 1) // split_value
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^~~~~~~~~~~~~
+ZeroDivisionError: integer division or modulo by zero
+
+
+======================================================================
+FAIL: test_empty_workload_for_normalized_thread_counts (test_empty_opc_task_splitting.TestEmptyOpcTasks.test_empty_workload_for_normalized_thread_counts) (parts=-2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<temporary-workspace>/source/tests/ut/scripts/test_empty_opc_task_splitting.py", line 59, in test_empty_workload_for_normalized_thread_counts
+    self.run_case(
+  File "<temporary-workspace>/source/tests/ut/scripts/test_empty_opc_task_splitting.py", line 39, in run_case
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "<temporary-workspace>/source/scripts/kernel/binary_script/gen_opc_json_with_threadnum.py", line 58, in <module>
+    main(sys.argv[1], sys.argv[2])
+  File "<temporary-workspace>/source/scripts/kernel/binary_script/gen_opc_json_with_threadnum.py", line 39, in main
+    split_real_num = (op_list_num + split_value - 1) // split_value
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^~~~~~~~~~~~~
+ZeroDivisionError: integer division or modulo by zero
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.286s
+
+FAILED (failures=5)

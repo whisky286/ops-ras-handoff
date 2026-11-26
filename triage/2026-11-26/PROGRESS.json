@@ -7,6 +7,24 @@
       "next_action": "按已列明位置和当前文件树补齐范围说明；与 #152 的同一链接修复统一跟踪，避免重复合入。",
       "evidence_level": "DOC_PR_REVIEW.json + 当前 issue 原文范围对照"
     },
+    "81": {
+      "review_stage": "已有PR回归已复核，最小主机验证通过，待合入",
+      "reason": "!154 的现有回归在固定基线复核：原版空任务场景有 5 处子测试失败，候选 3 个测试方法全部通过，覆盖空/缺省列表、归一化分片数、非空顺序与元数据；未运行 OPC/CANN/NPU。",
+      "next_action": "复用 BUILD_SCRIPT_REVIEW.json 与现有 PR 回归，等待 !154 合入；合入前保持 issue 打开。",
+      "evidence_level": "BUILD_SCRIPT_REVIEW.json：真实 CLI，候选 3 方法通过；原版 5 子场景失败"
+    },
+    "83": {
+      "review_stage": "已有PR回归已复核，最小主机验证通过，待合入",
+      "reason": "!156 的现有 3 个真实 CLI 回归已运行：原版缺输入仍返回成功导致 1 个失败，候选 3 个方法全部通过；成功输出、空列表和输入不变控制保留。",
+      "next_action": "等待 !156 合入后核对错误退出码；不额外安排 NPU 测试。",
+      "evidence_level": "BUILD_SCRIPT_REVIEW.json：原版 1 失败/候选 3 方法通过"
+    },
+    "84": {
+      "review_stage": "已有PR回归已复核，最小主机验证通过，待合入",
+      "reason": "!157 的现有 4 个真实 CLI 回归已运行：原版缩短/清空 CSV 残留旧内容，2 项失败；候选 4 项通过，重复生成、多输入和动态筛选控制通过。",
+      "next_action": "等待 !157 合入；复用固定 head 的 CSV 逐字节/行内容回归，不要求设备验证。",
+      "evidence_level": "BUILD_SCRIPT_REVIEW.json：原版 2 失败/候选 4 方法通过"
+    },
     "116": {
       "review_stage": "补丁已审查，最小静态验证通过，待合入",
       "reason": "已取得 !188 固定 head 的真实 diff；补丁同时为中英文链接补齐章节 fragment，文件和对应标题均存在，临时基线应用与 diff check 通过；master 尚未包含该变更。",

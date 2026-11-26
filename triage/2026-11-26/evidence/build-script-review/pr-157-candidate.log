@@ -1,0 +1,9 @@
+test_empty_result_contains_only_header (test_opcinfo_csv_truncation.TestOpcInfoCsvTruncation.test_empty_result_contains_only_header) ... ok
+test_multiple_inputs_and_dynamic_filter_remain_supported (test_opcinfo_csv_truncation.TestOpcInfoCsvTruncation.test_multiple_inputs_and_dynamic_filter_remain_supported) ... ok
+test_repeat_identical_result_is_stable (test_opcinfo_csv_truncation.TestOpcInfoCsvTruncation.test_repeat_identical_result_is_stable) ... ok
+test_shorter_result_removes_previous_rows (test_opcinfo_csv_truncation.TestOpcInfoCsvTruncation.test_shorter_result_removes_previous_rows) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.207s
+
+OK

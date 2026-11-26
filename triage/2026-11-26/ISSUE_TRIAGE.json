@@ -1724,8 +1724,8 @@
       "remote_state": "open",
       "category": "B",
       "category_label": "已有PR，待范围审查/合入",
-      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
-      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "reason": "!157 的现有 4 个真实 CLI 回归已运行：原版缩短/清空 CSV 残留旧内容，2 项失败；候选 4 项通过，重复生成、多输入和动态筛选控制通过。",
+      "next_action": "等待 !157 合入；复用固定 head 的 CSV 逐字节/行内容回归，不要求设备验证。",
       "owner": "本地Agent核对；维护者负责合入/关闭",
       "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
       "linked_prs": [
@@ -1739,9 +1739,9 @@
         }
       ],
       "server_report_status": "",
-      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "evidence_level": "BUILD_SCRIPT_REVIEW.json：原版 2 失败/候选 4 方法通过",
       "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
-      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "review_stage": "已有PR回归已复核，最小主机验证通过，待合入",
       "last_review_date": "2026-11-26"
     },
     {
@@ -1751,8 +1751,8 @@
       "remote_state": "open",
       "category": "B",
       "category_label": "已有PR，待范围审查/合入",
-      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
-      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "reason": "!156 的现有 3 个真实 CLI 回归已运行：原版缺输入仍返回成功导致 1 个失败，候选 3 个方法全部通过；成功输出、空列表和输入不变控制保留。",
+      "next_action": "等待 !156 合入后核对错误退出码；不额外安排 NPU 测试。",
       "owner": "本地Agent核对；维护者负责合入/关闭",
       "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
       "linked_prs": [
@@ -1766,9 +1766,9 @@
         }
       ],
       "server_report_status": "",
-      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "evidence_level": "BUILD_SCRIPT_REVIEW.json：原版 1 失败/候选 3 方法通过",
       "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
-      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "review_stage": "已有PR回归已复核，最小主机验证通过，待合入",
       "last_review_date": "2026-11-26"
     },
     {
@@ -1805,8 +1805,8 @@
       "remote_state": "open",
       "category": "B",
       "category_label": "已有PR，待范围审查/合入",
-      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
-      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "reason": "!154 的现有回归在固定基线复核：原版空任务场景有 5 处子测试失败，候选 3 个测试方法全部通过，覆盖空/缺省列表、归一化分片数、非空顺序与元数据；未运行 OPC/CANN/NPU。",
+      "next_action": "复用 BUILD_SCRIPT_REVIEW.json 与现有 PR 回归，等待 !154 合入；合入前保持 issue 打开。",
       "owner": "本地Agent核对；维护者负责合入/关闭",
       "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
       "linked_prs": [
@@ -1820,9 +1820,9 @@
         }
       ],
       "server_report_status": "",
-      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "evidence_level": "BUILD_SCRIPT_REVIEW.json：真实 CLI，候选 3 方法通过；原版 5 子场景失败",
       "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
-      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "review_stage": "已有PR回归已复核，最小主机验证通过，待合入",
       "last_review_date": "2026-11-26"
     },
     {

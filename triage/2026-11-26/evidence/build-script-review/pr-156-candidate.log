@@ -1,0 +1,8 @@
+test_empty_task_list_remains_supported (test_impl_mode_input_status.TestImplModeInputStatus.test_empty_task_list_remains_supported) ... ok
+test_missing_input_is_not_successful (test_impl_mode_input_status.TestImplModeInputStatus.test_missing_input_is_not_successful) ... ok
+test_valid_input_preserves_metadata_and_adds_requested_mode (test_impl_mode_input_status.TestImplModeInputStatus.test_valid_input_preserves_metadata_and_adds_requested_mode) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.160s
+
+OK

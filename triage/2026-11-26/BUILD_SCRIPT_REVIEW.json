@@ -1,0 +1,85 @@
+{
+  "review_date": "2026-11-26",
+  "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+  "reviews": [
+    {
+      "issue": 81,
+      "pr": 154,
+      "head_sha": "edfb95ef8c101e6e029460c43cca081aa5348b86",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "production_file": "scripts/kernel/binary_script/gen_opc_json_with_threadnum.py",
+      "existing_pr_regression": "tests/ut/scripts/test_empty_opc_task_splitting.py",
+      "command": "python3 -m unittest discover -s tests/ut/scripts -p test_empty_opc_task_splitting.py -v",
+      "runs": {
+        "candidate": {
+          "returncode": 0,
+          "tests_run": 3,
+          "failures": 0,
+          "errors": 0
+        },
+        "baseline": {
+          "returncode": 1,
+          "tests_run": 3,
+          "failures": 5,
+          "errors": 0
+        }
+      },
+      "scope": "existing PR tests; real CLI subprocesses; no CANN/NPU/full build",
+      "log_prefix": "evidence/build-script-review/pr-154"
+    },
+    {
+      "issue": 83,
+      "pr": 156,
+      "head_sha": "3f3e26f1e0dd8c990c6089d248a5c5983abad4cf",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "production_file": "scripts/kernel/binary_script/gen_opc_json_with_impl_mode.py",
+      "existing_pr_regression": "tests/ut/scripts/test_impl_mode_input_status.py",
+      "command": "python3 -m unittest discover -s tests/ut/scripts -p test_impl_mode_input_status.py -v",
+      "runs": {
+        "candidate": {
+          "returncode": 0,
+          "tests_run": 3,
+          "failures": 0,
+          "errors": 0
+        },
+        "baseline": {
+          "returncode": 1,
+          "tests_run": 3,
+          "failures": 1,
+          "errors": 0
+        }
+      },
+      "scope": "existing PR tests; real CLI subprocesses; no CANN/NPU/full build",
+      "log_prefix": "evidence/build-script-review/pr-156"
+    },
+    {
+      "issue": 84,
+      "pr": 157,
+      "head_sha": "f5f9a9f9bfcdbcea1f0f9bbd3c0bf3f30acbcae4",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "production_file": "scripts/kernel/binary_script/gen_opcinfo_from_opinfo.py",
+      "existing_pr_regression": "tests/ut/scripts/test_opcinfo_csv_truncation.py",
+      "command": "python3 -m unittest discover -s tests/ut/scripts -p test_opcinfo_csv_truncation.py -v",
+      "runs": {
+        "candidate": {
+          "returncode": 0,
+          "tests_run": 4,
+          "failures": 0,
+          "errors": 0
+        },
+        "baseline": {
+          "returncode": 1,
+          "tests_run": 4,
+          "failures": 2,
+          "errors": 0
+        }
+      },
+      "scope": "existing PR tests; real CLI subprocesses; no CANN/NPU/full build",
+      "log_prefix": "evidence/build-script-review/pr-157"
+    }
+  ],
+  "limits": [
+    "Tests cover the specific reported producer/CLI cases; not a complete OPC build or NPU validation.",
+    "Passing candidate tests do not mean the upstream PR has merged."
+  ]
+}

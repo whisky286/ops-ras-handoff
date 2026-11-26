@@ -8,5 +8,6 @@
 - [固定版本补丁和校验值](triage/2026-11-26/PATCH_INDEX.json)
 - [文档 PR 审查结果](triage/2026-11-26/DOC_PR_REVIEW.json)
 - [主机脚本修复对照](triage/2026-11-26/HOST_PR_REVIEW.json)
+- [构建脚本原版/修复回归](triage/2026-11-26/BUILD_SCRIPT_REVIEW.json)
 
 初始交接包和 server-run-2026-11-25 原始结果继续保留。台账关联、候选已验证和 master 已修复是不同状态；GitCode 远端操作仍暂缓。
