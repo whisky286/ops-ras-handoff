@@ -1,0 +1,12 @@
+{"case":"valid_fp16_control","expected":"accept","getws":0,"accepted":true,"exec":0,"msg":""}
+{"case":"A_fp16_B_fp32_mismatch","expected":"reject","getws":161002,"accepted":false,"exec":-99,"msg":"[PID: 364650] 2026-11-26-18:47:49.041.870 AclNN_Parameter_Error(EZ1001): Io input dtype or format is not suppo"}
+{"case":"C_rank1","expected":"reject","getws":0,"accepted":true,"exec":-99,"msg":""}
+{"case":"C_col_mismatch","expected":"reject","getws":0,"accepted":true,"exec":-99,"msg":""}
+{"case":"W_len_mismatch","expected":"reject","getws":0,"accepted":true,"exec":-99,"msg":""}
+{"case":"W_rank2","expected":"reject","getws":0,"accepted":true,"exec":-99,"msg":""}
+{"case":"eMax_negative","expected":"reject","getws":0,"accepted":true,"exec":-99,"msg":""}
+{"case":"eMax_zero_allowed","expected":"accept","getws":0,"accepted":true,"exec":0,"msg":""}
+{"case":"eMax_nan","expected":"reject","getws":0,"accepted":true,"exec":-99,"msg":""}
+{"case":"eMax_pos_inf","expected":"reject","getws":0,"accepted":true,"exec":-99,"msg":""}
+{"summary":{"mode":"defect","invalid_cases_accepted":7,"control_ok":1,"internal_failures":0}}
+PARAM_PROBE_EXIT=0

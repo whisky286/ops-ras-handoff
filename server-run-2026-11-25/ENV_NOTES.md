@@ -26,3 +26,11 @@
 
 ## 未做 / 禁止
 - 未对 gitcode 提交评论/PR/关闭 issue; 未改系统 CANN; 未升级驱动
+
+## 2026-11-26 服务器重启后的环境变化
+- 驱动/npu-smi:26.0.rc1 → **26.1.1**(ascendhal 7.35.23),CANN toolkit 仍为 9.0.0(未变)
+- 重启后全部 16 个 die 空闲(NPU 0-7 无进程);/home 可用空间约 20G
+- 本目录内全部设备结果(C1_118、C2_567_117、floor/kmin 实验)均在 **驱动 26.0.rc1** 下采集
+- 按用户决定,重启后未重复设备测试;如需在 26.1.1 上复现,直接重跑
+  results/harness/run_probe_v2.sh 与 run_param_v2.sh 即可(基线/候选 OPP 目录均保留)
+- 仓库 HEAD 36847ff、git 凭据(credential store)在重启后均正常

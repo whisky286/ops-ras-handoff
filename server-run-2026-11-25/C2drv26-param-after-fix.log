@@ -1,0 +1,19 @@
+{"case":"valid_fp16_control","expected":"accept","getws":0,"accepted":true,"exec":0,"msg":""}
+{"case":"A_fp16_B_fp32_mismatch","expected":"reject","getws":161002,"accepted":false,"exec":-99,"msg":"[PID: 365482] 2026-11-26-18:47:54.322.181 AclNN_Parameter_Error(EZ1001): Io input dtype or format is not suppo"}
+{"case":"C_rank1","expected":"reject","getws":561002,"accepted":false,"exec":-99,"msg":"EZ9999: Inner Error!
+EZ9999[PID: 365482] 2026-11-26-18:47:54.322.444 (EZ9999):  C must have shape [A.M, B.N][F"}
+{"case":"C_col_mismatch","expected":"reject","getws":561002,"accepted":false,"exec":-99,"msg":"EZ9999: Inner Error!
+EZ9999[PID: 365482] 2026-11-26-18:47:54.322.628 (EZ9999):  C must have shape [A.M, B.N][F"}
+{"case":"W_len_mismatch","expected":"reject","getws":561002,"accepted":false,"exec":-99,"msg":"EZ9999: Inner Error!
+EZ9999[PID: 365482] 2026-11-26-18:47:54.322.806 (EZ9999):  checksum_weight must have shap"}
+{"case":"W_rank2","expected":"reject","getws":561002,"accepted":false,"exec":-99,"msg":"EZ9999: Inner Error!
+EZ9999[PID: 365482] 2026-11-26-18:47:54.322.985 (EZ9999):  checksum_weight must have shap"}
+{"case":"eMax_negative","expected":"reject","getws":561002,"accepted":false,"exec":-99,"msg":"EZ9999: Inner Error!
+EZ9999[PID: 365482] 2026-11-26-18:47:54.323.161 (EZ9999):  e_max must be a finite non-neg"}
+{"case":"eMax_zero_allowed","expected":"accept","getws":0,"accepted":true,"exec":0,"msg":""}
+{"case":"eMax_nan","expected":"reject","getws":561002,"accepted":false,"exec":-99,"msg":"EZ9999: Inner Error!
+EZ9999[PID: 365482] 2026-11-26-18:47:54.323.537 (EZ9999):  e_max must be a finite non-neg"}
+{"case":"eMax_pos_inf","expected":"reject","getws":561002,"accepted":false,"exec":-99,"msg":"EZ9999: Inner Error!
+EZ9999[PID: 365482] 2026-11-26-18:47:54.323.716 (EZ9999):  e_max must be a finite non-neg"}
+{"summary":{"mode":"fix","invalid_cases_accepted":0,"control_ok":1,"internal_failures":0}}
+PARAM_PROBE_EXIT=0
