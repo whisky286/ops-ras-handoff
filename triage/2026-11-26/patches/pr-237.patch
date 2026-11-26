@@ -1,0 +1,13 @@
+diff --git a/docs/en/context/basic_concept.md b/docs/en/context/basic_concept.md
+--- a/docs/en/context/basic_concept.md
++++ b/docs/en/context/basic_concept.md
+@@ -8,7 +8,7 @@
+     -  [Broadcast Relationship](./broadcast_relationship.md)
+     -  [Deduction Relationship](./deduction_relationship.md)
+     -  [Conversion Relationship](./conversion_relationship.md)
+-    -  [Quant more Introduction](./quant_more_introduction.md)
++    -  [Quant more Introduction](./quant_mode_introduction.md)
+     -  [Sparse Mode Introduction](./sparse_mode_introduction.md)
+     -  [Deterministic Computation](./determinism_compute.md)
+     -  [Batch Consistency](./batch_consistency.md)
+

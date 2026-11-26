@@ -1,0 +1,138 @@
+{
+  "review_date": "2026-11-26",
+  "master": "6943b10042266ee3dbee3e17237919a0ded600bf",
+  "pr_reviews": [
+    {
+      "pr": 188,
+      "head_sha": "a562d477beb64dbb980ba6cd10062356b8aa99ca",
+      "state": "open",
+      "target": "master",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "patch_sha256": "def0395e5744bcb556ae2b880081e32ea3c4fb8ced9d1389ee8bb5367907b8e8",
+      "files": [
+        "docs/en/install/build.md",
+        "docs/zh/install/build.md"
+      ],
+      "patch_applied_cleanly": true,
+      "diff_check": true,
+      "checks": [
+        {
+          "language": "en",
+          "file_and_fragment_exist": true
+        },
+        {
+          "language": "zh",
+          "file_and_fragment_exist": true
+        }
+      ]
+    },
+    {
+      "pr": 223,
+      "head_sha": "f24d1feafa3e84cdbe254e3f78f159d56ee2cabe",
+      "state": "open",
+      "target": "master",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "patch_sha256": "35c57f7d639fed4139360903cc332669ce1cc84954de45c506fe153c03589e52",
+      "files": [
+        "docs/en/context/basic_concept.md"
+      ],
+      "patch_applied_cleanly": true,
+      "diff_check": true,
+      "checks": [
+        {
+          "relative_links": 12,
+          "missing_targets": []
+        },
+        {
+          "remaining_list_indentation": "4-space indentation remains; #129 / !201 owns rendering fix"
+        }
+      ]
+    },
+    {
+      "pr": 237,
+      "head_sha": "1d62d36f60a488a567461d7a393e0472609e7aad",
+      "state": "open",
+      "target": "master",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "patch_sha256": "93d1f6ebb9910d67f5d579805a27676c7aa001c65e1b6b730b7577400969afa1",
+      "files": [
+        "docs/en/context/basic_concept.md"
+      ],
+      "patch_applied_cleanly": true,
+      "diff_check": true,
+      "checks": [
+        {
+          "relative_links": 12,
+          "missing_targets": []
+        },
+        {
+          "remaining_list_indentation": "4-space indentation remains; #129 / !201 owns rendering fix"
+        }
+      ]
+    },
+    {
+      "pr": 238,
+      "head_sha": "b8e19faba0eb94c0018ab9adeaa0a32644c9adec",
+      "state": "open",
+      "target": "master",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "patch_sha256": "e689df35539d97e6a33e2895590c9b52a6ddcf12d248522109d505c0b977f2b5",
+      "files": [
+        "build.sh",
+        "docs/en/install/build.md",
+        "docs/zh/install/build.md"
+      ],
+      "patch_applied_cleanly": true,
+      "diff_check": true,
+      "checks": [
+        {
+          "changes_outside_usage_function": false
+        },
+        {
+          "actual_usage_function_mode": "general",
+          "passed": true
+        },
+        {
+          "actual_usage_function_mode": "pkg",
+          "passed": true
+        },
+        {
+          "actual_usage_function_mode": "ophost",
+          "passed": true
+        },
+        {
+          "actual_usage_function_mode": "onnxplugin",
+          "passed": true
+        },
+        {
+          "actual_usage_function_mode": "tfplugin",
+          "passed": true
+        },
+        {
+          "actual_usage_function_mode": "opgraph",
+          "passed": true
+        },
+        {
+          "actual_usage_function_mode": "opapi",
+          "passed": true
+        }
+      ],
+      "limitations": [
+        "Executed extracted real usage function, not full Linux build.sh CLI; no CANN/NPU/full build."
+      ]
+    }
+  ],
+  "interaction": {
+    "prs": [
+      223,
+      237
+    ],
+    "can_apply_second_unchanged_after_first": false,
+    "meaning": "Same link hunk; choose one/rebase, not two independent fixes."
+  },
+  "mutations": "temporary clone only; no original checkout changes or remote writes",
+  "coverage_limits": [
+    "#44 original six-item list is incomplete; checked current named pages and remaining quant link, not an exhaustive rendered docs-site audit.",
+    "Link target existence does not fix the separate Markdown indentation issue #129."
+  ]
+}

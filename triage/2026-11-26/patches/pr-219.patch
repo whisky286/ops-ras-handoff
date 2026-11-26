@@ -1,0 +1,14 @@
+diff --git a/scripts/check_build_dependencies.py b/scripts/check_build_dependencies.py
+--- a/scripts/check_build_dependencies.py
++++ b/scripts/check_build_dependencies.py
+@@ -108,9 +108,6 @@ def check_build_dep_item(version: str, dep: str) -> bool:
+ 
+     dep_parts = split_version(dep)
+ 
+-    if check_func is check_eq:
+-        return check_func()
+-
+     if len(dep_parts) < len(version_parts):
+         dep_parts.extend([0] * (len(version_parts) - len(dep_parts)))
+     elif len(dep_parts) > len(version_parts):
+

@@ -1,0 +1,84 @@
+﻿pr,state,target,head_sha,issues,title,default_action
+87,open,master,8689c1143817acf832d73f3220b219730da6887c,#23,[修复] 完善 Obfuscation 系列 OpAPI 的 Tensor shape 校验,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+125,open,master,e3331dc92478dc4520c6786cfe4c3345fc4828f7,#51,修正 MatmulAbftVerify 的中英文 API 文档链接,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+126,open,master,aca186117397ff32b3634fe79987abe29244a28a,#53,Fix FP16 subnormal rounding for MatmulAbftVerify mean factor,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+129,open,master,7e3df686b9d305b0c16a3dc8f869bd95638361e8,"#56,#57,#58",fix: validate MatmulAbftVerify inputs and Crypto example,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+131,open,master,33a97edebe954d2c55dea3390d2b8c244c163993,#58,[docs] 修复 aclnnCrypto 文档原型名与示例 IV 缓冲区越界读取,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+133,open,master,1072956e558f6c12d2c1c233988e14325578119c,#61,docs: print ACL error messages safely in RAS guides,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+134,open,master,318261f839e98a2ccfb264bb361ee02b8d84ef8f,#62,docs: include the RAS suffix in custom package activation paths,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+135,open,master,d61853ffae388a5759d76a8d66aa38e6ce9a8bb1,#65,Preserve unknown dimensions in MatmulAbftVerify InferShape,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+136,open,master,d40624d0840ca9a268de66e4c226faa0ef6ddfa5,#60,fix: remove continue that made failed-json cleanup unreachable,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+137,open,master,38ceefd1916aca9c9eb251610d41c624b7b32cb0,"#64,#105",docs(zh): add missing Chinese-named figures for cross-platform migration guide,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+139,open,master,02b9641ba6fdd7acf20262aa66d7dc952804e3b0,"#59,#63",docs: remove orphaned duplicate of docs/en/context/quant_mode_introduction.md,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+140,open,master,de262f4c8c55e872b8f0b4d24c2d598a511a4830,#40,[docs] 移除文档标题中手工添加的序号并修正受影响锚点,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+141,open,master,50552e2cc9a8a1204f00ad1d2c225c198fb34e71,#38,[docs] 按规范重命名 31 个非规范图片文件并同步更新引用,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+142,open,master,0568073a08bbd4a2cc949c2a95001edf8e3eca14,#66,fix: truncate reused operator JSON outputs,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+143,open,master,953c519212a03741f17ccdfd94bdd56b8d043b1d,#67,fix: 跟踪 Graph 原型合并的输入依赖(#67),一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+145,open,master,3eb2469687d4119559e44ae8b1eff7c6e725de1c,#68,fix(build): propagate dependency CMake configuration failures,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+146,open,master,583244394191b0d3fcd4a9d432410cad5336d589,#52,Fix non-contiguous tensor handling in aclnnCrypto,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+148,open,master,87a0177dc4d4e6a155cad9c5ad8ab741f158470a,"#69,#70,#71",fix(build): preserve binary metadata parameter groups and paths,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+149,open,master,5ef82f7aec7dc022397e5bda9f13cbeefd868cf3,"#72,#73",fix(build): preserve kernel source fallback and valid INI updates,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+150,open,master,3f33955195f29229368a4ffb8ecf0ae3457f8636,"#74,#75",fix(build): preserve and encode adapter string defaults,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+151,open,master,0139ba299eb118a85628e7926c635cdbab72d187,"#76,#77",fix(build): quote static ACLNN paths and propagate command failures,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+152,open,master,5e7016050f50e876777d716b95a130ab3d35c3dc,#78,fix(build): propagate merged INI output failures,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+153,open,master,adf42f4873964611a3214cfc3087b386ad00444b,"#79,#80",fix(build): normalize binary config paths and reject missing inputs,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+154,open,master,edfb95ef8c101e6e029460c43cca081aa5348b86,#81,fix(build): split empty OPC workloads without division by zero,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+155,open,master,da99d377fff7d1742f2d57aecaee29ed140c2cd2,#82,fix(replay): copy all packed tiling bytes on the host,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+156,open,master,3f3e26f1e0dd8c990c6089d248a5c5983abad4cf,#83,fix(build): propagate implementation-mode input failures,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+157,open,master,f5f9a9f9bfcdbcea1f0f9bbd3c0bf3f30acbcae4,#84,fix(build): truncate regenerated OPC-info CSV output,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+158,open,master,bd3d1eedb5392c3dd94547cf6d31f30a8827785b,#85,fix(build): derive binary metadata paths from the input root,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+159,open,master,3dcade5f047a2f81811993febcc071471605ce43,#86,fix(build): reject missing AICPU metadata INI inputs,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+160,open,master,d8d1c06c2e734f15e681868134fcabfbb53ee9d4,"#87,#88",fix(build): quote AICPU merge paths and propagate failures,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+161,open,master,d37d8f2fad619d0d0631c2a780e3e4d8f9d6a88a,"#89,#90,#91",fix(build): refresh operator config and copy all custom kernels,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+162,open,master,adefc6b8a9deb1d29fb8f9c35cfa478a70bca2e7,"#92,#93",fix(build): quote compiler option paths and propagate failures,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+163,open,master,7f2698eb506707967a161ffb217262c70f5b3139,"#94,#95",fix(build): propagate static resource generation failures,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+164,open,master,b39c9631734eab6b1dbe8561f4d343388699cb85,#96,fix(build): classify generator options by their complete names,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+165,open,master,b15b5236bd372081910e337e45a35ad9dd8c5ae1,"#97,#98",fix(build): retain SoC compiler options during adapter generation,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+166,open,master,ccd7b17eacf8241546846d754b10701a0125eb0c,"#99,#100",fix(build): refresh and install generated adapters,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+167,open,master,e9b977927ee1cafe3b8d07877d16feb112c64e23,"#101,#102",fix(test): preserve UT tiling keys and explicit library arguments,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+168,open,master,ecce3eadd45978e43573217c62c950d5e5b46250,#103,fix(build): scan the actual static archive target,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+179,open,master,6d693243146d04efdb691bece92cc18038e62885,#104,[L4] security: cleanup.sh 的 rm -rf 增加路径安全守卫，防误删（#104）,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+180,open,master,a7000bd05121bb558d26e78deb38ff6d5716dc3f,#110,docs: fix RAS vendor paths in English guides,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+181,open,master,ea055cdcf8164c8f8b18be3d3674461275301ce9,#111,docs: use published RAS tag and valid checkout steps,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+186,open,master,e37be8e12bb980c2847fb2cdd328f645bd922866,#114,Fix incremental selection for deleted operator files,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+187,open,master,f3395e444a9b6767f3dafd6379e903cd11596dd3,#115,docs: make UT command examples executable,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+188,open,master,a562d477beb64dbb980ba6cd10062356b8aa99ca,#116,docs: fix build environment setup link,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+194,open,master,379aaab406d59663dd2f33184476b0fd2090e715,#133,CANN开发者共建计划--修正中英文广播兼容性规则,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+195,open,master,646fbfb506b994acb68eb0ce3aba8141dd3421ad,#134,CANN开发者共建计划-docs: complete basic data type declarations,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+196,open,master,900d54b98fb59f4fe7e0609d48305234c52e4c96,#135,CANN开发者共建计划-docs: correct AI CPU packaging example,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+197,open,master,a5a2862b5f123b77c4c4c79d10b2c1168638bf04,#132,docs: 修复图模式 CMake 示例的架构路径,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+198,open,master,718852c263be3f9114552ca16224caeaebe8dc49,#123,docs: 更正 ObfuscationSetupV2 参数类型说明,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+199,open,master,a8d75169531206f0772a5ee0cd9b260ab89c3121,#126,docs: 补充 ops-ras 静态库依赖说明,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+200,open,master,97029c6565beff0bb864a331d04dccf57ce1126c,#127,docs: 更正 AddExample 的 A3 支持声明,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+201,open,master,57afd51bdec5712c49fe25dfaa1832492958448c,#129,docs: 修复 basic concept 列表渲染,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+202,open,master,e507f3e1dd588407e5e2506ff5b65a178fbd6f4f,#131,docs: 修复 RAS 示例链接库名,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+203,open,master,4c0221462e85b04f9504176785454d65f96f0243,#122,docs: 补全可靠性算子列表,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+204,open,master,166f69d1c3f39ba8a80ef8760e006ec30dc23b8b,#125,docs: 按当前仓库修正目录结构图,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+205,open,master,e28f0b4efa50b59ff367cfdb5b65b1df6ab96656,#130,docs: correct Matmul ABFT validation errors,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+206,open,master,8cbf832173f6f4e10f2ea9f80882fdefeff9d604,#128,docs: complete third-party software notices,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+207,open,master,55dd156bcc510c017e2858db64038643fc61b9ab,#124,docs(ops-ras): align obfuscation setup release command,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+208,open,master,d0d618cbd9e193a452f6d1c58873f1db082a003f,#117,fix(ops-ras): use distinct include guards for V2 headers,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+211,open,master,1afc531ccde2857713952091e706f799f7aef009,#137,docs: fix AI CPU log variable reference,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+215,open,master,fc5f019bb7fbb6e873df226f3877cea287269f9c,#138,docs: fix absolute uninstall command paths,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+216,open,master,941b552808a90fbb7d4015446119c7b1f0caf8fa,#147,fix(scripts): correct overlay/replace prompt handling in custom install.sh,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+217,open,master,71f3eb3f5096109fe35ed1aca074b0228f9f8a32,#148,fix(scripts): fix missing space in upgrade.sh removal test,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+218,open,master,ffb6f1e4ba9c69f204a5ee1f683e14cc6636d578,#149,fix(scripts): fix empty-dir test and quoting in custom install.sh,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+219,open,master,9a875963c8aead584ebc06af2b1c86143ef9b527,#150,fix(scripts): compare exact dependency versions by full segments,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+220,open,master,9abe293ee4d200181fb6dd9c87733aef284d077e,#151,fix(scripts): fall back to current time when tagInfo format is unexpected,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+223,open,master,f24d1feafa3e84cdbe254e3f78f159d56ee2cabe,#44,docs: fix dead quant mode introduction link,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+224,open,master,7618001537df2f17c791af2c6b751bb39e0b5c8a,#146,docs: normalize inline code for ops-ras placeholders,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+225,open,master,1c7bc341576ad330ccb376db90e76710ba3cd36c,#145,docs: correct compile sample code block languages,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+226,open,master,d7301d47ad0cd566591187cdfb4bdf6c518684c2,#139,docs: align aclnnCrypto API names and sample,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+227,open,master,af789c62b95fe2f94a67f71db616f0c832b96d42,#140,docs: fix aclnnObfuscationSetupV2 parameter and sample issues,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+228,open,master,59e055f4db177977d1b9ed45d1d045955a557f9c,#142,docs: fix aclnnObfuscationSetup naming and sample types,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+229,open,master,dc66bde0ef8e2b8fad9231b95fedda9ea02e914d,#143,docs: fix aclnnObfuscationCalculateV2 sample and parameter notes,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+230,open,master,e3e854931880344d4540b41299560181f4ec43d2,#144,docs: fix aclnnObfuscationCalculate sample and terminology,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+231,open,master,99f5ab0307b8ed606a9c73f10e3ca420f4233b7e,#141,docs: correct MatmulAbftVerify error parameters,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+232,open,master,07d250e5d6f49710c9b4582976cb65029fc53ae9,#108,fix: remove dead shapeType/needCompile validation constants,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+233,open,master,f011358079993584137eb80b34de4a8c815ffd23,#109,fix: accept documented build options and sync build docs,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+234,open,master,3d60bdeb8bcee67b0e0baa1e11330d937d863888,#107,chore: add missing end-of-file newlines,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+235,open,master,8e9e0093180a4cdb1b99b4dd694d1ec777f8c671,#118,fix: keep FP32 precision in the MatmulAbftVerify FP16 checksum path,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+236,open,master,5bfea742e29e7f10e16766a32da5896ffc632d95,#16,feat: support INT64 and BF16 in the AddExample template,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+237,open,master,1d62d36f60a488a567461d7a393e0472609e7aad,#152,docs(en): 修正 basic_concept 量化介绍链接文件名拼写错误,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+238,open,master,b8e19faba0eb94c0018ab9adeaa0a32644c9adec,#153,docs: 让编译线程数的帮助和双语文档与 build.sh 一致,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue
+244,open,master,64d38f374a41dea77d605c8b92b5cca528612be3,#154,fix: 固定 scripts/ci/gen_ops_soc.py 去重后的 SoC 配置列表顺序,一组修复只审查/验证一次；复用有效证据；未合入不据此关issue

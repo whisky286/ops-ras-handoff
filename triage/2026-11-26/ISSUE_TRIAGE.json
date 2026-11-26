@@ -1,0 +1,2764 @@
+{
+  "user_facing_date": "2026-11-26",
+  "retrieved_at_utc": "2026-11-26T01:52:21.387386+00:00",
+  "repository": "cann/ops-ras",
+  "target_branch": "master",
+  "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+  "server_report_commit": "36847ffde3389f0b1b8a1a943e2e84e27ebcc1f3",
+  "open_issue_count": 102,
+  "fetched_pr_count": 244,
+  "classification_scope": "全量关联与状态初筛，不是全部PR补丁审查、CI复跑或修复验收",
+  "remote_mutations": "none; GitCode comments/PR/push/merge/close remain deferred",
+  "counts": {
+    "可准备关闭": 5,
+    "已有PR，待范围审查/合入": 88,
+    "已有PR，需补针对性验证": 5,
+    "缺条件或范围待确认": 4
+  },
+  "issues": [
+    {
+      "number": 154,
+      "title": "[Bug-Report|缺陷反馈]: scripts/ci/gen_ops_soc.py 多处使用 list(set(...)) 导致 SoC 配置输出顺序跨进程不稳定",
+      "url": "https://gitcode.com/cann/ops-ras/issues/154",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "新增 #154 / !244 已验证：代表性组合输入在 12 个独立 Python 哈希种子进程中，原版产生 5 种顺序，候选均为同一有序列表；集合成员未变。",
+      "next_action": "等待 !244 合入后核对；当前证据覆盖代表性输入及 12 个种子，不代表全部 C++ 语法解析分支。",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 244,
+          "state": "open",
+          "target": "master",
+          "head_sha": "64d38f374a41dea77d605c8b92b5cca528612be3",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/244",
+          "title": "fix: 固定 scripts/ci/gen_ops_soc.py 去重后的 SoC 配置列表顺序"
+        }
+      ],
+      "server_report_status": "服务器尚未记录此项；本地已完成PR关联和状态初筛",
+      "evidence_level": "HOST_PR_REVIEW.json：12 个独立进程的真实输出",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "补丁已审查，最小主机回归通过，待合入",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 153,
+      "title": "[Documentation|文档反馈]: 让编译线程数的帮助和双语文档与 build.sh 一致",
+      "url": "https://gitcode.com/cann/ops-ras/issues/153",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "已取得 !238 真实 diff；build.sh 的 usage 函数之外字节内容未变，bash -n 通过，执行真实 usage 函数的 7 种帮助模式均显示 CPU 数/上限 32；双语说明同步，未运行完整 Linux CLI 或 CANN 构建。",
+      "next_action": "复用该固定 head 的最小验证，等待 !238 合入后核对文档/help；不为纯帮助修改安排 NPU。",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 238,
+          "state": "open",
+          "target": "master",
+          "head_sha": "b8e19faba0eb94c0018ab9adeaa0a32644c9adec",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/238",
+          "title": "docs: 让编译线程数的帮助和双语文档与 build.sh 一致"
+        }
+      ],
+      "server_report_status": "服务器尚未记录此项；本地已完成PR关联和状态初筛",
+      "evidence_level": "DOC_PR_REVIEW.json：!238 应用、语法、函数边界与 7 种真实帮助输出",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "补丁已审查，最小主机验证通过，待合入",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 152,
+      "title": "[Documentation|文档反馈]: docs/en/context/basic_concept.md 量化介绍链接文件名拼写错误导致 404（中文侧正确）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/152",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "!237 和 !223 均修复同一量化链接，分别应用后 basic_concept 的 12 个相对链接目标均存在；两补丁不能原样依次应用。四空格列表渲染问题仍由 #129 / !201 单独跟踪。",
+      "next_action": "协调 !223 / !237 选一或重放，连同 !201 的同文件改动审查；目标分支合入前保持打开。",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 237,
+          "state": "open",
+          "target": "master",
+          "head_sha": "1d62d36f60a488a567461d7a393e0472609e7aad",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/237",
+          "title": "docs(en): 修正 basic_concept 量化介绍链接文件名拼写错误"
+        }
+      ],
+      "server_report_status": "服务器尚未记录此项；本地已完成PR关联和状态初筛",
+      "evidence_level": "DOC_PR_REVIEW.json：!223/!237 实际应用、12 个链接和重复 hunk 检查",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "补丁已审查，链接目标验证通过，待重复PR协调",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 151,
+      "title": "[Bug-Report|缺陷反馈]: scripts/generate_version_info.py 在 tagInfo 分段不足时生成空 timestamp",
+      "url": "https://gitcode.com/cann/ops-ras/issues/151",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "!220 固定 head 经 4 次真实 CLI 验证：无 tag、短 tag abc/a_b、正常 tag；原版 2 项时间戳格式不符合预期，候选 0 项；正常 tag 输出保持。未覆盖所有三段以上但内容为空的 tag。",
+      "next_action": "等待 !220 合入，保留分段数量回退的验证范围；不把该补丁扩写为完整 tag 格式校验。",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 220,
+          "state": "open",
+          "target": "master",
+          "head_sha": "9abe293ee4d200181fb6dd9c87733aef284d077e",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/220",
+          "title": "fix(scripts): fall back to current time when tagInfo format is unexpected"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "HOST_PR_REVIEW.json：真实 CLI 输出对照",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "补丁已审查，最小主机回归通过，待合入",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 150,
+      "title": "[Bug-Report|缺陷反馈]: scripts/check_build_dependencies.py 的 check_eq 提前返回，未按完整分段比较（8.1 与 8.1.3 判等）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/150",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "!219 固定 head 的真实补丁已在独立基线验证：9 个版本比较用例中原版 2 个错误相等判断，候选 0 个失败；包括长短版本互换、补零相等及范围比较控制。",
+      "next_action": "复用 HOST_PR_REVIEW.json 的固定 head 证据，等待 !219 合入后核对；不安排 NPU。",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 219,
+          "state": "open",
+          "target": "master",
+          "head_sha": "9a875963c8aead584ebc06af2b1c86143ef9b527",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/219",
+          "title": "fix(scripts): compare exact dependency versions by full segments"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "HOST_PR_REVIEW.json：9 项真实函数调用，原版 2 失败/候选 0 失败",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "补丁已审查，最小主机回归通过，待合入",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 149,
+      "title": "[Bug-Report|缺陷反馈]: scripts/custom/install.sh 用 `[ \"ls <dir>\" = \"\" ]` 判断空目录，条件恒为假",
+      "url": "https://gitcode.com/cann/ops-ras/issues/149",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 218,
+          "state": "open",
+          "target": "master",
+          "head_sha": "ffb6f1e4ba9c69f204a5ee1f683e14cc6636d578",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/218",
+          "title": "fix(scripts): fix empty-dir test and quoting in custom install.sh"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 148,
+      "title": "[Bug-Report|缺陷反馈]: scripts/custom/upgrade.sh 中 `[ -n \"$vendor_installed_file\"]` 缺少空格，选择 r 时旧文件不会被删除",
+      "url": "https://gitcode.com/cann/ops-ras/issues/148",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 217,
+          "state": "open",
+          "target": "master",
+          "head_sha": "71f3eb3f5096109fe35ed1aca074b0228f9f8a32",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/217",
+          "title": "fix(scripts): fix missing space in upgrade.sh removal test"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 147,
+      "title": "[Bug-Report|缺陷反馈]: scripts/custom/install.sh 覆写提示要输入 o 但代码判断 m，替换分支变量误写为 $0rn，Overlay 与 replace 两种安装方式均不可用",
+      "url": "https://gitcode.com/cann/ops-ras/issues/147",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 216,
+          "state": "open",
+          "target": "master",
+          "head_sha": "941b552808a90fbb7d4015446119c7b1f0caf8fa",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/216",
+          "title": "fix(scripts): correct overlay/replace prompt handling in custom install.sh"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 146,
+      "title": "[Documentation|文档反馈]: 文档质量扫描发现 ops-ras 仓 Ras类aclnn接口列表 文档存在问题（1 处问题）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/146",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 224,
+          "state": "open",
+          "target": "master",
+          "head_sha": "7618001537df2f17c791af2c6b751bb39e0b5c8a",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/224",
+          "title": "docs: normalize inline code for ops-ras placeholders"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 145,
+      "title": "[Documentation|文档反馈]: 文档质量扫描发现 ops-ras 仓 编译与运行样例 文档存在问题（3 处问题）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/145",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 225,
+          "state": "open",
+          "target": "master",
+          "head_sha": "1c7bc341576ad330ccb376db90e76710ba3cd36c",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/225",
+          "title": "docs: correct compile sample code block languages"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 144,
+      "title": "[Documentation|文档反馈]: 文档质量扫描发现 ops-ras 仓 aclnnObfuscationCalculate 文档存在问题（7 处问题）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/144",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 230,
+          "state": "open",
+          "target": "master",
+          "head_sha": "e3e854931880344d4540b41299560181f4ec43d2",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/230",
+          "title": "docs: fix aclnnObfuscationCalculate sample and terminology"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 143,
+      "title": "[Documentation|文档反馈]: 文档质量扫描发现 ops-ras 仓 aclnnObfuscationCalculateV2 文档存在问题（7 处问题）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/143",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 229,
+          "state": "open",
+          "target": "master",
+          "head_sha": "dc66bde0ef8e2b8fad9231b95fedda9ea02e914d",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/229",
+          "title": "docs: fix aclnnObfuscationCalculateV2 sample and parameter notes"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 142,
+      "title": "[Documentation|文档反馈]: 文档质量扫描发现 ops-ras 仓 aclnnObfuscationSetup 文档存在问题（8 处问题）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/142",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 228,
+          "state": "open",
+          "target": "master",
+          "head_sha": "59e055f4db177977d1b9ed45d1d045955a557f9c",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/228",
+          "title": "docs: fix aclnnObfuscationSetup naming and sample types"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 141,
+      "title": "[Documentation|文档反馈]: 文档质量扫描发现 ops-ras 仓 aclnnMatmulAbftVerify 文档存在问题（9 处问题）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/141",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "新增 !231；需核对是否覆盖全部扫描条目，并协调 !205；不能仅凭改了错误码表就声明全部扫描完成。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 231,
+          "state": "open",
+          "target": "master",
+          "head_sha": "99f5ab0307b8ed606a9c73f10e3ca420f4233b7e",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/231",
+          "title": "docs: correct MatmulAbftVerify error parameters"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 140,
+      "title": "[Documentation|文档反馈]: 文档质量扫描发现 ops-ras 仓 aclnnObfuscationSetupV2 文档存在问题（11 处问题）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/140",
+      "remote_state": "open",
+      "category": "D",
+      "category_label": "缺条件或范围待确认",
+      "reason": "新增 !227；可先静态审查，但完整 11 条附件未核验；还与 !198/!207 有内容重叠。",
+      "next_action": "获取完整附件，逐行对照源码/中英文文档/!227，并协调 !198/!207。",
+      "owner": "本地Agent核对附件和文档",
+      "minimum_validation": "获取完整附件，逐行对照源码/中英文文档/!227，并协调 !198/!207。",
+      "linked_prs": [
+        {
+          "number": 227,
+          "state": "open",
+          "target": "master",
+          "head_sha": "af789c62b95fe2f94a67f71db616f0c832b96d42",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/227",
+          "title": "docs: fix aclnnObfuscationSetupV2 parameter and sample issues"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 139,
+      "title": "[Documentation|文档反馈]: 文档质量扫描发现 ops-ras 仓 aclnnCrypto 文档存在问题（17 处问题）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/139",
+      "remote_state": "open",
+      "category": "D",
+      "category_label": "缺条件或范围待确认",
+      "reason": "新增 !226；可先静态审查，但完整 17 条附件未核验，不能仅凭 PR 摘要写全部覆盖或关闭。",
+      "next_action": "获取完整附件，逐行对照源码/中英文文档/!226；不要求 NPU 才能分类。",
+      "owner": "本地Agent核对附件和文档",
+      "minimum_validation": "获取完整附件，逐行对照源码/中英文文档/!226；不要求 NPU 才能分类。",
+      "linked_prs": [
+        {
+          "number": 226,
+          "state": "open",
+          "target": "master",
+          "head_sha": "d7301d47ad0cd566591187cdfb4bdf6c518684c2",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/226",
+          "title": "docs: align aclnnCrypto API names and sample"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 138,
+      "title": "[Documentation|文档反馈]: 卸载命令将绝对安装路径误作相对路径",
+      "url": "https://gitcode.com/cann/ops-ras/issues/138",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 215,
+          "state": "open",
+          "target": "master",
+          "head_sha": "fc5f019bb7fbb6e873df226f3877cea287269f9c",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/215",
+          "title": "docs: fix absolute uninstall command paths"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 137,
+      "title": "[Documentation|文档反馈]: AI CPU 日志示例引用未声明的 data_size",
+      "url": "https://gitcode.com/cann/ops-ras/issues/137",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 211,
+          "state": "open",
+          "target": "master",
+          "head_sha": "1afc531ccde2857713952091e706f799f7aef009",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/211",
+          "title": "docs: fix AI CPU log variable reference"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 135,
+      "title": "CANN开发者共建计划--[Documentation|文档反馈] AI CPU打包示例误选AI Core算子",
+      "url": "https://gitcode.com/cann/ops-ras/issues/135",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 196,
+          "state": "open",
+          "target": "master",
+          "head_sha": "900d54b98fb59f4fe7e0609d48305234c52e4c96",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/196",
+          "title": "CANN开发者共建计划-docs: correct AI CPU packaging example"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 134,
+      "title": "CANN开发者共建计划--[Documentation|文档反馈] 补齐基础数据类型示例声明的分号",
+      "url": "https://gitcode.com/cann/ops-ras/issues/134",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 195,
+          "state": "open",
+          "target": "master",
+          "head_sha": "646fbfb506b994acb68eb0ce3aba8141dd3421ad",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/195",
+          "title": "CANN开发者共建计划-docs: complete basic data type declarations"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 133,
+      "title": "CANN开发者共建计划--广播规则错误排除合法的不同rank输入",
+      "url": "https://gitcode.com/cann/ops-ras/issues/133",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 194,
+          "state": "open",
+          "target": "master",
+          "head_sha": "379aaab406d59663dd2f33184476b0fd2090e715",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/194",
+          "title": "CANN开发者共建计划--修正中英文广播兼容性规则"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 132,
+      "title": "[Documentation|文档反馈]: 中文图模式 CMake 片段硬编码 x86_64 且变量名写错",
+      "url": "https://gitcode.com/cann/ops-ras/issues/132",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 197,
+          "state": "open",
+          "target": "master",
+          "head_sha": "a5a2862b5f123b77c4c4c79d10b2c1168638bf04",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/197",
+          "title": "docs: 修复图模式 CMake 示例的架构路径"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 131,
+      "title": "[Documentation|文档反馈]: 样例编译指南链接不存在的 librasopbase.so",
+      "url": "https://gitcode.com/cann/ops-ras/issues/131",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 202,
+          "state": "open",
+          "target": "master",
+          "head_sha": "e507f3e1dd588407e5e2506ff5b65a178fbd6f4f",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/202",
+          "title": "docs: 修复 RAS 示例链接库名"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 130,
+      "title": "[Documentation|文档反馈]: aclnnMatmulAbftVerify 错误码表引用不存在的 weight/beSplitFactor/reduceCores",
+      "url": "https://gitcode.com/cann/ops-ras/issues/130",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "已有 !205，与 #141 / !231 重叠；删除负 eMax 文档不能代替 #57 的实现修复，应与 !129 的实际合同同步。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 205,
+          "state": "open",
+          "target": "master",
+          "head_sha": "e28f0b4efa50b59ff367cfdb5b65b1df6ab96656",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/205",
+          "title": "docs: correct Matmul ABFT validation errors"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 129,
+      "title": "[Documentation|文档反馈]: docs/en/context/basic_concept.md 列表缩进使整页链接渲染为代码块",
+      "url": "https://gitcode.com/cann/ops-ras/issues/129",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 201,
+          "state": "open",
+          "target": "master",
+          "head_sha": "57afd51bdec5712c49fe25dfaa1832492958448c",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/201",
+          "title": "docs: 修复 basic concept 列表渲染"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 128,
+      "title": "[Documentation|文档反馈]: Third_Party Notice 缺 protobuf 与 abseil-cpp 许可文本",
+      "url": "https://gitcode.com/cann/ops-ras/issues/128",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 206,
+          "state": "open",
+          "target": "master",
+          "head_sha": "8cbf832173f6f4e10f2ea9f80882fdefeff9d604",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/206",
+          "title": "docs: complete third-party software notices"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 127,
+      "title": "[Documentation|文档反馈]: add_example README 宣称支持 A3，def 只注册 ascend910b 与 ascend910_95",
+      "url": "https://gitcode.com/cann/ops-ras/issues/127",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 200,
+          "state": "open",
+          "target": "master",
+          "head_sha": "97029c6565beff0bb864a331d04dccf57ce1126c",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/200",
+          "title": "docs: 更正 AddExample 的 A3 支持声明"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 126,
+      "title": "[Documentation|文档反馈]: 中文静态库使用说明缺 ops-legacy/ops-math 依赖并误称可从 toolkit 获取",
+      "url": "https://gitcode.com/cann/ops-ras/issues/126",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 199,
+          "state": "open",
+          "target": "master",
+          "head_sha": "a8d75169531206f0772a5ee0cd9b260ab89c3121",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/199",
+          "title": "docs: 补充 ops-ras 静态库依赖说明"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 125,
+      "title": "[Documentation|文档反馈]: dir_structure.md 目录树与当前仓不一致（13 条路径不存在）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/125",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 204,
+          "state": "open",
+          "target": "master",
+          "head_sha": "166f69d1c3f39ba8a80ef8760e006ec30dc23b8b",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/204",
+          "title": "docs: 按当前仓库修正目录结构图"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 124,
+      "title": "[Documentation|文档反馈]: aclnnObfuscationSetup/V2 的 cmd 取值与 fdToClose 条件自相矛盾",
+      "url": "https://gitcode.com/cann/ops-ras/issues/124",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "已有 !207；与 #142/#140 的 Setup 文档修正重叠；统一资源释放 cmd=16 的文档和头文件注释。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 207,
+          "state": "open",
+          "target": "master",
+          "head_sha": "55dd156bcc510c017e2858db64038643fc61b9ab",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/207",
+          "title": "docs(ops-ras): align obfuscation setup release command"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 123,
+      "title": "[Documentation|文档反馈]: aclnnObfuscationSetupV2 参数表把 obfCoefficient 标为 int32_t",
+      "url": "https://gitcode.com/cann/ops-ras/issues/123",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "已有 !198；与 #140 / !227 的 obfCoefficient 类型修正重叠，统一核对，避免重复提交。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 198,
+          "state": "open",
+          "target": "master",
+          "head_sha": "718852c263be3f9114552ca16224caeaebe8dc49",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/198",
+          "title": "docs: 更正 ObfuscationSetupV2 参数类型说明"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 122,
+      "title": "[Documentation|文档反馈]: op_list.md 只列出 1/4 个算子，crypto 与 obfuscation 算子缺失",
+      "url": "https://gitcode.com/cann/ops-ras/issues/122",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 203,
+          "state": "open",
+          "target": "master",
+          "head_sha": "4c0221462e85b04f9504176785454d65f96f0243",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/203",
+          "title": "docs: 补全可靠性算子列表"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 118,
+      "title": "[Bug-Report|缺陷反馈]: aclnnMatmulAbftVerify 在 FLOAT16 且 K<255 时把正确结果大面积判为故障（K=3 时 54/64 行误报），FP32/BFLOAT16 无此问题",
+      "url": "https://gitcode.com/cann/ops-ras/issues/118",
+      "remote_state": "open",
+      "category": "C",
+      "category_label": "已有PR，需补针对性验证",
+      "reason": "新增 !235 已提出 FP32 checksum 路径和 K=1 保护，尚无设备验证；优先验证此候选，停止把 Host 阈值试探当作唯一修复路线。",
+      "next_action": "!235 固定 head 的 FP32/FP16/BF16、同输入无故障/目标行故障对照；先最小区分用例，候选有效后再扩大边界。",
+      "owner": "服务器Agent（NPU）",
+      "minimum_validation": "!235 固定 head 的 FP32/FP16/BF16、同输入无故障/目标行故障对照；先最小区分用例，候选有效后再扩大边界。",
+      "linked_prs": [
+        {
+          "number": 235,
+          "state": "open",
+          "target": "master",
+          "head_sha": "8e9e0093180a4cdb1b99b4dd694d1ec777f8c671",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/235",
+          "title": "fix: keep FP32 precision in the MatmulAbftVerify FP16 checksum path"
+        }
+      ],
+      "server_report_status": "已复现;floor 方案证伪;kmin=512 候选(误报 892->14, 检出 117/117)但有非单调风险,未采纳",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 117,
+      "title": "[Bug-Report|缺陷反馈]: aclnnObfuscationSetupV2 / aclnnObfuscationCalculateV2 头文件 include guard 与 V1 重名，同时包含 V1+V2 时 V2 声明被静默丢弃",
+      "url": "https://gitcode.com/cann/ops-ras/issues/117",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "已有 !208；本地 guard 修复四种包含顺序通过，完整 !208 其余部分尚未整包验证；不混入旁引的 !118（它是 EOF 清理且目标为 9.2.0）。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 208,
+          "state": "open",
+          "target": "master",
+          "head_sha": "d0d618cbd9e193a452f6d1c58873f1db082a003f",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/208",
+          "title": "fix(ops-ras): use distinct include guards for V2 headers"
+        }
+      ],
+      "server_report_status": "已复现;V2 guard 本地修复,4/4 编译顺序通过(!208 其余未验)",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 116,
+      "title": "[Documentation]: fix broken environment setup link in build guide",
+      "url": "https://gitcode.com/cann/ops-ras/issues/116",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "已取得 !188 固定 head 的真实 diff；补丁同时为中英文链接补齐章节 fragment，文件和对应标题均存在，临时基线应用与 diff check 通过；master 尚未包含该变更。",
+      "next_action": "保留 issue 打开，等待 !188 合入；合入后核对章节定位再准备关闭，无需 NPU。",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 188,
+          "state": "open",
+          "target": "master",
+          "head_sha": "a562d477beb64dbb980ba6cd10062356b8aa99ca",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/188",
+          "title": "docs: fix build environment setup link"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "DOC_PR_REVIEW.json：!188 固定 head 补丁与文件/锚点实查",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "补丁已审查，最小静态验证通过，待合入",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 115,
+      "title": "[Documentation]: make UT command examples executable in Bash",
+      "url": "https://gitcode.com/cann/ops-ras/issues/115",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 187,
+          "state": "open",
+          "target": "master",
+          "head_sha": "f3395e444a9b6767f3dafd6379e903cd11596dd3",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/187",
+          "title": "docs: make UT command examples executable"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 114,
+      "title": "[Bug]: incremental selectors skip deleted files of registered operators",
+      "url": "https://gitcode.com/cann/ops-ras/issues/114",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 186,
+          "state": "open",
+          "target": "master",
+          "head_sha": "e37be8e12bb980c2847fb2cdd328f645bd922866",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/186",
+          "title": "Fix incremental selection for deleted operator files"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 111,
+      "title": "[Documentation|文档反馈]: README 的 9.0.0 标签不存在，快速入门误导在标签上 git pull",
+      "url": "https://gitcode.com/cann/ops-ras/issues/111",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 181,
+          "state": "open",
+          "target": "master",
+          "head_sha": "ea055cdcf8164c8f8b18be3d3674461275301ce9",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/181",
+          "title": "docs: use published RAS tag and valid checkout steps"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 110,
+      "title": "[Documentation|文档反馈]: 英文开发指南将 RAS 自定义包目录误写为 _nn",
+      "url": "https://gitcode.com/cann/ops-ras/issues/110",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 180,
+          "state": "open",
+          "target": "master",
+          "head_sha": "a7000bd05121bb558d26e78deb38ff6d5716dc3f",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/180",
+          "title": "docs: fix RAS vendor paths in English guides"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 109,
+      "title": "[Bug-Report|缺陷反馈]: build.sh 的 checkopts 白名单漏收 5 个文档/help 宣传的选项（--debug --valgrind --simulator --bisheng_flags --kernel_template_input）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/109",
+      "remote_state": "open",
+      "category": "C",
+      "category_label": "已有PR，需补针对性验证",
+      "reason": "新增 !233 与旧本地草稿实现不同（新增 --debug 别名）；旧草稿 8 项回归不能自动证明 !233；需要针对该 head 核对参数传递及 Valgrind 路径。",
+      "next_action": "先对 !233 的固定 head 跑参数回归；真实 CMake/编译参数和 Valgrind 路径按环境补证。",
+      "owner": "服务器Agent（SDK构建）",
+      "minimum_validation": "先对 !233 的固定 head 跑参数回归；真实 CMake/编译参数和 Valgrind 路径按环境补证。",
+      "linked_prs": [
+        {
+          "number": 233,
+          "state": "open",
+          "target": "master",
+          "head_sha": "f011358079993584137eb80b34de4a8c815ffd23",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/233",
+          "title": "fix: accept documented build options and sync build docs"
+        }
+      ],
+      "server_report_status": "8 项主机回归通过;Valgrind 缺失;真实传参未验证",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 108,
+      "title": "[Bug-Report|缺陷反馈]: parser_ini 的 check_op_info 里 shapeType/needCompile 合法值只声明不校验，三个变量是死代码",
+      "url": "https://gitcode.com/cann/ops-ras/issues/108",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "新增 !232 采用删除死常量并明确解析范围；不等于实现 shapeType/needCompile 枚举校验。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 232,
+          "state": "open",
+          "target": "master",
+          "head_sha": "07d250e5d6f49710c9b4582976cb65029fc53ae9",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/232",
+          "title": "fix: remove dead shapeType/needCompile validation constants"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 107,
+      "title": "[L2] 本仓已启用 end-of-file-fixer，但 master 上仍有 121 个文本文件缺末行换行（含 .clang-format 本身）；我那条批量 PR 因基线过时+cann-cla/no 已关闭，改以本条交接",
+      "url": "https://gitcode.com/cann/ops-ras/issues/107",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "新增 !234 是 EOF 清理；与本地 115 文件草稿范围不同，按真实 diff 和格式门禁确认，无需 NPU。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 234,
+          "state": "open",
+          "target": "master",
+          "head_sha": "3d60bdeb8bcee67b0e0baa1e11330d937d863888",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/234",
+          "title": "chore: add missing end-of-file newlines"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 105,
+      "title": "[L2] docs: docs/zh/develop/cross_platform_migration_guide.md 的 4 处 <img> 指向 docs/zh/figures/ 下不存在的文件",
+      "url": "https://gitcode.com/cann/ops-ras/issues/105",
+      "remote_state": "open",
+      "category": "A",
+      "category_label": "可准备关闭",
+      "reason": "与 #64 为同一文件的同四处图片问题；!190 closed，主问题应继续由 #64 / !137 跟踪。",
+      "next_action": "准备关闭说明，待用户恢复 GitCode 远端操作授权",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "当前 master 文件/讨论依据已核对，无需 NPU",
+      "linked_prs": [
+        {
+          "number": 137,
+          "state": "open",
+          "target": "master",
+          "head_sha": "38ceefd1916aca9c9eb251610d41c624b7b32cb0",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/137",
+          "title": "docs(zh): add missing Chinese-named figures for cross-platform migration guide"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "master源码/当前讨论",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关闭依据已核对",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 104,
+      "title": "[Risk|风险提示]: cleanup.sh 执行 rm -rf $(pwd) 无路径校验无安全提示，误执行将递归删除当前目录全部内容（L4）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/104",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 179,
+          "state": "open",
+          "target": "master",
+          "head_sha": "6d693243146d04efdb691bece92cc18038e62885",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/179",
+          "title": "[L4] security: cleanup.sh 的 rm -rf 增加路径安全守卫，防误删（#104）"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 103,
+      "title": "[Bug-Report|缺陷反馈]: 静态符号后处理硬编码 source/build，非默认构建树扫描错误归档",
+      "url": "https://gitcode.com/cann/ops-ras/issues/103",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 168,
+          "state": "open",
+          "target": "master",
+          "head_sha": "ecce3eadd45978e43573217c62c950d5e5b46250",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/168",
+          "title": "fix(build): scan the actual static archive target"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 102,
+      "title": "[Bug-Report|缺陷反馈]: tiling 生成器携带keys时忽略显式库路径，生成另一注册库的头",
+      "url": "https://gitcode.com/cann/ops-ras/issues/102",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 167,
+          "state": "open",
+          "target": "master",
+          "head_sha": "e9b977927ee1cafe3b8d07877d16feb112c64e23",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/167",
+          "title": "fix(test): preserve UT tiling keys and explicit library arguments"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 101,
+      "title": "[Bug-Report|缺陷反馈]: UT tiling 生成命令提前构造，遗漏自定义keys并错误传递空尾参",
+      "url": "https://gitcode.com/cann/ops-ras/issues/101",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 167,
+          "state": "open",
+          "target": "master",
+          "head_sha": "e9b977927ee1cafe3b8d07877d16feb112c64e23",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/167",
+          "title": "fix(test): preserve UT tiling keys and explicit library arguments"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 100,
+      "title": "[Bug-Report|缺陷反馈]: adapter 安装规则在配置时列举尚未生成文件，首次干净安装遗漏产物",
+      "url": "https://gitcode.com/cann/ops-ras/issues/100",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 166,
+          "state": "open",
+          "target": "master",
+          "head_sha": "ccd7b17eacf8241546846d754b10701a0125eb0c",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/166",
+          "title": "fix(build): refresh and install generated adapters"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 99,
+      "title": "[Bug-Report|缺陷反馈]: adapter 增量生成未跟踪导入模块，解析器更新后沿用旧产物",
+      "url": "https://gitcode.com/cann/ops-ras/issues/99",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 166,
+          "state": "open",
+          "target": "master",
+          "head_sha": "ccd7b17eacf8241546846d754b10701a0125eb0c",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/166",
+          "title": "fix(build): refresh and install generated adapters"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 98,
+      "title": "[Bug-Report|缺陷反馈]: ALL算子编译选项整表替换使其他SoC或全局配置静默丢失",
+      "url": "https://gitcode.com/cann/ops-ras/issues/98",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 165,
+          "state": "open",
+          "target": "master",
+          "head_sha": "b15b5236bd372081910e337e45a35ad9dd8c5ae1",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/165",
+          "title": "fix(build): retain SoC compiler options during adapter generation"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 97,
+      "title": "[Bug-Report|缺陷反馈]: 已支持Ascend950编译选项在适配器生成时因缺少SoC映射抛KeyError",
+      "url": "https://gitcode.com/cann/ops-ras/issues/97",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 165,
+          "state": "open",
+          "target": "master",
+          "head_sha": "b15b5236bd372081910e337e45a35ad9dd8c5ae1",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/165",
+          "title": "fix(build): retain SoC compiler options during adapter generation"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 96,
+      "title": "[Bug-Report|缺陷反馈]: 编译选项生成器用子串匹配特殊flag，合法宏或include参数被误拒绝或改写",
+      "url": "https://gitcode.com/cann/ops-ras/issues/96",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 164,
+          "state": "open",
+          "target": "master",
+          "head_sha": "b39c9631734eab6b1dbe8561f4d343388699cb85",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/164",
+          "title": "fix(build): classify generator options by their complete names"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 95,
+      "title": "[Bug-Report|缺陷反馈]: 静态资源转换丢弃线程 Future，worker 异常被吞且 CLI 返回成功",
+      "url": "https://gitcode.com/cann/ops-ras/issues/95",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 163,
+          "state": "open",
+          "target": "master",
+          "head_sha": "7f2698eb506707967a161ffb217262c70f5b3139",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/163",
+          "title": "fix(build): propagate static resource generation failures"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 94,
+      "title": "[Bug-Report|缺陷反馈]: 静态库符号扫描忽略 readelf 失败，CLI 返回成功并覆盖符号输出",
+      "url": "https://gitcode.com/cann/ops-ras/issues/94",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 163,
+          "state": "open",
+          "target": "master",
+          "head_sha": "7f2698eb506707967a161ffb217262c70f5b3139",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/163",
+          "title": "fix(build): propagate static resource generation failures"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 93,
+      "title": "[Bug-Report|缺陷反馈]: 编译选项 CLI 忽略 call_write_scripts 的失败并固定 exit 0，缺失配置或生成失败被掩盖",
+      "url": "https://gitcode.com/cann/ops-ras/issues/93",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "已有 !162，目前仅静态核对；与 #92 同组，按路径引用和失败传播的主机回归审查，不需要 NPU。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 162,
+          "state": "open",
+          "target": "master",
+          "head_sha": "adefc6b8a9deb1d29fb8f9c35cfa478a70bca2e7",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/162",
+          "title": "fix(build): quote compiler option paths and propagate failures"
+        }
+      ],
+      "server_report_status": "!162 已取得真实 diff 静态核对;未移植未验证",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 92,
+      "title": "[Bug-Report|缺陷反馈]: 编译选项 CLI 未引用脚本与仓库路径，空格目录丢失根路径而不能生成适配器",
+      "url": "https://gitcode.com/cann/ops-ras/issues/92",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "与 #93 同属 !162，按同一变更和主机回归合并审查。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 162,
+          "state": "open",
+          "target": "master",
+          "head_sha": "adefc6b8a9deb1d29fb8f9c35cfa478a70bca2e7",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/162",
+          "title": "fix(build): quote compiler option paths and propagate failures"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 91,
+      "title": "[Bug-Report|缺陷反馈]: binary.json 的 op_type 用逐行 grep 和贪婪引号读取，合法紧凑或跨行 JSON 解析错误",
+      "url": "https://gitcode.com/cann/ops-ras/issues/91",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 161,
+          "state": "open",
+          "target": "master",
+          "head_sha": "d37d8f2fad619d0d0631c2a780e3e4d8f9d6a88a",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/161",
+          "title": "fix(build): refresh operator config and copy all custom kernels"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 90,
+      "title": "[Bug-Report|缺陷反馈]: op_type/有效性以 CMake CACHE INTERNAL 持久化，重新配置仍使用修改前结果",
+      "url": "https://gitcode.com/cann/ops-ras/issues/90",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 161,
+          "state": "open",
+          "target": "master",
+          "head_sha": "d37d8f2fad619d0d0631c2a780e3e4d8f9d6a88a",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/161",
+          "title": "fix(build): refresh operator config and copy all custom kernels"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 89,
+      "title": "[Bug-Report|缺陷反馈]: 多算子 custom ASC 构建在复制循环内提前 return，仅第一个算子有 kernel 源码",
+      "url": "https://gitcode.com/cann/ops-ras/issues/89",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 161,
+          "state": "open",
+          "target": "master",
+          "head_sha": "d37d8f2fad619d0d0631c2a780e3e4d8f9d6a88a",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/161",
+          "title": "fix(build): refresh operator config and copy all custom kernels"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 88,
+      "title": "[Bug-Report|缺陷反馈]: AICPU JSON 合并器忽略后续缺失输入或失败，后续成功掩盖不完整输出",
+      "url": "https://gitcode.com/cann/ops-ras/issues/88",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "已有 !160；本地移植的错误传播对照通过，不能把该有限证据扩写为所有路径/全部 PR head 已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 160,
+          "state": "open",
+          "target": "master",
+          "head_sha": "d8d1c06c2e734f15e681868134fcabfbb53ee9d4",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/160",
+          "title": "fix(build): quote AICPU merge paths and propagate failures"
+        }
+      ],
+      "server_report_status": "基线复现;本地移植 !160 后候选回归通过(json 合并 4 例)",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 87,
+      "title": "[Bug-Report|缺陷反馈]: AICPU JSON Bash 合并器未引用源目录及输入输出路径，空格目录不能正确合并",
+      "url": "https://gitcode.com/cann/ops-ras/issues/87",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "与 #88 同属 !160；优先复用已有带空格路径真实脚本回归，不能当成另一份需要 NPU 的任务。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 160,
+          "state": "open",
+          "target": "master",
+          "head_sha": "d8d1c06c2e734f15e681868134fcabfbb53ee9d4",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/160",
+          "title": "fix(build): quote AICPU merge paths and propagate failures"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 86,
+      "title": "[Bug-Report|缺陷反馈]: AICPU INI 转 JSON 对缺失输入只警告，成功生成空或不完整算子元数据",
+      "url": "https://gitcode.com/cann/ops-ras/issues/86",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 159,
+          "state": "open",
+          "target": "master",
+          "head_sha": "3dcade5f047a2f81811993febcc071471605ce43",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/159",
+          "title": "fix(build): reject missing AICPU metadata INI inputs"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 85,
+      "title": "[Bug-Report|缺陷反馈]: 算子配置通过 SoC 字符串 split 构造 filePath，合法父目录被截断或无 SoC 目录报错",
+      "url": "https://gitcode.com/cann/ops-ras/issues/85",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 158,
+          "state": "open",
+          "target": "master",
+          "head_sha": "bd3d1eedb5392c3dd94547cf6d31f30a8827785b",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/158",
+          "title": "fix(build): derive binary metadata paths from the input root"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 84,
+      "title": "[Bug-Report|缺陷反馈]: OPC-info CSV 缩短或清空后未截断旧文件，残留已移除算子行",
+      "url": "https://gitcode.com/cann/ops-ras/issues/84",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 157,
+          "state": "open",
+          "target": "master",
+          "head_sha": "f5f9a9f9bfcdbcea1f0f9bbd3c0bf3f30acbcae4",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/157",
+          "title": "fix(build): truncate regenerated OPC-info CSV output"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 83,
+      "title": "[Bug-Report|缺陷反馈]: 实现模式 JSON 生成 CLI 对已识别的缺失输入仍返回成功",
+      "url": "https://gitcode.com/cann/ops-ras/issues/83",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 156,
+          "state": "open",
+          "target": "master",
+          "head_sha": "3f3e26f1e0dd8c990c6089d248a5c5983abad4cf",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/156",
+          "title": "fix(build): propagate implementation-mode input failures"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 82,
+      "title": "[Bug-Report|缺陷反馈]: Host replay 生成的 tiling 初始化器只复制完整 8 字节块，丢失较小结构和尾部",
+      "url": "https://gitcode.com/cann/ops-ras/issues/82",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 155,
+          "state": "open",
+          "target": "master",
+          "head_sha": "da99d377fff7d1742f2d57aecaee29ed140c2cd2",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/155",
+          "title": "fix(replay): copy all packed tiling bytes on the host"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 81,
+      "title": "[Bug-Report|缺陷反馈]: OPC 配置分片器对合法空任务列表发生除零",
+      "url": "https://gitcode.com/cann/ops-ras/issues/81",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 154,
+          "state": "open",
+          "target": "master",
+          "head_sha": "edfb95ef8c101e6e029460c43cca081aa5348b86",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/154",
+          "title": "fix(build): split empty OPC workloads without division by zero"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 80,
+      "title": "[Bug-Report|缺陷反馈]: 算子配置输入全部移除后合并 CLI 仍成功并遗留旧任务产物",
+      "url": "https://gitcode.com/cann/ops-ras/issues/80",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 153,
+          "state": "open",
+          "target": "master",
+          "head_sha": "adf42f4873964611a3214cfc3087b386ad00444b",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/153",
+          "title": "fix(build): normalize binary config paths and reject missing inputs"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 79,
+      "title": "[Bug-Report|缺陷反馈]: 算子配置 JSON 合并器对等价目录拼写生成错误文件名",
+      "url": "https://gitcode.com/cann/ops-ras/issues/79",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 153,
+          "state": "open",
+          "target": "master",
+          "head_sha": "adf42f4873964611a3214cfc3087b386ad00444b",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/153",
+          "title": "fix(build): normalize binary config paths and reject missing inputs"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 78,
+      "title": "[Bug-Report|缺陷反馈]: INI 合并 CLI 在最终输出写入失败时仍返回成功",
+      "url": "https://gitcode.com/cann/ops-ras/issues/78",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 152,
+          "state": "open",
+          "target": "master",
+          "head_sha": "5e7016050f50e876777d716b95a130ab3d35c3dc",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/152",
+          "title": "fix(build): propagate merged INI output failures"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 77,
+      "title": "[Bug-Report|缺陷反馈]: 静态 ACLNN 修改器未引用构建路径，合法空格或单引号路径无法修改",
+      "url": "https://gitcode.com/cann/ops-ras/issues/77",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 151,
+          "state": "open",
+          "target": "master",
+          "head_sha": "0139ba299eb118a85628e7926c635cdbab72d187",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/151",
+          "title": "fix(build): quote static ACLNN paths and propagate command failures"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 76,
+      "title": "[Bug-Report|缺陷反馈]: 静态 ACLNN 修改器忽略子命令失败并向构建返回成功",
+      "url": "https://gitcode.com/cann/ops-ras/issues/76",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 151,
+          "state": "open",
+          "target": "master",
+          "head_sha": "0139ba299eb118a85628e7926c635cdbab72d187",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/151",
+          "title": "fix(build): quote static ACLNN paths and propagate command failures"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 75,
+      "title": "[Bug-Report|缺陷反馈]: 适配器字符串默认值未转义而生成无效或错误 Python 字面量",
+      "url": "https://gitcode.com/cann/ops-ras/issues/75",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 150,
+          "state": "open",
+          "target": "master",
+          "head_sha": "3f33955195f29229368a4ffb8ecf0ae3457f8636",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/150",
+          "title": "fix(build): preserve and encode adapter string defaults"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 74,
+      "title": "[Bug-Report|缺陷反馈]: 适配器 INI 字符串默认值遇到等号被静默截断",
+      "url": "https://gitcode.com/cann/ops-ras/issues/74",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 150,
+          "state": "open",
+          "target": "master",
+          "head_sha": "3f33955195f29229368a4ffb8ecf0ae3457f8636",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/150",
+          "title": "fix(build): preserve and encode adapter string defaults"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 73,
+      "title": "[Bug-Report|缺陷反馈]: kernelSrc 更新器对合法 INI 空白节标题和键格式处理失败",
+      "url": "https://gitcode.com/cann/ops-ras/issues/73",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 149,
+          "state": "open",
+          "target": "master",
+          "head_sha": "5ef82f7aec7dc022397e5bda9f13cbeefd868cf3",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/149",
+          "title": "fix(build): preserve kernel source fallback and valid INI updates"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 72,
+      "title": "[Bug-Report|缺陷反馈]: ALL 默认 kernelSrc 重复插入已有键并破坏 INI",
+      "url": "https://gitcode.com/cann/ops-ras/issues/72",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 149,
+          "state": "open",
+          "target": "master",
+          "head_sha": "5ef82f7aec7dc022397e5bda9f13cbeefd868cf3",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/149",
+          "title": "fix(build): preserve kernel source fallback and valid INI updates"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 71,
+      "title": "[Bug-Report|缺陷反馈]: 二进制元数据生成器把构建根路径中的方括号当作 glob 模式",
+      "url": "https://gitcode.com/cann/ops-ras/issues/71",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 148,
+          "state": "open",
+          "target": "master",
+          "head_sha": "87a0177dc4d4e6a155cad9c5ad8ab741f158470a",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/148",
+          "title": "fix(build): preserve binary metadata parameter groups and paths"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 70,
+      "title": "[Bug-Report|缺陷反馈]: 二进制元数据生成器遇到缺省可选参数变体时在兼容性比较中崩溃",
+      "url": "https://gitcode.com/cann/ops-ras/issues/70",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 148,
+          "state": "open",
+          "target": "master",
+          "head_sha": "87a0177dc4d4e6a155cad9c5ad8ab741f158470a",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/148",
+          "title": "fix(build): preserve binary metadata parameter groups and paths"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 69,
+      "title": "[Bug-Report|缺陷反馈]: 二进制元数据生成器将多个动态输入/输出组写成同一个累计列表",
+      "url": "https://gitcode.com/cann/ops-ras/issues/69",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 148,
+          "state": "open",
+          "target": "master",
+          "head_sha": "87a0177dc4d4e6a155cad9c5ad8ab741f158470a",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/148",
+          "title": "fix(build): preserve binary metadata parameter groups and paths"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 68,
+      "title": "[Bug-Report|缺陷反馈]: 算子依赖配置入口未传播 CMake 配置失败，Python CLI 仍返回成功",
+      "url": "https://gitcode.com/cann/ops-ras/issues/68",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 145,
+          "state": "open",
+          "target": "master",
+          "head_sha": "3eb2469687d4119559e44ae8b1eff7c6e725de1c",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/145",
+          "title": "fix(build): propagate dependency CMake configuration failures"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 67,
+      "title": "[Bug-Report|缺陷反馈]: Graph 原型合并增量构建未跟踪 proto 及生成脚本依赖",
+      "url": "https://gitcode.com/cann/ops-ras/issues/67",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 143,
+          "state": "open",
+          "target": "master",
+          "head_sha": "953c519212a03741f17ccdfd94bdd56b8d043b1d",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/143",
+          "title": "fix: 跟踪 Graph 原型合并的输入依赖(#67)"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 66,
+      "title": "[Bug-Report|缺陷反馈]: 算子配置 JSON 覆盖较短结果时残留旧文件尾部",
+      "url": "https://gitcode.com/cann/ops-ras/issues/66",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 142,
+          "state": "open",
+          "target": "master",
+          "head_sha": "0568073a08bbd4a2cc949c2a95001edf8e3eca14",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/142",
+          "title": "fix: truncate reused operator JSON outputs"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 65,
+      "title": "[Bug-Report|缺陷反馈]: MatmulAbftVerify InferShape 返回错误的动态输出长度",
+      "url": "https://gitcode.com/cann/ops-ras/issues/65",
+      "remote_state": "open",
+      "category": "C",
+      "category_label": "已有PR，需补针对性验证",
+      "reason": "已有 !135；先跑 Host InferShape 的未知维度输出 [-1] 和静态 [8] 对照，不把 -1 分配为普通设备张量。",
+      "next_action": "Host InferShape：动态维度 [-1]；静态输出 [8]。",
+      "owner": "服务器Agent（Host UT）",
+      "minimum_validation": "Host InferShape：动态维度 [-1]；静态输出 [8]。",
+      "linked_prs": [
+        {
+          "number": 135,
+          "state": "open",
+          "target": "master",
+          "head_sha": "d61853ffae388a5759d76a8d66aa38e6ce9a8bb1",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/135",
+          "title": "Preserve unknown dimensions in MatmulAbftVerify InferShape"
+        }
+      ],
+      "server_report_status": "未开始(host infershape)",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 64,
+      "title": "[L2] 跨平台迁移指南（中文页）4 张图按中文文件名引用，素材只以英文名存在于 docs/en/figures → 页面全部破图",
+      "url": "https://gitcode.com/cann/ops-ras/issues/64",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "已有 !137；与重复项 #105 统一跟踪，另与 !141 的图片命名规范方案协调。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 137,
+          "state": "open",
+          "target": "master",
+          "head_sha": "38ceefd1916aca9c9eb251610d41c624b7b32cb0",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/137",
+          "title": "docs(zh): add missing Chinese-named figures for cross-platform migration guide"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 63,
+      "title": "[L2] docs/quant_mode_introduction.md 是 docs/en/context/ 同名文件的逐字节副本，但它这里的 5 张图路径解析不到",
+      "url": "https://gitcode.com/cann/ops-ras/issues/63",
+      "remote_state": "open",
+      "category": "A",
+      "category_label": "可准备关闭",
+      "reason": "最新讨论明确与 #59 重复；按重复准备关闭，#59 / !139 继续跟踪，不能声称主问题已修。",
+      "next_action": "准备关闭说明，待用户恢复 GitCode 远端操作授权",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "当前 master 文件/讨论依据已核对，无需 NPU",
+      "linked_prs": [
+        {
+          "number": 139,
+          "state": "open",
+          "target": "master",
+          "head_sha": "02b9641ba6fdd7acf20262aa66d7dc952804e3b0",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/139",
+          "title": "docs: remove orphaned duplicate of docs/en/context/quant_mode_introduction.md"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "master源码/当前讨论",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关闭依据已核对",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 62,
+      "title": "[Documentation|文档反馈] 自定义包环境激活路径缺少真实 vendor 目录的 _ras 后缀",
+      "url": "https://gitcode.com/cann/ops-ras/issues/62",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 134,
+          "state": "open",
+          "target": "master",
+          "head_sha": "318261f839e98a2ccfb264bb361ee02b8d84ef8f",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/134",
+          "title": "docs: include the RAS suffix in custom package activation paths"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 61,
+      "title": "[Documentation|文档反馈] op_debug_prof 中英文示例将错误日志用作 printf 格式字符串",
+      "url": "https://gitcode.com/cann/ops-ras/issues/61",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 133,
+          "state": "open",
+          "target": "master",
+          "head_sha": "1072956e558f6c12d2c1c233988e14325578119c",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/133",
+          "title": "docs: print ACL error messages safely in RAS guides"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 60,
+      "title": "[L2] gen_output_json.py：continue 之后的 _failed.json 清理与 raise FileNotFoundError 永不执行（缺 json 只打日志不失败）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/60",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 136,
+          "state": "open",
+          "target": "master",
+          "head_sha": "d40624d0840ca9a268de66e4c226faa0ef6ddfa5",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/136",
+          "title": "fix: remove continue that made failed-json cleanup unreachable"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 59,
+      "title": "[Bug][docs]: docs/quant_mode_introduction.md 是与 docs/en/context/ 下同名文件逐字节相同的孤儿副本，其 5 处图片引用在该层级全部破图",
+      "url": "https://gitcode.com/cann/ops-ras/issues/59",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 139,
+          "state": "open",
+          "target": "master",
+          "head_sha": "02b9641ba6fdd7acf20262aa66d7dc952804e3b0",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/139",
+          "title": "docs: remove orphaned duplicate of docs/en/context/quant_mode_introduction.md"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 58,
+      "title": "[Documentation|文档反馈]: Crypto 文档原型名称错误且示例 IV 缓冲区长度不足",
+      "url": "https://gitcode.com/cann/ops-ras/issues/58",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 129,
+          "state": "open",
+          "target": "master",
+          "head_sha": "7e3df686b9d305b0c16a3dc8f869bd95638361e8",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/129",
+          "title": "fix: validate MatmulAbftVerify inputs and Crypto example"
+        },
+        {
+          "number": 131,
+          "state": "open",
+          "target": "master",
+          "head_sha": "33a97edebe954d2c55dea3390d2b8c244c163993",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/131",
+          "title": "[docs] 修复 aclnnCrypto 文档原型名与示例 IV 缓冲区越界读取"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 57,
+      "title": "[Bug-Report|缺陷反馈]: MatmulAbftVerify 接受负 eMax，与文档参数校验约定不符",
+      "url": "https://gitcode.com/cann/ops-ras/issues/57",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "已有 !129，负值/NaN/Inf 拒绝及 eMax=0 合法已在后续报告说明；与 #56 合并验证，不再为相同 PR 重复建环境。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 129,
+          "state": "open",
+          "target": "master",
+          "head_sha": "7e3df686b9d305b0c16a3dc8f869bd95638361e8",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/129",
+          "title": "fix: validate MatmulAbftVerify inputs and Crypto example"
+        }
+      ],
+      "server_report_status": "!129 本地应用验证:eMax<0/NaN/Inf 被拒(eMax=0 合法),fix rc=0;未合入",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 56,
+      "title": "[Bug-Report|缺陷反馈]: MatmulAbftVerify 未校验 B/C/weight 的输入类型与 shape 合同",
+      "url": "https://gitcode.com/cann/ops-ras/issues/56",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "已有 !129，服务器报告已完成本地阶段一修复对照及 Host UT；修复未进入 master，保持 open，复用对应源码/补丁身份的证据。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 129,
+          "state": "open",
+          "target": "master",
+          "head_sha": "7e3df686b9d305b0c16a3dc8f869bd95638361e8",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/129",
+          "title": "fix: validate MatmulAbftVerify inputs and Crypto example"
+        }
+      ],
+      "server_report_status": "!129 本地应用验证:非法 shape/rank 8->0,UT 28/28;未合入",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 53,
+      "title": "[Bug-Report|缺陷反馈]: MatmulAbftVerify FP16 mean factor can round to zero",
+      "url": "https://gitcode.com/cann/ops-ras/issues/53",
+      "remote_state": "open",
+      "category": "C",
+      "category_label": "已有PR，需补针对性验证",
+      "reason": "已有 !126；先跑 Host tiling 大 K 元数据用例检查 aMeanFactorBits=0x0001，无需分配巨大设备输入。",
+      "next_action": "Host tiling：M=N=1,K=20000000,FP16，factor bits=0x0001。",
+      "owner": "服务器Agent（Host UT）",
+      "minimum_validation": "Host tiling：M=N=1,K=20000000,FP16，factor bits=0x0001。",
+      "linked_prs": [
+        {
+          "number": 126,
+          "state": "open",
+          "target": "master",
+          "head_sha": "aca186117397ff32b3634fe79987abe29244a28a",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/126",
+          "title": "Fix FP16 subnormal rounding for MatmulAbftVerify mean factor"
+        }
+      ],
+      "server_report_status": "未开始(host tiling)",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 52,
+      "title": "`aclnnCrypto` 丢弃连续化结果，导致非连续 Tensor 读写错误",
+      "url": "https://gitcode.com/cann/ops-ras/issues/52",
+      "remote_state": "open",
+      "category": "D",
+      "category_label": "缺条件或范围待确认",
+      "reason": "已有 !146；目前服务器缺匹配的 Crypto AICPU 后端，旧草稿失败已回滚；读密钥路径另需 KMS/SPDM，普通提供密钥路径应单独判断服务需求。",
+      "next_action": "先补匹配 Crypto 后端，再六路 stride-2 与输出哨兵；服务依赖按密钥模式区分。",
+      "owner": "环境负责人/服务器Agent",
+      "minimum_validation": "先补匹配 Crypto 后端，再六路 stride-2 与输出哨兵；服务依赖按密钥模式区分。",
+      "linked_prs": [
+        {
+          "number": 146,
+          "state": "open",
+          "target": "master",
+          "head_sha": "583244394191b0d3fcd4a9d432410cad5336d589",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/146",
+          "title": "Fix non-contiguous tensor handling in aclnnCrypto"
+        }
+      ],
+      "server_report_status": "静态确认根因;草稿补丁已回滚;设备阻塞(CANN 9.0.0 无 Crypto AICPU/KMS)",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 51,
+      "title": "API 清单中的 MatmulAbftVerify 文档链接不存在",
+      "url": "https://gitcode.com/cann/ops-ras/issues/51",
+      "remote_state": "open",
+      "category": "A",
+      "category_label": "可准备关闭",
+      "reason": "当前 master 中英文 API 清单均指向实际存在的 aclnnMatmulAbftVerify 文档；!125 虽仍 open，问题现状已消失。",
+      "next_action": "准备关闭说明，待用户恢复 GitCode 远端操作授权",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "当前 master 文件/讨论依据已核对，无需 NPU",
+      "linked_prs": [
+        {
+          "number": 125,
+          "state": "open",
+          "target": "master",
+          "head_sha": "e3331dc92478dc4520c6786cfe4c3345fc4828f7",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/125",
+          "title": "修正 MatmulAbftVerify 的中英文 API 文档链接"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "master源码/当前讨论",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关闭依据已核对",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 49,
+      "title": "[Documentation|文档反馈]: OpsRas 安装文档缺少 `--full`",
+      "url": "https://gitcode.com/cann/ops-ras/issues/49",
+      "remote_state": "open",
+      "category": "A",
+      "category_label": "可准备关闭",
+      "reason": "最新讨论已确认误报：把内置包 --full 约束误套到自定义包；!123 closed，不能恢复该修复。",
+      "next_action": "准备关闭说明，待用户恢复 GitCode 远端操作授权",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "当前 master 文件/讨论依据已核对，无需 NPU",
+      "linked_prs": [],
+      "server_report_status": "",
+      "evidence_level": "master源码/当前讨论",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关闭依据已核对",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 45,
+      "title": "[Documentation|文档反馈]: op_debug_prof 中英文文档 Simulator 链接失效",
+      "url": "https://gitcode.com/cann/ops-ras/issues/45",
+      "remote_state": "open",
+      "category": "A",
+      "category_label": "可准备关闭",
+      "reason": "当前 master 的中英文 Simulator 文件和锚点均存在；!112 已 merged；讨论确认与 #42 重复且已修复。",
+      "next_action": "准备关闭说明，待用户恢复 GitCode 远端操作授权",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "当前 master 文件/讨论依据已核对，无需 NPU",
+      "linked_prs": [],
+      "server_report_status": "",
+      "evidence_level": "master源码/当前讨论",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关闭依据已核对",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 44,
+      "title": "[Documentation|文档反馈]: docs/en 若干相对链接指向不存在的文档（6 处死链）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/44",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "!223 的真实修改只有量化链接一行，已验证该页 12 个链接目标；与 !237 重叠。原报告声称约 6 处但只列部分位置，原 Simulator 问题已在 master 修复，不能据单行 PR 宣称原 6 项全部验收。",
+      "next_action": "按已列明位置和当前文件树补齐范围说明；与 #152 的同一链接修复统一跟踪，避免重复合入。",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 223,
+          "state": "open",
+          "target": "master",
+          "head_sha": "f24d1feafa3e84cdbe254e3f78f159d56ee2cabe",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/223",
+          "title": "docs: fix dead quant mode introduction link"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "DOC_PR_REVIEW.json + 当前 issue 原文范围对照",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "已审查相关补丁，原报告范围仍需澄清",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 40,
+      "title": "[Documentation|文档反馈]: 约 4 个文档标题手工添加序号（最新 master 核验仍存在）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/40",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "PR 正文明确引用本 issue，当前 open、目标 master；这里只确认关联与状态，尚未逐项复核完整 diff/CI，不宣称修复已验证。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 140,
+          "state": "open",
+          "target": "master",
+          "head_sha": "de262f4c8c55e872b8f0b4d24c2d598a511a4830",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/140",
+          "title": "[docs] 移除文档标题中手工添加的序号并修正受影响锚点"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 38,
+      "title": "[Documentation|文档反馈]: 文档图片命名不符合规范——31 个图片使用中文名或大写字母（应为英文小写+下划线）",
+      "url": "https://gitcode.com/cann/ops-ras/issues/38",
+      "remote_state": "open",
+      "category": "B",
+      "category_label": "已有PR，待范围审查/合入",
+      "reason": "已有 !141 的图片命名规范方案；需与 !137 / #64 的补图方案统一，避免相互失效。",
+      "next_action": "审查已有修复范围及可复用测试证据；无必要不重跑整套测试；修复合入前保持 issue 打开",
+      "owner": "本地Agent核对；维护者负责合入/关闭",
+      "minimum_validation": "按改动选择静态检查或已有针对性回归；不默认要求 NPU",
+      "linked_prs": [
+        {
+          "number": 141,
+          "state": "open",
+          "target": "master",
+          "head_sha": "50552e2cc9a8a1204f00ad1d2c225c198fb34e71",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/141",
+          "title": "[docs] 按规范重命名 31 个非规范图片文件并同步更新引用"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 23,
+      "title": "[Bug-Report|缺陷反馈]: Obfuscation 系列 OpAPI 对 Tensor shape 只校验 rank",
+      "url": "https://gitcode.com/cann/ops-ras/issues/23",
+      "remote_state": "open",
+      "category": "C",
+      "category_label": "已有PR，需补针对性验证",
+      "reason": "已有 !87；先验证四接口的阶段一 shape 拒绝和合法对照，不需要先运行非法 kernel 或等待混淆服务。",
+      "next_action": "仅阶段一 shape 拒绝 + 合法对照；不执行非法 kernel。",
+      "owner": "服务器Agent（Host/OpAPI）",
+      "minimum_validation": "仅阶段一 shape 拒绝 + 合法对照；不执行非法 kernel。",
+      "linked_prs": [
+        {
+          "number": 87,
+          "state": "open",
+          "target": "master",
+          "head_sha": "8689c1143817acf832d73f3220b219730da6887c",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/87",
+          "title": "[修复] 完善 Obfuscation 系列 OpAPI 的 Tensor shape 校验"
+        }
+      ],
+      "server_report_status": "未开始(obfuscation shape)",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    },
+    {
+      "number": 16,
+      "title": "[Documentation|文档反馈]: AddExample 模板算子缺少对 int64 和 bf16 数据类型的支持",
+      "url": "https://gitcode.com/cann/ops-ras/issues/16",
+      "remote_state": "open",
+      "category": "D",
+      "category_label": "缺条件或范围待确认",
+      "reason": "已有 !236，但这是示例能力扩展；需确认目标 SoC/支持范围，再安排 INT64/BF16 最小设备验证，不以静态 pre-commit 代替。",
+      "next_action": "支持范围确认后，固定 SoC 的 INT64/BF16 add_example 合法输出/边界。",
+      "owner": "维护者确认范围后由服务器Agent验证",
+      "minimum_validation": "支持范围确认后，固定 SoC 的 INT64/BF16 add_example 合法输出/边界。",
+      "linked_prs": [
+        {
+          "number": 236,
+          "state": "open",
+          "target": "master",
+          "head_sha": "5bfea742e29e7f10e16766a32da5896ffc632d95",
+          "url": "https://gitcode.com/cann/ops-ras/merge_requests/236",
+          "title": "feat: support INT64 and BF16 in the AddExample template"
+        }
+      ],
+      "server_report_status": "",
+      "evidence_level": "当前issue/PR正文和状态；验证范围见reason",
+      "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+      "review_stage": "关联初筛完成，验证状态见现有证据",
+      "last_review_date": "2026-11-26"
+    }
+  ]
+}

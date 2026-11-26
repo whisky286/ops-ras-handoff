@@ -1,0 +1,77 @@
+diff --git a/build.sh b/build.sh
+--- a/build.sh
++++ b/build.sh
+@@ -25,6 +25,7 @@ SUPPORTED_LONG_OPTS=(
+    "jit" "pkg" "asan" "make_clean_all" "make_clean" "no_force"
+   "ophost" "opgraph" "opapi" "run_example" "example_name=" "genop=" "genop_aicpu=" "experimental" "cann_3rd_lib_path=" "oom" "onnxplugin" "tfplugin" "dump_cce"
+   "module_extension=" "noaclnn" "mssanitizer" "rule_launch=" "ccache=" "pkg-type="
++  "debug" "valgrind" "bisheng_flags=" "kernel_template_input="
+ )
+ 
+ in_array() {
+@@ -642,6 +643,8 @@ checkopts() {
+   ENABLE_UT_EXEC=TRUE
+   ENABLE_ASAN=FALSE
+   ENABLE_VALGRIND=FALSE
++  BISHENG_FLAGS=""
++  KERNEL_TEMPLATE_INPUT=""
+   ENABLE_BINARY=FALSE
+   ENABLE_CUSTOM=FALSE
+   ENABLE_STATIC=FALSE
+@@ -814,6 +817,10 @@ checkopts() {
+         build-type=*)
+           BUILD_TYPE=${OPTARG#*=}
+           ;;
++        debug) BUILD_TYPE="Debug" ;;
++        valgrind) ENABLE_VALGRIND=TRUE ;;
++        bisheng_flags=*) BISHENG_FLAGS=${OPTARG#*=} ;;
++        kernel_template_input=*) KERNEL_TEMPLATE_INPUT=${OPTARG#*=} ;;
+         pkg-type=*)
+           PACKAGE_TYPE=${OPTARG#*=}
+           PACKAGE_TYPE_SET=TRUE
+@@ -951,6 +958,8 @@ custom_cmake_args() {
+ assemble_cmake_args() {
+   CMAKE_ARGS="-DBUILD_PATH=${BUILD_PATH}"
+   CMAKE_ARGS="$CMAKE_ARGS -DENABLE_VALGRIND=${ENABLE_VALGRIND}"
++  CMAKE_ARGS="$CMAKE_ARGS -DBISHENG_FLAGS=${BISHENG_FLAGS}"
++  CMAKE_ARGS="$CMAKE_ARGS -DKERNEL_TEMPLATE_INPUT=${KERNEL_TEMPLATE_INPUT}"
+   CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
+   CMAKE_ARGS="$CMAKE_ARGS -DENABLE_MSSANITIZER=${ENABLE_MSSANITIZER}"
+   CMAKE_ARGS="$CMAKE_ARGS -DENABLE_OOM=${ENABLE_OOM}"
+
+diff --git a/docs/en/install/build.md b/docs/en/install/build.md
+--- a/docs/en/install/build.md
++++ b/docs/en/install/build.md
+@@ -53,7 +53,7 @@ bash build.sh --help
+ | --pkg            | Optional     | Generates the installation package. Cannot be used with -u (UT mode) or --ophost, --opapi at the same time.                           |
+ | --pkg-type       | Optional     | Package format: run/deb/rpm/all. Defaults to run and requires --pkg. deb/rpm/all support built-in, non-static packages only. |
+ | --asan           | Optional     | Enables host-side ASAN (AddressSanitizer) memory detection function.                                           |
+-| --valgrind       | Optional     | Reserved parameter, developers do not need to pay attention for now.                                                              |
++| --valgrind       | Optional     | Runs unit tests with valgrind memory leak detection enabled.                                                              |
+ | --make_clean     | Optional     | Executes basic cleanup operations (cleans compilation products). The script exits after execution.                                          |
+ | --make_clean_all | Optional     | Executes complete cleanup operations (deletes all compilation-related files). The script exits after execution.                                   |
+ | --ophost         | Optional     | Compiles the libophost_ras.so library. Cannot be used with --pkg, --ops at the same time.                                      |
+@@ -66,6 +66,5 @@ bash build.sh --help
+ | --oom            | Optional     | Enables kernel-side oom memory detection function.                                                   |
+ | --dump_cce       | Optional     | Enables kernel-side dump precompiled file function.                                                      |
+ | --cann_3rd_lib_path| Optional   | The directory where third-party libraries are stored in the offline compilation scenario.                                                   |
+-| --simulator      | Optional     | Used in combination with --run_example to enable simulator mode to execute --run_example tasks. In simulator mode, the corresponding simulator library will be linked according to soc_version.          |
+ | --bisheng_flags  | Optional     | Specifies the BiSheng compiler compilation parameters. Multiple compilation parameters are separated by English commas ",". Cannot be used with --mssanitizer, --oom, --dump_cce at the same time.     |
+ | --kernel_template_input    | Optional     | Specifies the tilingKey template when compiling the kernel. Only one template can be specified. Used with --ops and only one operator can be specified. It will not compile the binary files of other operators that this operator depends on.     |
+
+diff --git a/docs/zh/install/build.md b/docs/zh/install/build.md
+--- a/docs/zh/install/build.md
++++ b/docs/zh/install/build.md
+@@ -52,7 +52,10 @@ bash build.sh --help
+ | --pkg           | 可选     | 生成安装包，不可与-u（UT模式）或--ophost、--opapi、--opgraph同时使用。                         |
+ | --pkg-type      | 可选     | 安装包格式：run/deb/rpm/all，默认run，必须搭配--pkg；deb/rpm/all仅支持内置、非静态算子包。 |
+ | --asan          | 可选     | 开启host侧ASAN（AddressSanitizer）内存检测功能。                                           |
+-| --valgrind      | 可选     | 预留参数，开发者暂不需要关注。                                                           |
++| --debug         | 可选     | 启用调试模式，等价于`--build-type=Debug`。                                               |
++| --valgrind      | 可选     | 启用单元测试的valgrind内存泄漏检测。                                                     |
++| --bisheng_flags | 可选     | 指定BiSheng编译器的编译参数，多个参数用英文逗号“,”分隔。不可与--mssanitizer、--oom、--dump_cce同时使用。 |
++| --kernel_template_input | 可选 | 指定编译kernel时的tilingKey模板，仅支持一个模板，需与--ops搭配且只能指定一个算子。 |
+ | --make_clean    | 可选     | 执行基础清理操作（清理编译产物），执行后脚本退出。                                                 |
+ | --make_clean_all | 可选     | 执行完全清理操作（删除所有编译相关文件），执行后脚本退出。                                   |
+ | --ophost        | 可选     | 编译libophost_ras.so库，不可与--pkg、--ops同时使用。                                  |
+

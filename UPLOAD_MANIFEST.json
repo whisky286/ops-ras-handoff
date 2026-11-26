@@ -1,0 +1,184 @@
+{
+  "files": {
+    "README.md": {
+      "bytes": 675,
+      "characters": 463,
+      "sha256": "dc5d7e57cbd41c7ff3c18670c71252e1a6cf169ddd565c8215590a888a3d6f95",
+      "git_blob_sha": "26a79752f768ee045655bfe7df83db2be2c34703"
+    },
+    "triage/2026-11-26/CLOSURE_DRAFTS.md": {
+      "bytes": 2458,
+      "characters": 1258,
+      "sha256": "d79f1f254a7334dec37a882d4167e7b85b01559fa379ec134a65478bae50eae2",
+      "git_blob_sha": "d1f8bc524310888c7eb6aeb196fc75b8c65211d3"
+    },
+    "triage/2026-11-26/DOC_PR_REVIEW.json": {
+      "bytes": 4021,
+      "characters": 4021,
+      "sha256": "10c850490d73f716d94cd97e02f58dff30569a62eb34ecc4bfb034d9e258a8a0",
+      "git_blob_sha": "17285b4fb79bb95a56f57b2f8dcdb49e2bd8ee87"
+    },
+    "triage/2026-11-26/HOST_PR_REVIEW.json": {
+      "bytes": 9916,
+      "characters": 9916,
+      "sha256": "34a856e4d7580f4696d39de80a906088e6d67352805011ef6364361ef55385b2",
+      "git_blob_sha": "0503528c7b30c7ff06da330ada4104d32fd956a7"
+    },
+    "triage/2026-11-26/ISSUE_TRIAGE.csv": {
+      "bytes": 74136,
+      "characters": 38608,
+      "sha256": "4fb3c9b29f9d67cbe9110abe00c33a9fe7120432f8e03eec89f212575987bd7c",
+      "git_blob_sha": "2f99260819c5e49d1c5bfe0d14787ad7780a6f84"
+    },
+    "triage/2026-11-26/ISSUE_TRIAGE.json": {
+      "bytes": 149915,
+      "characters": 113763,
+      "sha256": "f02e40785a96e6f56a4eaed2a918a4abfafd4867ef6646a81781c31a1a5063a6",
+      "git_blob_sha": "5f990c277467e5653a7427bb99570d79b9789f78"
+    },
+    "triage/2026-11-26/MAINTENANCE.md": {
+      "bytes": 3026,
+      "characters": 1402,
+      "sha256": "a6c4e59fbac00cd5e651662937da476d1551228a24e9da80de74cd88d279f697",
+      "git_blob_sha": "5826598ff045efa1a01337b547b05e71e2ff8061"
+    },
+    "triage/2026-11-26/PATCH_INDEX.json": {
+      "bytes": 10421,
+      "characters": 10421,
+      "sha256": "9dbda175a313513ae8123d42144d4e159e10e59e6dc6201207595b6a338653b5",
+      "git_blob_sha": "98b2c3978ace8e3aad930bdde717a57246a44ea1"
+    },
+    "triage/2026-11-26/PROGRESS.json": {
+      "bytes": 4006,
+      "characters": 2338,
+      "sha256": "d091b7750baddb5c36b3160fd838158ea224a01339d40033d23ede58afd8f0f7",
+      "git_blob_sha": "b7a284364889079091bbc2296474c178d16d02d7"
+    },
+    "triage/2026-11-26/PR_GROUPS.csv": {
+      "bytes": 17092,
+      "characters": 12268,
+      "sha256": "c783b8e297c833ea3f422021589021185e3b806be3514eae8d52ee7906ef0067",
+      "git_blob_sha": "d27de6020e99c247667c4fd3691d261f1c8a270f"
+    },
+    "triage/2026-11-26/README.md": {
+      "bytes": 31758,
+      "characters": 21166,
+      "sha256": "e5e5e042d304eb95b3de83321efc418a6f7893e831913cc49abbd748bdd80586",
+      "git_blob_sha": "4cf76afe7c339fee40c69c2e0e7d6451f0a4e022"
+    },
+    "triage/2026-11-26/SERVER_QUEUE.md": {
+      "bytes": 4542,
+      "characters": 2279,
+      "sha256": "947acb1141d42ba2b26835207b49e9c34b2daaf3b1c145fdcfb8c8c24d522f8e",
+      "git_blob_sha": "bb49a7b6ff0d60664e6b5918f781e60add939f19"
+    },
+    "triage/2026-11-26/SOURCE_STATE.json": {
+      "bytes": 1019,
+      "characters": 899,
+      "sha256": "e3855a2d5db559f38f94236dd3559e7572adc1b3f61b6d8af2b4eda4d1b77192",
+      "git_blob_sha": "cad35e9d3bca412501bec129dc71ff8d9da87c4d"
+    },
+    "triage/2026-11-26/START_AGENT.md": {
+      "bytes": 1245,
+      "characters": 683,
+      "sha256": "2351a0b67f431343bcb63dc55a60619cdff63951d51395244779f5308d0b38b5",
+      "git_blob_sha": "3ba870c950f2feba2cde8e7f86def03ee334e804"
+    },
+    "triage/2026-11-26/evidence/closure-evidence.json": {
+      "bytes": 3565,
+      "characters": 3275,
+      "sha256": "f6de01eca53c282583649d0b26a455a1148db51f6c5800749037b745a347dc4c",
+      "git_blob_sha": "5ea52941f4dab2eb5a6962deea1cf2686d02b46e"
+    },
+    "triage/2026-11-26/patches/pr-126.patch": {
+      "bytes": 2227,
+      "characters": 2227,
+      "sha256": "82b7432b8872b25fe947c9997bbe0a5afde3a6cadc2c0cd55a7b40fec045d4cc",
+      "git_blob_sha": "fc9d79367b34c4958e26a246b43d441bbdbaa314"
+    },
+    "triage/2026-11-26/patches/pr-135.patch": {
+      "bytes": 5604,
+      "characters": 5604,
+      "sha256": "459f5fd100cfeaf64b64173456d9f1d55f00bb9217f3f48c237d2b3f67414fb7",
+      "git_blob_sha": "f919b09c10a16ef4fb4f2c4d28ab5bb5829ba609"
+    },
+    "triage/2026-11-26/patches/pr-146.patch": {
+      "bytes": 8800,
+      "characters": 8790,
+      "sha256": "36fb6e6a3204610069d560740e0e18a517e43f5b97b6bdb3ee6aa314006a171b",
+      "git_blob_sha": "f060e6d13f987da363c786bb9fedf9cd2737e16b"
+    },
+    "triage/2026-11-26/patches/pr-188.patch": {
+      "bytes": 1094,
+      "characters": 934,
+      "sha256": "def0395e5744bcb556ae2b880081e32ea3c4fb8ced9d1389ee8bb5367907b8e8",
+      "git_blob_sha": "6fb5ffc3bbc4f933050580a4dfd81061961efc52"
+    },
+    "triage/2026-11-26/patches/pr-219.patch": {
+      "bytes": 516,
+      "characters": 516,
+      "sha256": "97fb54c058c5f2472f3da1cfb9d59f9201408fa3660b1a5b01b7ba0cda965cfd",
+      "git_blob_sha": "d23062514ab6f4704f840145ff53487ff83d0c54"
+    },
+    "triage/2026-11-26/patches/pr-220.patch": {
+      "bytes": 883,
+      "characters": 883,
+      "sha256": "e2af4cf885671f4f4306454b3765a5c84169ee52d42ad0bbf65bf0ae6aa1bb3c",
+      "git_blob_sha": "6cd7c738dfe46f55058954f089321acb06d69b73"
+    },
+    "triage/2026-11-26/patches/pr-223.patch": {
+      "bytes": 672,
+      "characters": 672,
+      "sha256": "35c57f7d639fed4139360903cc332669ce1cc84954de45c506fe153c03589e52",
+      "git_blob_sha": "0f76e4f5cdb5b2e225d01d8c604e65613df3eff3"
+    },
+    "triage/2026-11-26/patches/pr-233.patch": {
+      "bytes": 6224,
+      "characters": 5712,
+      "sha256": "eefdb0d7c24d19eab3b571d2b4f87168784400f47be40e5330d02ccddd4595b8",
+      "git_blob_sha": "d9d06af97dbb73b04e3aabadb4b989e8ee482a13"
+    },
+    "triage/2026-11-26/patches/pr-235.patch": {
+      "bytes": 33301,
+      "characters": 33281,
+      "sha256": "42641094e9ceec2ac8c19d5dae103ae06b8e9553060f58c0f7b619067c7fcdb6",
+      "git_blob_sha": "1caed51962269a1393158e22d903a0148e1491e7"
+    },
+    "triage/2026-11-26/patches/pr-236.patch": {
+      "bytes": 11655,
+      "characters": 11191,
+      "sha256": "0ac0f4da234b76528a2cad692307ff4f3d7ab63cc9259dfef19140ca1db15f55",
+      "git_blob_sha": "26c844ef878591df3dd246d184cf7ea4d81ee1c9"
+    },
+    "triage/2026-11-26/patches/pr-237.patch": {
+      "bytes": 672,
+      "characters": 672,
+      "sha256": "93d1f6ebb9910d67f5d579805a27676c7aa001c65e1b6b730b7577400969afa1",
+      "git_blob_sha": "eb90443720fb9de6e36102637c40ebe60ce0c1a0"
+    },
+    "triage/2026-11-26/patches/pr-238.patch": {
+      "bytes": 6700,
+      "characters": 6388,
+      "sha256": "e689df35539d97e6a33e2895590c9b52a6ddcf12d248522109d505c0b977f2b5",
+      "git_blob_sha": "a5dfbea86ac0f80a109a01bcc642a15d6fde3c03"
+    },
+    "triage/2026-11-26/patches/pr-244.patch": {
+      "bytes": 1564,
+      "characters": 1540,
+      "sha256": "6da365fc92d7d59d32bbce33232f4dbb69b87316704eaabc4f966721f54f3462",
+      "git_blob_sha": "869a2abb61b9b892ace674f2f33987b3f17a5fc0"
+    },
+    "triage/2026-11-26/patches/pr-87.patch": {
+      "bytes": 77800,
+      "characters": 74018,
+      "sha256": "c1f36863911ce56c958e18a4c772ee3f798180b45dc9345eb6e754e62955223d",
+      "git_blob_sha": "f9903dc5cad676e561cbef288527fbb89790538e"
+    },
+    "triage/2026-11-26/verify_host_prs.py": {
+      "bytes": 4487,
+      "characters": 4487,
+      "sha256": "d213e0766332427553cd3c8443599f66ad6eb2f2e29a7dae86644443a39901a9",
+      "git_blob_sha": "611a0840cd0e5e45b0cd7c64bdf0537c1a998924"
+    }
+  }
+}

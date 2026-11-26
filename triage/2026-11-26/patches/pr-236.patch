@@ -1,0 +1,257 @@
+diff --git a/docs/en/develop/aicore_develop_guide.md b/docs/en/develop/aicore_develop_guide.md
+--- a/docs/en/develop/aicore_develop_guide.md
++++ b/docs/en/develop/aicore_develop_guide.md
+@@ -198,10 +198,10 @@ For detailed implementation, refer to [add_example_tiling_key.h](../../../exampl
+ // ${op_name}_tiling_key.h
+ ASCENDC_TPL_ARGS_DECL(
+     ${op_name},
+-    ASCENDC_TPL_UINT_DECL(schMode, 1, ASCENDC_TPL_UI_LIST, ELEMENTWISE_TPL_SCH_MODE_0, ELEMENTWISE_TPL_SCH_MODE_1));
++    ASCENDC_TPL_UINT_DECL(schMode, 2, ASCENDC_TPL_UI_LIST, ELEMENTWISE_TPL_SCH_MODE_0, ELEMENTWISE_TPL_SCH_MODE_1, ELEMENTWISE_TPL_SCH_MODE_2, ELEMENTWISE_TPL_SCH_MODE_3));
+ 
+ ASCENDC_TPL_SEL(ASCENDC_TPL_ARGS_SEL(
+-    ASCENDC_TPL_UINT_SEL(schMode, ASCENDC_TPL_UI_LIST, ELEMENTWISE_TPL_SCH_MODE_0, ELEMENTWISE_TPL_SCH_MODE_1)));
++    ASCENDC_TPL_UINT_SEL(schMode, ASCENDC_TPL_UI_LIST, ELEMENTWISE_TPL_SCH_MODE_0, ELEMENTWISE_TPL_SCH_MODE_1, ELEMENTWISE_TPL_SCH_MODE_2, ELEMENTWISE_TPL_SCH_MODE_3)));
+ ```
+ 
+ **Deliverable 3: ${op_name}_tiling_data.h**
+
+diff --git a/docs/zh/develop/aicore_develop_guide.md b/docs/zh/develop/aicore_develop_guide.md
+--- a/docs/zh/develop/aicore_develop_guide.md
++++ b/docs/zh/develop/aicore_develop_guide.md
+@@ -181,10 +181,10 @@ TilingKey是一个算子内为了区分不同的实现而将kernel代码进行
+ // ${op_name}_tiling_key.h
+ ASCENDC_TPL_ARGS_DECL(
+     ${op_name},
+-    ASCENDC_TPL_UINT_DECL(schMode, 1, ASCENDC_TPL_UI_LIST, ELEMENTWISE_TPL_SCH_MODE_0, ELEMENTWISE_TPL_SCH_MODE_1));
++    ASCENDC_TPL_UINT_DECL(schMode, 2, ASCENDC_TPL_UI_LIST, ELEMENTWISE_TPL_SCH_MODE_0, ELEMENTWISE_TPL_SCH_MODE_1, ELEMENTWISE_TPL_SCH_MODE_2, ELEMENTWISE_TPL_SCH_MODE_3));
+ 
+ ASCENDC_TPL_SEL(ASCENDC_TPL_ARGS_SEL(
+-    ASCENDC_TPL_UINT_SEL(schMode, ASCENDC_TPL_UI_LIST, ELEMENTWISE_TPL_SCH_MODE_0, ELEMENTWISE_TPL_SCH_MODE_1)));
++    ASCENDC_TPL_UINT_SEL(schMode, ASCENDC_TPL_UI_LIST, ELEMENTWISE_TPL_SCH_MODE_0, ELEMENTWISE_TPL_SCH_MODE_1, ELEMENTWISE_TPL_SCH_MODE_2, ELEMENTWISE_TPL_SCH_MODE_3)));
+ ```
+ 
+ **交付件3：${op_name}_tiling_data.h**
+
+diff --git a/examples/add_example/README.md b/examples/add_example/README.md
+--- a/examples/add_example/README.md
++++ b/examples/add_example/README.md
+@@ -39,21 +39,21 @@ $$
+       <td>x1</td>
+       <td>输入</td>
+       <td>待进行add_example计算的入参，公式中的x1。</td>
+-      <td>FLOAT、INT32</td>
++      <td>FLOAT、INT32、INT64、BF16</td>
+       <td>ND</td>
+     </tr>
+     <tr>
+       <td>x2</td>
+       <td>输入</td>
+       <td>待进行add_example计算的入参，公式中的x2。</td>
+-      <td>FLOAT、INT32</td>
++      <td>FLOAT、INT32、INT64、BF16</td>
+       <td>ND</td>
+     </tr>
+     <tr>
+       <td>y</td>
+       <td>输出</td>
+       <td>待进行add_example计算的出参，公式中的y。</td>
+-      <td>FLOAT、INT32</td>
++      <td>FLOAT、INT32、INT64、BF16</td>
+       <td>ND</td>
+     </tr>
+   </tbody></table>
+
+diff --git a/examples/add_example/README_en.md b/examples/add_example/README_en.md
+--- a/examples/add_example/README_en.md
++++ b/examples/add_example/README_en.md
+@@ -41,21 +41,21 @@ $$
+       <td>x1</td>
+       <td>Input</td>
+       <td>Input parameter for add_example computation, x1 in the formula.</td>
+-      <td>FLOAT, INT32</td>
++      <td>FLOAT, INT32, INT64, BF16</td>
+       <td>ND</td>
+     </tr>
+     <tr>
+       <td>x2</td>
+       <td>Input</td>
+       <td>Input parameter for add_example computation, x2 in the formula.</td>
+-      <td>FLOAT, INT32</td>
++      <td>FLOAT, INT32, INT64, BF16</td>
+       <td>ND</td>
+     </tr>
+     <tr>
+       <td>y</td>
+       <td>Output</td>
+       <td>Output parameter for add_example computation, y in the formula.</td>
+-      <td>FLOAT, INT32</td>
++      <td>FLOAT, INT32, INT64, BF16</td>
+       <td>ND</td>
+     </tr>
+   </tbody></table>
+
+diff --git a/examples/add_example/op_host/add_example_def.cpp b/examples/add_example/op_host/add_example_def.cpp
+--- a/examples/add_example/op_host/add_example_def.cpp
++++ b/examples/add_example/op_host/add_example_def.cpp
+@@ -15,28 +15,28 @@
+ #include "register/op_def_registry.h"
+ 
+ namespace ops {
+-class AddExample : public OpDef
+-{
++class AddExample : public OpDef {
+ public:
+     explicit AddExample(const char* name) : OpDef(name)
+     {
+-        this->Input("x1")                                       // 输入x1定义
+-            .ParamType(REQUIRED)                                // 必选输入
+-            .DataType({ge::DT_FLOAT, ge::DT_INT32})             // 支持数据类型
+-            .Format({ge::FORMAT_ND, ge::FORMAT_ND})             // 支持format格式
+-            .UnknownShapeFormat({ge::FORMAT_ND, ge::FORMAT_ND}) // 未确定大小shape对应format格式
+-            .AutoContiguous();                                  // 内存自动连续化
+-        this->Input("x2")                                       // 输入x2定义
++        this->Input("x1")                                                         // 输入x1定义
++            .ParamType(REQUIRED)                                                  // 必选输入
++            .DataType({ge::DT_FLOAT, ge::DT_INT32, ge::DT_INT64, ge::DT_BF16})    // 支持数据类型
++            .Format({ge::FORMAT_ND, ge::FORMAT_ND, ge::FORMAT_ND, ge::FORMAT_ND}) // 支持format格式
++            .UnknownShapeFormat(
++                {ge::FORMAT_ND, ge::FORMAT_ND, ge::FORMAT_ND, ge::FORMAT_ND}) // 未确定大小shape对应format格式
++            .AutoContiguous();                                                // 内存自动连续化
++        this->Input("x2")                                                     // 输入x2定义
+             .ParamType(REQUIRED)
+-            .DataType({ge::DT_FLOAT, ge::DT_INT32})
+-            .Format({ge::FORMAT_ND, ge::FORMAT_ND})
+-            .UnknownShapeFormat({ge::FORMAT_ND, ge::FORMAT_ND})
++            .DataType({ge::DT_FLOAT, ge::DT_INT32, ge::DT_INT64, ge::DT_BF16})
++            .Format({ge::FORMAT_ND, ge::FORMAT_ND, ge::FORMAT_ND, ge::FORMAT_ND})
++            .UnknownShapeFormat({ge::FORMAT_ND, ge::FORMAT_ND, ge::FORMAT_ND, ge::FORMAT_ND})
+             .AutoContiguous();
+         this->Output("y") // 输出y定义
+             .ParamType(REQUIRED)
+-            .DataType({ge::DT_FLOAT, ge::DT_INT32})
+-            .Format({ge::FORMAT_ND, ge::FORMAT_ND})
+-            .UnknownShapeFormat({ge::FORMAT_ND, ge::FORMAT_ND})
++            .DataType({ge::DT_FLOAT, ge::DT_INT32, ge::DT_INT64, ge::DT_BF16})
++            .Format({ge::FORMAT_ND, ge::FORMAT_ND, ge::FORMAT_ND, ge::FORMAT_ND})
++            .UnknownShapeFormat({ge::FORMAT_ND, ge::FORMAT_ND, ge::FORMAT_ND, ge::FORMAT_ND})
+             .AutoContiguous();
+ 
+         OpAICoreConfig aicoreConfig;
+@@ -52,4 +52,4 @@ public:
+     }
+ };
+ OP_ADD(AddExample); // 添加算子信息库
+-} // namespace ops
+\ No newline at end of file
++} // namespace ops
+
+diff --git a/examples/add_example/op_host/add_example_tiling.cpp b/examples/add_example/op_host/add_example_tiling.cpp
+--- a/examples/add_example/op_host/add_example_tiling.cpp
++++ b/examples/add_example/op_host/add_example_tiling.cpp
+@@ -34,14 +34,14 @@ constexpr uint32_t INDEXTWO = 2;
+ constexpr uint32_t INDEXTHREE = 3;
+ static const gert::Shape g_vec_1_shape = {1};
+ 
+-struct AddExampleCompileInfo {
+-};
++struct AddExampleCompileInfo {};
+ 
+-inline const gert::Shape &EnsureNotScalar(const gert::Shape &in_shape) {
+-  if (in_shape.IsScalar()) {
+-    return g_vec_1_shape;
+-  }
+-  return in_shape;
++inline const gert::Shape& EnsureNotScalar(const gert::Shape& in_shape)
++{
++    if (in_shape.IsScalar()) {
++        return g_vec_1_shape;
++    }
++    return in_shape;
+ }
+ 
+ // 获取平台信息如ubSize, coreNum
+@@ -89,7 +89,7 @@ ge::graphStatus GetShapeAttrsInfo(gert::TilingContext* context, int64_t& totalId
+     auto wDim = inputShapeX.GetDim(INDEXTHREE);
+     totalIdx = nDim * cDim * hDim * wDim;
+     // dtype校验
+-    const std::set<ge::DataType> supportedDtype = {ge::DT_FLOAT, ge::DT_INT32};
++    const std::set<ge::DataType> supportedDtype = {ge::DT_FLOAT, ge::DT_INT32, ge::DT_INT64, ge::DT_BF16};
+     auto inputDesc = context->GetInputDesc(0);
+     OP_CHECK_NULL_WITH_CONTEXT(context, inputDesc);
+     dataType = inputDesc->GetDataType();
+@@ -147,6 +147,12 @@ static ge::graphStatus AddExampleTilingFunc(gert::TilingContext* context)
+     } else if (dataType == ge::DT_INT32) {
+         tilingKey = GET_TPL_TILING_KEY(ELEMENTWISE_TPL_SCH_MODE_1);
+         context->SetTilingKey(tilingKey);
++    } else if (dataType == ge::DT_INT64) {
++        tilingKey = GET_TPL_TILING_KEY(ELEMENTWISE_TPL_SCH_MODE_2);
++        context->SetTilingKey(tilingKey);
++    } else if (dataType == ge::DT_BF16) {
++        tilingKey = GET_TPL_TILING_KEY(ELEMENTWISE_TPL_SCH_MODE_3);
++        context->SetTilingKey(tilingKey);
+     } else {
+         OP_LOGE(context, "get dtype error");
+         return ge::GRAPH_FAILED;
+
+diff --git a/examples/add_example/op_kernel/add_example.cpp b/examples/add_example/op_kernel/add_example.cpp
+--- a/examples/add_example/op_kernel/add_example.cpp
++++ b/examples/add_example/op_kernel/add_example.cpp
+@@ -15,10 +15,11 @@
+ 
+ #include "add_example.h"
+ 
+-enum class AddExampleTilingKey : uint32_t
+-{
++enum class AddExampleTilingKey : uint32_t {
+     TILING_KEY_EXAMPLE_FLOAT = 0,
+     TILING_KEY_EXAMPLE_INT32 = 1,
++    TILING_KEY_EXAMPLE_INT64 = 2,
++    TILING_KEY_EXAMPLE_BF16 = 3,
+ };
+ 
+ template <uint32_t schMode>
+@@ -36,4 +37,14 @@ __global__ __aicore__ void add_example(GM_ADDR x, GM_ADDR y, GM_ADDR z, GM_ADDR
+         op.Init(x, y, z, &tilingData);        // 算子kernel实例初始化
+         op.Process();                         // 算子kernel实例执行
+     }
++    if constexpr (schMode == static_cast<uint32_t>(AddExampleTilingKey::TILING_KEY_EXAMPLE_INT64)) {
++        NsAddExample::AddExample<int64_t> op; // 算子kernel实例获取
++        op.Init(x, y, z, &tilingData);        // 算子kernel实例初始化
++        op.Process();                         // 算子kernel实例执行
++    }
++    if constexpr (schMode == static_cast<uint32_t>(AddExampleTilingKey::TILING_KEY_EXAMPLE_BF16)) {
++        NsAddExample::AddExample<AscendC::bfloat16_t> op; // 算子kernel实例获取
++        op.Init(x, y, z, &tilingData);                    // 算子kernel实例初始化
++        op.Process();                                     // 算子kernel实例执行
++    }
+ }
+
+diff --git a/examples/add_example/op_kernel/add_example_tiling_key.h b/examples/add_example/op_kernel/add_example_tiling_key.h
+--- a/examples/add_example/op_kernel/add_example_tiling_key.h
++++ b/examples/add_example/op_kernel/add_example_tiling_key.h
+@@ -20,13 +20,16 @@
+ 
+ #define ELEMENTWISE_TPL_SCH_MODE_0 0
+ #define ELEMENTWISE_TPL_SCH_MODE_1 1
++#define ELEMENTWISE_TPL_SCH_MODE_2 2
++#define ELEMENTWISE_TPL_SCH_MODE_3 3
+ 
+-ASCENDC_TPL_ARGS_DECL(AddExample,
+-    ASCENDC_TPL_UINT_DECL(schMode, 1, ASCENDC_TPL_UI_LIST, ELEMENTWISE_TPL_SCH_MODE_0, ELEMENTWISE_TPL_SCH_MODE_1)
+-);
++ASCENDC_TPL_ARGS_DECL(
++    AddExample, ASCENDC_TPL_UINT_DECL(
++                    schMode, 2, ASCENDC_TPL_UI_LIST, ELEMENTWISE_TPL_SCH_MODE_0, ELEMENTWISE_TPL_SCH_MODE_1,
++                    ELEMENTWISE_TPL_SCH_MODE_2, ELEMENTWISE_TPL_SCH_MODE_3));
+ 
+-ASCENDC_TPL_SEL(
+-    ASCENDC_TPL_ARGS_SEL(
+-        ASCENDC_TPL_UINT_SEL(schMode, ASCENDC_TPL_UI_LIST, ELEMENTWISE_TPL_SCH_MODE_0, ELEMENTWISE_TPL_SCH_MODE_1)));
++ASCENDC_TPL_SEL(ASCENDC_TPL_ARGS_SEL(ASCENDC_TPL_UINT_SEL(
++    schMode, ASCENDC_TPL_UI_LIST, ELEMENTWISE_TPL_SCH_MODE_0, ELEMENTWISE_TPL_SCH_MODE_1, ELEMENTWISE_TPL_SCH_MODE_2,
++    ELEMENTWISE_TPL_SCH_MODE_3)));
+ 
+-#endif
+\ No newline at end of file
++#endif
+

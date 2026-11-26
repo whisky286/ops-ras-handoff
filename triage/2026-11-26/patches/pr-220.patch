@@ -1,0 +1,19 @@
+diff --git a/scripts/generate_version_info.py b/scripts/generate_version_info.py
+--- a/scripts/generate_version_info.py
++++ b/scripts/generate_version_info.py
+@@ -30,7 +30,13 @@ def gen_version_info_content(version: str, deps: Iterable[str]) -> Iterator[str]
+         yield f'required_package_{dep_pkg}_version="{dep_info}"'
+     if os.environ.get("tagInfo"):
+         tag_info = os.environ.get("tagInfo")
+-        timestamp = "_".join(tag_info.split("_")[-3:-1])
++        tag_parts = tag_info.split("_")
++        if len(tag_parts) >= 3:
++            timestamp = "_".join(tag_parts[-3:-1])
++        else:
++            timestamp = datetime.now(timezone(timedelta(hours=8))).strftime(
++                "%Y%m%d_%H%M%S%f"
++            )[:-3]
+     else:
+         timestamp = datetime.now(timezone(timedelta(hours=8))).strftime("%Y%m%d_%H%M%S%f")[:-3]
+     yield f"timestamp={timestamp}"
+

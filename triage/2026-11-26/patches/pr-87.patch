@@ -1,0 +1,1698 @@
+diff --git a/cmake/ut.cmake b/cmake/ut.cmake
+--- a/cmake/ut.cmake
++++ b/cmake/ut.cmake
+@@ -326,7 +326,7 @@ function(add_modules_ut_sources)
+     message(STATUS "=== Debug<add_modules_ut_sources>: ${MODULE_HOSTNAME} ${MODULE_MODE} ${MODULE_DIR}")
+ 
+     string(FIND "${MODULE_HOSTNAME}_cases_obj" "tiling" TILING_FOUND_INDEX)
+-    if (DEFINED ASCEND_COMPUTE_UNIT)
++    if (DEFINED ASCEND_COMPUTE_UNIT AND NOT "${ASCEND_COMPUTE_UNIT}" STREQUAL "")
+         map_compute_unit(${ASCEND_COMPUTE_UNIT} compute_unit_long)
+         get_target_dir(${compute_unit_long} target_dir)
+     else()
+
+diff --git a/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate.cpp b/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate.cpp
+--- a/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate.cpp
++++ b/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate.cpp
+@@ -4,128 +4,136 @@
+  * This file is a part of the CANN Open Software.
+  * Licensed under CANN Open Software License Agreement Version 2.0 (the "License").
+  * Please refer to the License for details. You may not use this file except in compliance with the License.
+- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+- * See LICENSE in the root of the software repository for the full text of the License.
++ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING
++ * BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. See LICENSE in the root of
++ * the software repository for the full text of the License.
+  */
+ #include "aclnn_obfuscation_calculate.h"
+ 
+-#include "obfuscation_calculate.h"
++#include <initializer_list>
++
+ #include "aclnn_kernels/cast.h"
+-#include "aclnn_kernels/contiguous.h"
+-#include "opdev/op_executor.h"
+- 
+ #include "aclnn_kernels/common/op_error_check.h"
++#include "aclnn_kernels/contiguous.h"
++#include "aclnn_obfuscation_calculate_v2.h"
++#include "obfuscation_calculate.h"
+ #include "opdev/common_types.h"
+ #include "opdev/data_type_utils.h"
+-#include "opdev/format_utils.h"
++#include "opdev/op_executor.h"
+ #include "opdev/op_dfx.h"
+ #include "opdev/op_log.h"
+-#include "opdev/platform.h"
+ #include "opdev/shape_utils.h"
+ #include "opdev/tensor_view_utils.h"
+ 
+-using namespace op;
++namespace {
++
++using op::CheckType;
++
++bool CheckNotNull(const aclTensor* x, const aclTensor* y)
++{
++    OP_CHECK_NULL(x, return false);
++    OP_CHECK_NULL(y, return false);
++    return true;
++}
++
++bool CheckDtypeValid(const aclTensor* x, const aclTensor* y)
++{
++    static const std::initializer_list<op::DataType> dtypeSupportList = {
++        op::DataType::DT_FLOAT, op::DataType::DT_FLOAT16, op::DataType::DT_INT8, op::DataType::DT_BF16};
++    OP_CHECK_DTYPE_NOT_SUPPORT(x, dtypeSupportList, return false);
++    OP_CHECK_DTYPE_NOT_MATCH(y, x->GetDataType(), return false);
++    return true;
++}
++
++bool CheckShape(const aclTensor* x, const aclTensor* y)
++{
++    size_t xDimNum = x->GetViewShape().GetDimNum();
++    size_t yDimNum = y->GetViewShape().GetDimNum();
++    bool sameShape = xDimNum == yDimNum;
++    for (size_t i = 0; sameShape && i < xDimNum; ++i) {
++        sameShape = x->GetViewShape().GetDim(i) == y->GetViewShape().GetDim(i);
++    }
++    OP_CHECK(
++        sameShape,
++        OP_LOGE(
++            ACLNN_ERR_PARAM_INVALID, "Shape of x tensor should be same with y tensor, but (got x: %s, y: %s)",
++            op::ToString(x->GetViewShape()).GetString(), op::ToString(y->GetViewShape()).GetString()),
++        return false);
++    return true;
++}
++
++aclnnStatus CheckParams(const aclTensor* x, const aclTensor* y)
++{
++    CHECK_RET(CheckNotNull(x, y), ACLNN_ERR_PARAM_NULLPTR);
++    CHECK_RET(CheckDtypeValid(x, y), ACLNN_ERR_PARAM_INVALID);
++    CHECK_RET(CheckShape(x, y), ACLNN_ERR_PARAM_INVALID);
++    return ACLNN_SUCCESS;
++}
++
++aclnnStatus GetWorkspaceSize(
++    int32_t fd, const aclTensor* x, int32_t param, int32_t cmd, float obfCoefficient, aclTensor* y,
++    uint64_t* workspaceSize, aclOpExecutor** executor)
++{
++    auto uniqueExecutor = CREATE_EXECUTOR();
++    CHECK_RET(uniqueExecutor.get() != nullptr, ACLNN_ERR_INNER_CREATE_EXECUTOR);
++
++    auto ret = CheckParams(x, y);
++    CHECK_RET(ret == ACLNN_SUCCESS, ret);
++
++    if (x->IsEmpty()) {
++        *workspaceSize = 0;
++        uniqueExecutor.ReleaseTo(executor);
++        return ACLNN_SUCCESS;
++    }
++
++    auto xContiguous = l0op::Contiguous(x, uniqueExecutor.get());
++    CHECK_RET(xContiguous != nullptr, ACLNN_ERR_INNER_NULLPTR);
++
++    auto fdTensor = uniqueExecutor.get()->ConvertToTensor(&fd, 1, op::DataType::DT_INT32);
++    auto paramTensor = uniqueExecutor.get()->ConvertToTensor(&param, 1, op::DataType::DT_INT32);
++    auto yOut = l0op::ObfuscationCalculate(fdTensor, xContiguous, paramTensor, cmd, obfCoefficient, uniqueExecutor.get());
++
++    auto castY = l0op::Cast(yOut, y->GetDataType(), uniqueExecutor.get());
++    CHECK_RET(castY != nullptr, ACLNN_ERR_INNER_NULLPTR);
++
++    auto viewCopyY = l0op::ViewCopy(castY, y, uniqueExecutor.get());
++    CHECK_RET(viewCopyY != nullptr, ACLNN_ERR_INNER_NULLPTR);
++
++    *workspaceSize = uniqueExecutor->GetWorkspaceSize();
++    uniqueExecutor.ReleaseTo(executor);
++    return ACLNN_SUCCESS;
++}
++
++} // namespace
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+ 
+-// 根据API定义，需要列出所能支持的所有dtype
+-static const std::initializer_list<op::DataType> DTYPE_SUPPORT_LIST = {
+-  op::DataType::DT_FLOAT, op::DataType::DT_FLOAT16, op::DataType::DT_INT8, op::DataType::DT_BF16
+-};
+-
+-static bool CheckNotNull(const aclTensor* x, const aclTensor* y)
++aclnnStatus aclnnObfuscationCalculateGetWorkspaceSize(
++    int32_t fd, const aclTensor* x, int32_t param, int32_t cmd, aclTensor* y, uint64_t* workspaceSize,
++    aclOpExecutor** executor)
+ {
+-  OP_CHECK_NULL(x, return false);
+-  OP_CHECK_NULL(y, return false);
+-  return true;
++    L2_DFX_PHASE_1(aclnnObfuscationCalculate, DFX_IN(fd, x, param, cmd), DFX_OUT(y));
++    return GetWorkspaceSize(fd, x, param, cmd, 1.0F, y, workspaceSize, executor);
+ }
+ 
+-static bool CheckDtypeValid(const aclTensor* x, const aclTensor* y)
++aclnnStatus aclnnObfuscationCalculateV2GetWorkspaceSize(
++    int32_t fd, const aclTensor* x, int32_t param, int32_t cmd, float obfCoefficient, aclTensor* y,
++    uint64_t* workspaceSize, aclOpExecutor** executor)
+ {
+-  OP_CHECK_DTYPE_NOT_SUPPORT(x, DTYPE_SUPPORT_LIST, return false);
+-  OP_CHECK_DTYPE_NOT_MATCH(y, x->GetDataType(), return false);
+-  return true;
++    L2_DFX_PHASE_1(aclnnObfuscationCalculateV2, DFX_IN(fd, x, param, cmd, obfCoefficient), DFX_OUT(y));
++    return GetWorkspaceSize(fd, x, param, cmd, obfCoefficient, y, workspaceSize, executor);
+ }
+ 
+-static bool CheckShape(const aclTensor* x, const aclTensor* y)
++aclnnStatus aclnnObfuscationCalculate(
++    void* workspace, uint64_t workspaceSize, aclOpExecutor* executor, aclrtStream stream)
+ {
+-  size_t xDimNum = x->GetViewShape().GetDimNum();
+-  size_t yDimNum = y->GetViewShape().GetDimNum();
+-  OP_CHECK(xDimNum == yDimNum,
+-    OP_LOGE(ACLNN_ERR_PARAM_INVALID, "Shape of x tensor should be same with y tensor, but (got x: %s, y: %s)", 
+-            op::ToString(x->GetViewShape()).GetString(), op::ToString(y->GetViewShape()).GetString()), return false);
+-  return true;
+-}
+-
+-static aclnnStatus CheckParams(const int32_t fd, const aclTensor* x, const int32_t param, 
+-                              const int32_t cmd, const aclTensor* y)
+-{
+-  // 1. 检查参数是否为空指针
+-  CHECK_RET(CheckNotNull(x, y), ACLNN_ERR_PARAM_NULLPTR);
+-
+-  // 2. 检查输入输出数据类型
+-  CHECK_RET(CheckDtypeValid(x, y), ACLNN_ERR_PARAM_INVALID);
+-
+-  // 3. 检查输出输出shape
+-  CHECK_RET(CheckShape(x, y), ACLNN_ERR_PARAM_INVALID);
+-
+-  return ACLNN_SUCCESS;
+-}
+-
+-aclnnStatus aclnnObfuscationCalculateGetWorkspaceSize(int32_t fd, const aclTensor* x, int32_t param,
+-                                                      int32_t cmd, aclTensor* y, 
+-                                                      uint64_t* workspaceSize, aclOpExecutor** executor)
+-{
+-  L2_DFX_PHASE_1(aclnnObfuscationCalculate, DFX_IN(fd, x, param, cmd), DFX_OUT(y));
+-  // 固定写法，创建OpExecutor
+-  auto uniqueExecutor = CREATE_EXECUTOR();
+-  CHECK_RET(uniqueExecutor.get() != nullptr, ACLNN_ERR_INNER_CREATE_EXECUTOR);
+-
+-  // 固定写法，参数检查
+-  auto ret = CheckParams(fd, x, param, cmd, y);
+-  CHECK_RET(ret == ACLNN_SUCCESS, ret);
+-
+-  if (x->IsEmpty()) {
+-    // 根据实际支持情况补充
+-    *workspaceSize = 0;
+-    uniqueExecutor.ReleaseTo(executor);
+-    return ACLNN_SUCCESS;
+-  }
+-
+-  // 固定写法，将输入x转换成连续的tensor
+-  auto xContiguous = l0op::Contiguous(x, uniqueExecutor.get());
+-  CHECK_RET(xContiguous != nullptr, ACLNN_ERR_INNER_NULLPTR);
+-
+-  // 进行ObfuscationCalculate计算
+-  auto fdTensor = uniqueExecutor.get() -> ConvertToTensor(&fd, 1, op::DataType::DT_INT32);
+-  auto paramTensor = uniqueExecutor.get() -> ConvertToTensor(&param, 1, op::DataType::DT_INT32);
+-  float obfCoefficient = 1.0;
+-
+-  auto yOut = l0op::ObfuscationCalculate(fdTensor, x, paramTensor, cmd, obfCoefficient, uniqueExecutor.get());
+-
+-  // 固定写法，将计算结果转换成输出y的数据类型
+-  auto castY = l0op::Cast(yOut, y->GetDataType(), uniqueExecutor.get());
+-  CHECK_RET(castY != nullptr, ACLNN_ERR_INNER_NULLPTR);
+-
+-  // 固定写法，将计算结果拷贝到输出y上，y可能是非连续的tensor
+-  auto viewCopyY = l0op::ViewCopy(castY, y, uniqueExecutor.get());
+-  CHECK_RET(viewCopyY != nullptr, ACLNN_ERR_INNER_NULLPTR);
+-
+-  // 固定写法，获取计算过程中需要使用的workspace大小
+-  *workspaceSize = uniqueExecutor->GetWorkspaceSize();
+-  // 需要把 uniqueExecutor持有executor转移给executor
+-  uniqueExecutor.ReleaseTo(executor);
+-  return ACLNN_SUCCESS;
+-}
+-
+-aclnnStatus aclnnObfuscationCalculate(void* workspace, uint64_t workspaceSize, aclOpExecutor* executor, aclrtStream stream)
+-{
+-  L2_DFX_PHASE_2(aclnnObfuscationCalculate);
+-  // 固定写法，调用框架能力，完成计算
+-  return CommonOpExecutorRun(workspace, workspaceSize, executor, stream);
++    L2_DFX_PHASE_2(aclnnObfuscationCalculate);
++    // 固定写法，调用框架能力，完成计算
++    return CommonOpExecutorRun(workspace, workspaceSize, executor, stream);
+ }
+ 
+ #ifdef __cplusplus
+ }
+-#endif
+\ No newline at end of file
++#endif
+
+diff --git a/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.cpp b/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.cpp
+--- a/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.cpp
++++ b/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.cpp
+@@ -4,127 +4,27 @@
+  * This file is a part of the CANN Open Software.
+  * Licensed under CANN Open Software License Agreement Version 2.0 (the "License").
+  * Please refer to the License for details. You may not use this file except in compliance with the License.
+- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+- * See LICENSE in the root of the software repository for the full text of the License.
++ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING
++ * BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. See LICENSE in the root of
++ * the software repository for the full text of the License.
+  */
+ #include "aclnn_obfuscation_calculate_v2.h"
+ 
+-#include "obfuscation_calculate.h"
+-#include "aclnn_kernels/cast.h"
+-#include "aclnn_kernels/contiguous.h"
+ #include "opdev/op_executor.h"
+-
+-#include "aclnn_kernels/common/op_error_check.h"
+-#include "opdev/common_types.h"
+-#include "opdev/data_type_utils.h"
+-#include "opdev/format_utils.h"
+ #include "opdev/op_dfx.h"
+-#include "opdev/op_log.h"
+-#include "opdev/platform.h"
+-#include "opdev/shape_utils.h"
+-#include "opdev/tensor_view_utils.h"
+ 
+-using namespace op;
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+ 
+-// 根据API定义，需要列出所能支持的所有dtype
+-static const std::initializer_list<op::DataType> DTYPE_SUPPORT_LIST = {
+-  op::DataType::DT_FLOAT, op::DataType::DT_FLOAT16, op::DataType::DT_INT8, op::DataType::DT_BF16
+-};
+-
+-static bool CheckNotNull(const aclTensor* x, const aclTensor* y)
++aclnnStatus aclnnObfuscationCalculateV2(
++    void* workspace, uint64_t workspaceSize, aclOpExecutor* executor, aclrtStream stream)
+ {
+-  OP_CHECK_NULL(x, return false);
+-  OP_CHECK_NULL(y, return false);
+-  return true;
+-}
+-
+-static bool CheckDtypeValid(const aclTensor* x, const aclTensor* y)
+-{
+-  OP_CHECK_DTYPE_NOT_SUPPORT(x, DTYPE_SUPPORT_LIST, return false);
+-  OP_CHECK_DTYPE_NOT_MATCH(y, x->GetDataType(), return false);
+-  return true;
+-}
+-
+-static bool CheckShape(const aclTensor* x, const aclTensor* y)
+-{
+-  size_t xDimNum = x->GetViewShape().GetDimNum();
+-  size_t yDimNum = y->GetViewShape().GetDimNum();
+-  OP_CHECK(xDimNum == yDimNum,
+-    OP_LOGE(ACLNN_ERR_PARAM_INVALID, "Shape of x tensor should be same with y tensor, but (got x: %s, y: %s)", 
+-            op::ToString(x->GetViewShape()).GetString(), op::ToString(y->GetViewShape()).GetString()), return false);
+-  return true;
+-}
+-
+-static aclnnStatus CheckParams(const int32_t fd, const aclTensor* x, const int32_t param, 
+-                              const int32_t cmd, float obfCoefficient, const aclTensor* y)
+-{
+-  // 1. 检查参数是否为空指针
+-  CHECK_RET(CheckNotNull(x, y), ACLNN_ERR_PARAM_NULLPTR);
+-
+-  // 2. 检查输入输出数据类型
+-  CHECK_RET(CheckDtypeValid(x, y), ACLNN_ERR_PARAM_INVALID);
+-
+-  // 3. 检查输出输出shape
+-  CHECK_RET(CheckShape(x, y), ACLNN_ERR_PARAM_INVALID);
+-
+-  return ACLNN_SUCCESS;
+-}
+-
+-aclnnStatus aclnnObfuscationCalculateV2GetWorkspaceSize(int32_t fd, const aclTensor* x, int32_t param,
+-                                                      int32_t cmd, float obfCoefficient, aclTensor* y, 
+-                                                      uint64_t* workspaceSize, aclOpExecutor** executor)
+-{
+-  L2_DFX_PHASE_1(aclnnObfuscationCalculateV2, DFX_IN(fd, x, param, cmd), DFX_OUT(y));
+-  // 固定写法，创建OpExecutor
+-  auto uniqueExecutor = CREATE_EXECUTOR();
+-  CHECK_RET(uniqueExecutor.get() != nullptr, ACLNN_ERR_INNER_CREATE_EXECUTOR);
+-
+-  // 固定写法，参数检查
+-  auto ret = CheckParams(fd, x, param, cmd, obfCoefficient, y);
+-  CHECK_RET(ret == ACLNN_SUCCESS, ret);
+-
+-  if (x->IsEmpty()) {
+-    // 根据实际支持情况补充
+-    *workspaceSize = 0;
+-    uniqueExecutor.ReleaseTo(executor);
+-    return ACLNN_SUCCESS;
+-  }
+-
+-  // 固定写法，将输入x转换成连续的tensor
+-  auto xContiguous = l0op::Contiguous(x, uniqueExecutor.get());
+-  CHECK_RET(xContiguous != nullptr, ACLNN_ERR_INNER_NULLPTR);
+-
+-  // 进行ObfuscationCalculateV2计算
+-  auto fdTensor = uniqueExecutor.get() -> ConvertToTensor(&fd, 1, op::DataType::DT_INT32);
+-  auto paramTensor = uniqueExecutor.get() -> ConvertToTensor(&param, 1, op::DataType::DT_INT32);
+-
+-  auto yOut = l0op::ObfuscationCalculate(fdTensor, x, paramTensor, cmd, obfCoefficient, uniqueExecutor.get());
+-
+-  // 固定写法，将计算结果转换成输出y的数据类型
+-  auto castY = l0op::Cast(yOut, y->GetDataType(), uniqueExecutor.get());
+-  CHECK_RET(castY != nullptr, ACLNN_ERR_INNER_NULLPTR);
+-
+-  // 固定写法，将计算结果拷贝到输出y上，y可能是非连续的tensor
+-  auto viewCopyY = l0op::ViewCopy(castY, y, uniqueExecutor.get());
+-  CHECK_RET(viewCopyY != nullptr, ACLNN_ERR_INNER_NULLPTR);
+-
+-  // 固定写法，获取计算过程中需要使用的workspace大小
+-  *workspaceSize = uniqueExecutor->GetWorkspaceSize();
+-  // 需要把 uniqueExecutor持有executor转移给executor
+-  uniqueExecutor.ReleaseTo(executor);
+-  return ACLNN_SUCCESS;
+-}
+-
+-aclnnStatus aclnnObfuscationCalculateV2(void* workspace, uint64_t workspaceSize, aclOpExecutor* executor, aclrtStream stream)
+-{
+-  L2_DFX_PHASE_2(aclnnObfuscationCalculateV2);
+-  // 固定写法，调用框架能力，完成计算
+-  return CommonOpExecutorRun(workspace, workspaceSize, executor, stream);
++    L2_DFX_PHASE_2(aclnnObfuscationCalculateV2);
++    // 固定写法，调用框架能力，完成计算
++    return CommonOpExecutorRun(workspace, workspaceSize, executor, stream);
+ }
+ 
+ #ifdef __cplusplus
+ }
+-#endif
+\ No newline at end of file
++#endif
+
+diff --git a/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.h b/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.h
+--- a/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.h
++++ b/reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.h
+@@ -4,11 +4,12 @@
+  * This file is a part of the CANN Open Software.
+  * Licensed under CANN Open Software License Agreement Version 2.0 (the "License").
+  * Please refer to the License for details. You may not use this file except in compliance with the License.
+- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+- * See LICENSE in the root of the software repository for the full text of the License.
++ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING
++ * BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. See LICENSE in the root of
++ * the software repository for the full text of the License.
+  */
+-#ifndef OP_API_INC_OBFUSCATION_CALCULATE_H_
+-#define OP_API_INC_OBFUSCATION_CALCULATE_H_
++#ifndef OP_API_INC_OBFUSCATION_CALCULATE_V2_H_
++#define OP_API_INC_OBFUSCATION_CALCULATE_V2_H_
+ 
+ #include "aclnn/aclnn_base.h"
+ #include "aclnn_util.h"
+@@ -20,34 +21,38 @@ extern "C" {
+ /**
+  * @brief aclnnObfuscationCalculate的第一段接口，根据具体的计算流程，计算workspace大小。
+  * @domain aclnn_ops_infer
+- * 
++ *
+  * 算子功能： PMCC项目计算实现。
+  * @param [in] fd: npu device侧的aclTensor，表示socket连接符，shape为(1)。数据类型支持INT32。数据格式支持ND。
+- * @param [in] x: npu device侧的aclTensor，shape为( , *, ... , hiddenSize)，即最后一维的size是hiddenSize， 数据格式支持ND。
+- * 昇腾310P AI处理器：Tensor数据类型支持ACL_FLOAT、ACL_FLOAT16、ACL_INT8。
+- * 昇腾910B AI处理器：Tensor数据类型支持ACL_FLOAT、ACL_FLOAT16、ACL_INT8、ACL_BF16。
++ * @param [in] x: npu device侧的aclTensor，shape为( , *, ... , hiddenSize)，即最后一维的size是hiddenSize，
++ * 数据格式支持ND。 昇腾310P AI处理器：Tensor数据类型支持ACL_FLOAT、ACL_FLOAT16、ACL_INT8。 昇腾910B
++ * AI处理器：Tensor数据类型支持ACL_FLOAT、ACL_FLOAT16、ACL_INT8、ACL_BF16。
+  * @param [in] param: host侧的int32_t，预留的参数字段。
+  * @param [in] cmd: host侧的int32_t，混淆算子指令编号。目前仅支持1。
+- * @param [in] obfCoefficient: host侧的float，混淆系数，用于对推理数据部分混淆的比例，仅在cmd设置为1或2时需要填写有效值，否则填0。
++ * @param [in] obfCoefficient:
++ * host侧的float，混淆系数，用于对推理数据部分混淆的比例，仅在cmd设置为1或2时需要填写有效值，否则填0。
+  * @param [out] y: npu device侧的aclTensor，混淆处理后的张量，数据类型及Shape与x相同。数据格式支持ND。
+  * @param [out] workspaceSize: 返回用户需要在npu device侧申请的workspace大小。
+  * @param [out] executor: 返回op执行器，包含算子计算流程。
+  * @return aclnnStatus: 返回状态码。
+  */
+- ACLNN_API aclnnStatus aclnnObfuscationCalculateV2GetWorkspaceSize(int32_t fd, const aclTensor* x,
+-    int32_t param, int32_t cmd, float obfCoefficient, aclTensor* y, uint64_t* workspaceSize, aclOpExecutor** executor);
++ACLNN_API aclnnStatus aclnnObfuscationCalculateV2GetWorkspaceSize(
++    int32_t fd, const aclTensor* x, int32_t param, int32_t cmd, float obfCoefficient, aclTensor* y,
++    uint64_t* workspaceSize, aclOpExecutor** executor);
+ 
+ /**
+  * @brief aclnnObfuscationCalculate的第二段接口，用于执行计算
+  * @param [in] workspace: 在npu device侧申请的workspace内存地址
+- * @param [in] workspaceSize: 在npu device侧申请的workspace大小，由第一段接口aclnnObfuscationCalculateGetWorkspaceSize获取
++ * @param [in] workspaceSize: 在npu
++ * device侧申请的workspace大小，由第一段接口aclnnObfuscationCalculateGetWorkspaceSize获取
+  * @param [in] executor: 返回op执行器，包含算子计算流程
+  * @param [in] stream: acl stream流
+  * @return aclnnStatus: 返回状态码
+  */
+-ACLNN_API aclnnStatus aclnnObfuscationCalculateV2(void* workspace, uint64_t workspaceSize, aclOpExecutor* executor, aclrtStream stream);
++ACLNN_API aclnnStatus
++aclnnObfuscationCalculateV2(void* workspace, uint64_t workspaceSize, aclOpExecutor* executor, aclrtStream stream);
+ 
+ #ifdef __cplusplus
+ }
+ #endif
+-#endif  // OP_API_INC_OBFUSCATION_CALCULATE_H_
++#endif // OP_API_INC_OBFUSCATION_CALCULATE_V2_H_
+
+diff --git a/reliability/obfuscation_calculate/tests/ut/op_host/CMakeLists.txt b/reliability/obfuscation_calculate/tests/ut/op_host/CMakeLists.txt
+--- a/reliability/obfuscation_calculate/tests/ut/op_host/CMakeLists.txt
++++ b/reliability/obfuscation_calculate/tests/ut/op_host/CMakeLists.txt
+@@ -10,5 +10,24 @@
+ 
+ file(GLOB CURRENT_DIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/*)
+ if(UT_TEST_ALL OR OP_API_UT)
++    set(_opsras_had_ascend_compute_unit FALSE)
++    if(DEFINED ASCEND_COMPUTE_UNIT)
++        set(_opsras_had_ascend_compute_unit TRUE)
++        set(_opsras_ascend_compute_units "${ASCEND_COMPUTE_UNIT}")
++        set(_opsras_ut_compute_unit "")
++        if(NOT "${_opsras_ascend_compute_units}" STREQUAL "")
++            list(GET _opsras_ascend_compute_units 0 _opsras_ut_compute_unit)
++        endif()
++        if(_opsras_ut_compute_unit STREQUAL "")
++            unset(ASCEND_COMPUTE_UNIT)
++        else()
++            set(ASCEND_COMPUTE_UNIT "${_opsras_ut_compute_unit}")
++        endif()
++    endif()
+     add_modules_ut_sources(HOSTNAME ${OP_API_MODULE_NAME} MODE PRIVATE DIR ${CMAKE_CURRENT_SOURCE_DIR})
+-endif()
+\ No newline at end of file
++    if(_opsras_had_ascend_compute_unit)
++        set(ASCEND_COMPUTE_UNIT "${_opsras_ascend_compute_units}")
++    else()
++        unset(ASCEND_COMPUTE_UNIT)
++    endif()
++endif()
+
+diff --git a/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate.cpp b/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate.cpp
+--- a/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate.cpp
++++ b/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate.cpp
+@@ -4,8 +4,9 @@
+  * This file is a part of the CANN Open Software.
+  * Licensed under CANN Open Software License Agreement Version 2.0 (the "License").
+  * Please refer to the License for details. You may not use this file except in compliance with the License.
+- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+- * See LICENSE in the root of the software repository for the full text of the License.
++ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING
++ * BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. See LICENSE in the root of
++ * the software repository for the full text of the License.
+  */
+ #include <array>
+ #include <vector>
+@@ -19,91 +20,106 @@
+ #include "op_api_ut_common/tensor_desc.h"
+ 
+ using namespace std;
+- 
+-class l2_obfuscation_calculate_test : public testing::Test {
+-  protected:
+-    static void SetUpTestCase() {
+-        cout << "obfuscation_calculate_test SetUp" << endl; 
+-    }
+ 
+-    static void TearDownTestCase() {
+-      cout << "obfuscation_calculate_test TearDown" << endl; }
++class L2ObfuscationCalculateTest : public testing::Test {
++protected:
++    static void SetUpTestCase() { cout << "obfuscation_calculate_test SetUp" << endl; }
++
++    static void TearDownTestCase() { cout << "obfuscation_calculate_test TearDown" << endl; }
+ };
+ 
+ // test success
+-TEST_F(l2_obfuscation_calculate_test, case_float_success) {
+-  int32_t fd = 35;
+-  int32_t param = 4;
+-  int32_t cmd = 1;
+-  auto x_tensor_desc = TensorDesc({2, 4}, ACL_FLOAT, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
+-  auto y_tensor_desc = TensorDesc({2, 4}, ACL_FLOAT, ACL_FORMAT_ND);
++TEST_F(L2ObfuscationCalculateTest, case_float_success)
++{
++    int32_t fd = 35;
++    int32_t param = 4;
++    int32_t cmd = 1;
++    auto x_tensor_desc = TensorDesc({2, 4}, ACL_FLOAT, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
++    auto y_tensor_desc = TensorDesc({2, 4}, ACL_FLOAT, ACL_FORMAT_ND);
+ 
+-  auto ut = OP_API_UT(aclnnObfuscationCalculate, INPUT(fd, x_tensor_desc, param, cmd), 
+-                      OUTPUT(y_tensor_desc));
++    auto ut = OP_API_UT(aclnnObfuscationCalculate, INPUT(fd, x_tensor_desc, param, cmd), OUTPUT(y_tensor_desc));
+ 
+-  uint64_t workspace_size = 0;
+-  aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
+-  EXPECT_EQ(aclRet, ACLNN_SUCCESS);
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_SUCCESS);
+ }
+ 
+ // *** nullptr test ***
+ // test nullptr x
+-TEST_F(l2_obfuscation_calculate_test, case_anullptr_x) {
+-  int32_t fd = 35;
+-  int32_t param = 4;
+-  int32_t cmd = 1;
+-  auto y_tensor_desc = TensorDesc({2, 4}, ACL_FLOAT, ACL_FORMAT_ND);
++TEST_F(L2ObfuscationCalculateTest, case_anullptr_x)
++{
++    int32_t fd = 35;
++    int32_t param = 4;
++    int32_t cmd = 1;
++    auto y_tensor_desc = TensorDesc({2, 4}, ACL_FLOAT, ACL_FORMAT_ND);
+ 
+-  auto ut = OP_API_UT(aclnnObfuscationCalculate, INPUT(fd, (aclTensor*)nullptr, param, cmd), 
+-                      OUTPUT(y_tensor_desc));
++    auto ut = OP_API_UT(aclnnObfuscationCalculate, INPUT(fd, (aclTensor*)nullptr, param, cmd), OUTPUT(y_tensor_desc));
+ 
+-  uint64_t workspace_size = 0;
+-  aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
+-  EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_NULLPTR);
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_NULLPTR);
+ }
+ 
+ // test nullptr y
+-TEST_F(l2_obfuscation_calculate_test, case_anullptr_y) {
+-  auto x_tensor_desc = TensorDesc({2, 4}, ACL_BF16, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
+-  int32_t fd = 35;
+-  int32_t param = 4;
+-  int32_t cmd = 1;
++TEST_F(L2ObfuscationCalculateTest, case_anullptr_y)
++{
++    auto x_tensor_desc = TensorDesc({2, 4}, ACL_BF16, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
++    int32_t fd = 35;
++    int32_t param = 4;
++    int32_t cmd = 1;
+ 
+-  auto ut = OP_API_UT(aclnnObfuscationCalculate, INPUT(fd, x_tensor_desc, param, cmd), OUTPUT((aclTensor*)nullptr));
++    auto ut = OP_API_UT(aclnnObfuscationCalculate, INPUT(fd, x_tensor_desc, param, cmd), OUTPUT((aclTensor*)nullptr));
+ 
+-  uint64_t workspace_size = 0;
+-  aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
+-  EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_NULLPTR);
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_NULLPTR);
+ }
+ 
+-// test datatype x != y 
+-TEST_F(l2_obfuscation_calculate_test, case_datatype_x_equal_y) {
+-  auto x_tensor_desc = TensorDesc({2, 4}, ACL_BF16, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
+-  int32_t fd = 35;
+-  int32_t param = 4;
+-  int32_t cmd = 1;
++// test datatype x != y
++TEST_F(L2ObfuscationCalculateTest, case_datatype_x_equal_y)
++{
++    auto x_tensor_desc = TensorDesc({2, 4}, ACL_BF16, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
++    int32_t fd = 35;
++    int32_t param = 4;
++    int32_t cmd = 1;
+ 
+-  auto y_tensor_desc = TensorDesc({2, 4}, ACL_FLOAT, ACL_FORMAT_ND);
++    auto y_tensor_desc = TensorDesc({2, 4}, ACL_FLOAT, ACL_FORMAT_ND);
+ 
+-  auto ut = OP_API_UT(aclnnObfuscationCalculate, INPUT(fd, x_tensor_desc, param, cmd), OUTPUT(y_tensor_desc));
++    auto ut = OP_API_UT(aclnnObfuscationCalculate, INPUT(fd, x_tensor_desc, param, cmd), OUTPUT(y_tensor_desc));
+ 
+-  uint64_t workspace_size = 0;
+-  aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
+-  EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
+ }
+ 
+-// test shape x != y 
+-TEST_F(l2_obfuscation_calculate_test, case_shape_x_equal_y) {
+-  auto x_tensor_desc = TensorDesc({2, 4}, ACL_FLOAT, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
+-  int32_t fd = 35;
+-  int32_t param = 4;
+-  int32_t cmd = 1;
++// test shape x != y
++TEST_F(L2ObfuscationCalculateTest, case_shape_x_equal_y)
++{
++    auto x_tensor_desc = TensorDesc({2, 4}, ACL_FLOAT, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
++    int32_t fd = 35;
++    int32_t param = 4;
++    int32_t cmd = 1;
+ 
+-  auto y_tensor_desc = TensorDesc({1}, ACL_FLOAT, ACL_FORMAT_ND);
++    auto y_tensor_desc = TensorDesc({1}, ACL_FLOAT, ACL_FORMAT_ND);
+ 
+-  auto ut = OP_API_UT(aclnnObfuscationCalculate, INPUT(fd, x_tensor_desc, param, cmd), OUTPUT(y_tensor_desc));
++    auto ut = OP_API_UT(aclnnObfuscationCalculate, INPUT(fd, x_tensor_desc, param, cmd), OUTPUT(y_tensor_desc));
+ 
+-  uint64_t workspace_size = 0;
+-  aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
+-  EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
+-}
+\ No newline at end of file
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
++}
++
++TEST_F(L2ObfuscationCalculateTest, case_shape_same_rank_different_dims)
++{
++    int32_t fd = 35;
++    int32_t param = 4;
++    int32_t cmd = 1;
++    auto x_tensor_desc = TensorDesc({2, 4}, ACL_FLOAT, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
++    auto y_tensor_desc = TensorDesc({1, 8}, ACL_FLOAT, ACL_FORMAT_ND);
++
++    auto ut = OP_API_UT(aclnnObfuscationCalculate, INPUT(fd, x_tensor_desc, param, cmd), OUTPUT(y_tensor_desc));
++
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
++}
+
+diff --git a/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate_v2.cpp b/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate_v2.cpp
+--- a/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate_v2.cpp
++++ b/reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate_v2.cpp
+@@ -4,8 +4,9 @@
+  * This file is a part of the CANN Open Software.
+  * Licensed under CANN Open Software License Agreement Version 2.0 (the "License").
+  * Please refer to the License for details. You may not use this file except in compliance with the License.
+- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+- * See LICENSE in the root of the software repository for the full text of the License.
++ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING
++ * BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. See LICENSE in the root of
++ * the software repository for the full text of the License.
+  */
+ #include <array>
+ #include <vector>
+@@ -18,97 +19,120 @@
+ #include "op_api_ut_common/scalar_desc.h"
+ #include "op_api_ut_common/tensor_desc.h"
+ 
+- using namespace std;
+- 
+-class l2_obfuscation_calculate_v2_test : public testing::Test {
+-  protected:
+-    static void SetUpTestCase() {
+-        cout << "obfuscation_calculate_v2_test SetUp" << endl; 
+-    }
++using namespace std;
+ 
+-    static void TearDownTestCase() {
+-      cout << "obfuscation_calculate_v2_test TearDown" << endl; }
++class L2ObfuscationCalculateV2Test : public testing::Test {
++protected:
++    static void SetUpTestCase() { cout << "obfuscation_calculate_v2_test SetUp" << endl; }
++
++    static void TearDownTestCase() { cout << "obfuscation_calculate_v2_test TearDown" << endl; }
+ };
+ 
+ // test success
+-TEST_F(l2_obfuscation_calculate_v2_test, case_float_success) {
+-  auto x_tensor_desc = TensorDesc({2, 8}, ACL_FLOAT, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
+-  int32_t fd = 40;
+-  int32_t param = 8;
+-  int32_t cmd = 1;
+-  float obfCoefficient = 0.5;
++TEST_F(L2ObfuscationCalculateV2Test, case_float_success)
++{
++    auto x_tensor_desc = TensorDesc({2, 8}, ACL_FLOAT, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
++    int32_t fd = 40;
++    int32_t param = 8;
++    int32_t cmd = 1;
++    float obfCoefficient = 0.5;
+ 
+-  auto y_tensor_desc = TensorDesc({2, 8}, ACL_FLOAT, ACL_FORMAT_ND);
++    auto y_tensor_desc = TensorDesc({2, 8}, ACL_FLOAT, ACL_FORMAT_ND);
+ 
+-  auto ut = OP_API_UT(aclnnObfuscationCalculateV2, INPUT(fd, x_tensor_desc, param, cmd, obfCoefficient), OUTPUT(y_tensor_desc));
++    auto ut = OP_API_UT(
++        aclnnObfuscationCalculateV2, INPUT(fd, x_tensor_desc, param, cmd, obfCoefficient), OUTPUT(y_tensor_desc));
+ 
+-  uint64_t workspace_size = 0;
+-  aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
+-  EXPECT_EQ(aclRet, ACLNN_SUCCESS);
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_SUCCESS);
+ }
+ 
+ // *** nullptr test ***
+ // test nullptr x
+-TEST_F(l2_obfuscation_calculate_v2_test, case_anullptr_x) {
+-  int32_t fd = 40;
+-  int32_t param = 8;
+-  int32_t cmd = 1;
+-  float obfCoefficient = 0.5;
+-  auto y_tensor_desc = TensorDesc({2, 8}, ACL_FLOAT, ACL_FORMAT_ND);
++TEST_F(L2ObfuscationCalculateV2Test, case_anullptr_x)
++{
++    int32_t fd = 40;
++    int32_t param = 8;
++    int32_t cmd = 1;
++    float obfCoefficient = 0.5;
++    auto y_tensor_desc = TensorDesc({2, 8}, ACL_FLOAT, ACL_FORMAT_ND);
+ 
+-  auto ut = OP_API_UT(aclnnObfuscationCalculateV2, INPUT(fd, (aclTensor*)nullptr, param, cmd, obfCoefficient), 
+-                      OUTPUT(y_tensor_desc));
++    auto ut = OP_API_UT(
++        aclnnObfuscationCalculateV2, INPUT(fd, (aclTensor*)nullptr, param, cmd, obfCoefficient), OUTPUT(y_tensor_desc));
+ 
+-  uint64_t workspace_size = 0;
+-  aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
+-  EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_NULLPTR);
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_NULLPTR);
+ }
+ 
+ // test nullptr y
+-TEST_F(l2_obfuscation_calculate_v2_test, case_anullptr_y) {
+-  auto x_tensor_desc = TensorDesc({2, 8}, ACL_BF16, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
+-  int32_t fd = 40;
+-  int32_t param = 8;
+-  int32_t cmd = 1;
+-  float obfCoefficient = 0.5;
++TEST_F(L2ObfuscationCalculateV2Test, case_anullptr_y)
++{
++    auto x_tensor_desc = TensorDesc({2, 8}, ACL_BF16, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
++    int32_t fd = 40;
++    int32_t param = 8;
++    int32_t cmd = 1;
++    float obfCoefficient = 0.5;
+ 
+-  auto ut = OP_API_UT(aclnnObfuscationCalculateV2, INPUT(fd, x_tensor_desc, param, cmd, obfCoefficient), OUTPUT((aclTensor*)nullptr));
++    auto ut = OP_API_UT(
++        aclnnObfuscationCalculateV2, INPUT(fd, x_tensor_desc, param, cmd, obfCoefficient), OUTPUT((aclTensor*)nullptr));
+ 
+-  uint64_t workspace_size = 0;
+-  aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
+-  EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_NULLPTR);
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_NULLPTR);
+ }
+ 
+-// test dataType x != y 
+-TEST_F(l2_obfuscation_calculate_v2_test, case_datatype_x_equal_y) {
+-  auto x_tensor_desc = TensorDesc({2, 8}, ACL_BF16, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
+-  int32_t fd = 40;
+-  int32_t param = 8;
+-  int32_t cmd = 1;
+-  float obfCoefficient = 0.5;
++// test dataType x != y
++TEST_F(L2ObfuscationCalculateV2Test, case_datatype_x_equal_y)
++{
++    auto x_tensor_desc = TensorDesc({2, 8}, ACL_BF16, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
++    int32_t fd = 40;
++    int32_t param = 8;
++    int32_t cmd = 1;
++    float obfCoefficient = 0.5;
+ 
+-  auto y_tensor_desc = TensorDesc({2, 8}, ACL_FLOAT, ACL_FORMAT_ND);
++    auto y_tensor_desc = TensorDesc({2, 8}, ACL_FLOAT, ACL_FORMAT_ND);
+ 
+-  auto ut = OP_API_UT(aclnnObfuscationCalculateV2, INPUT(fd, x_tensor_desc, param, cmd, obfCoefficient), OUTPUT(y_tensor_desc));
++    auto ut = OP_API_UT(
++        aclnnObfuscationCalculateV2, INPUT(fd, x_tensor_desc, param, cmd, obfCoefficient), OUTPUT(y_tensor_desc));
+ 
+-  uint64_t workspace_size = 0;
+-  aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
+-  EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
+ }
+ 
+-// test shape x != y 
+-TEST_F(l2_obfuscation_calculate_v2_test, case_shape_x_equal_y) {
+-  auto x_tensor_desc = TensorDesc({2, 8}, ACL_FLOAT, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
+-  int32_t fd = 40;
+-  int32_t param = 8;
+-  int32_t cmd = 1;
+-  float obfCoefficient = 0.5;
++// test shape x != y
++TEST_F(L2ObfuscationCalculateV2Test, case_shape_x_equal_y)
++{
++    auto x_tensor_desc = TensorDesc({2, 8}, ACL_FLOAT, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
++    int32_t fd = 40;
++    int32_t param = 8;
++    int32_t cmd = 1;
++    float obfCoefficient = 0.5;
+ 
+-  auto y_tensor_desc = TensorDesc({1}, ACL_FLOAT, ACL_FORMAT_ND);
++    auto y_tensor_desc = TensorDesc({1}, ACL_FLOAT, ACL_FORMAT_ND);
+ 
+-  auto ut = OP_API_UT(aclnnObfuscationCalculateV2, INPUT(fd, x_tensor_desc, param, cmd, obfCoefficient), OUTPUT(y_tensor_desc));
++    auto ut = OP_API_UT(
++        aclnnObfuscationCalculateV2, INPUT(fd, x_tensor_desc, param, cmd, obfCoefficient), OUTPUT(y_tensor_desc));
+ 
+-  uint64_t workspace_size = 0;
+-  aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
+-  EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
+-}
+\ No newline at end of file
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
++}
++
++TEST_F(L2ObfuscationCalculateV2Test, case_shape_same_rank_different_dims)
++{
++    auto x_tensor_desc = TensorDesc({2, 8}, ACL_FLOAT, ACL_FORMAT_ND).ValueRange(-2.0, 2.0);
++    int32_t fd = 40;
++    int32_t param = 8;
++    int32_t cmd = 1;
++    float obfCoefficient = 0.5;
++    auto y_tensor_desc = TensorDesc({1, 16}, ACL_FLOAT, ACL_FORMAT_ND);
++
++    auto ut = OP_API_UT(
++        aclnnObfuscationCalculateV2, INPUT(fd, x_tensor_desc, param, cmd, obfCoefficient), OUTPUT(y_tensor_desc));
++
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
++}
+
+diff --git a/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup.cpp b/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup.cpp
+--- a/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup.cpp
++++ b/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup.cpp
+@@ -4,117 +4,132 @@
+  * This file is a part of the CANN Open Software.
+  * Licensed under CANN Open Software License Agreement Version 2.0 (the "License").
+  * Please refer to the License for details. You may not use this file except in compliance with the License.
+- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+- * See LICENSE in the root of the software repository for the full text of the License.
++ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING
++ * BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. See LICENSE in the root of
++ * the software repository for the full text of the License.
+  */
+ #include "aclnn_obfuscation_setup.h"
+ 
+ #include "aclnn_kernels/cast.h"
+-#include "aclnn_kernels/contiguous.h"
+-#include "obfuscation_setup.h"
+-#include "opdev/op_executor.h"
+-
+ #include "aclnn_kernels/common/op_error_check.h"
++#include "aclnn_kernels/contiguous.h"
++#include "aclnn_obfuscation_setup_v2.h"
++#include "obfuscation_setup.h"
+ #include "opdev/common_types.h"
+ #include "opdev/data_type_utils.h"
+-#include "opdev/op_log.h"
+-#include "opdev/format_utils.h"
++#include "opdev/op_executor.h"
+ #include "opdev/op_dfx.h"
+-#include "opdev/platform.h"
++#include "opdev/op_log.h"
+ #include "opdev/shape_utils.h"
+ #include "opdev/tensor_view_utils.h"
+-using namespace op;
++
++namespace {
++
++using op::CheckType;
++
++bool CheckNotNull(const aclTensor* fd)
++{
++    OP_CHECK_NULL(fd, return false);
++    return true;
++}
++
++bool CheckDtypeValid(const aclTensor* fd)
++{
++    OP_CHECK_DTYPE_NOT_MATCH(fd, op::DataType::DT_INT32, return false);
++    return true;
++}
++
++bool CheckShape(const aclTensor* fd)
++{
++    OP_CHECK(
++        fd->GetViewShape().GetDimNum() == 1 && fd->GetViewShape().GetDim(0) == 1,
++        OP_LOGE(
++            ACLNN_ERR_PARAM_INVALID, "Shape of fd tensor should be [1], but current is %s.",
++            op::ToString(fd->GetViewShape()).GetString()),
++        return false);
++    return true;
++}
++
++aclnnStatus CheckParams(const aclTensor* fd)
++{
++    CHECK_RET(CheckNotNull(fd), ACLNN_ERR_PARAM_NULLPTR);
++    CHECK_RET(CheckDtypeValid(fd), ACLNN_ERR_PARAM_INVALID);
++    CHECK_RET(CheckShape(fd), ACLNN_ERR_PARAM_INVALID);
++    return ACLNN_SUCCESS;
++}
++
++aclnnStatus GetWorkspaceSize(
++    int32_t fdToClose, int32_t dataType, int32_t hiddenSize, int32_t tpRank, int32_t modelObfSeedId,
++    int32_t dataObfSeedId, int32_t cmd, int32_t threadNum, float obfCoefficient, aclTensor* fd, uint64_t* workspaceSize,
++    aclOpExecutor** executor)
++{
++    auto uniqueExecutor = CREATE_EXECUTOR();
++    CHECK_RET(uniqueExecutor.get() != nullptr, ACLNN_ERR_INNER_CREATE_EXECUTOR);
++
++    auto ret = CheckParams(fd);
++    CHECK_RET(ret == ACLNN_SUCCESS, ret);
++
++    auto fdToCloseTensor = uniqueExecutor.get()->ConvertToTensor(&fdToClose, 1, op::DataType::DT_INT32);
++    auto dataTypeTensor = uniqueExecutor.get()->ConvertToTensor(&dataType, 1, op::DataType::DT_INT32);
++    auto hiddenSizeTensor = uniqueExecutor.get()->ConvertToTensor(&hiddenSize, 1, op::DataType::DT_INT32);
++    auto tpRankTensor = uniqueExecutor.get()->ConvertToTensor(&tpRank, 1, op::DataType::DT_INT32);
++    auto modelObfSeedIdTensor = uniqueExecutor.get()->ConvertToTensor(&modelObfSeedId, 1, op::DataType::DT_INT32);
++    auto dataObfSeedIdTensor = uniqueExecutor.get()->ConvertToTensor(&dataObfSeedId, 1, op::DataType::DT_INT32);
++    auto fdOut = l0op::ObfuscationSetup(
++        fdToCloseTensor, dataTypeTensor, hiddenSizeTensor, tpRankTensor, modelObfSeedIdTensor, dataObfSeedIdTensor, cmd,
++        threadNum, obfCoefficient, uniqueExecutor.get());
++
++    auto castFd = l0op::Cast(fdOut, fd->GetDataType(), uniqueExecutor.get());
++    CHECK_RET(castFd != nullptr, ACLNN_ERR_INNER_NULLPTR);
++
++    auto viewCopyFd = l0op::ViewCopy(castFd, fd, uniqueExecutor.get());
++    CHECK_RET(viewCopyFd != nullptr, ACLNN_ERR_INNER_NULLPTR);
++
++    *workspaceSize = uniqueExecutor->GetWorkspaceSize();
++    uniqueExecutor.ReleaseTo(executor);
++    return ACLNN_SUCCESS;
++}
++
++} // namespace
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+- 
+-// 根据API定义，需要列出所能支持的所有dtype
+-static bool CheckNotNull(const aclTensor* fd)
++
++aclnnStatus aclnnObfuscationSetupGetWorkspaceSize(
++    int32_t fdToClose, int32_t dataType, int32_t hiddenSize, int32_t tpRank, int32_t modelObfSeedId,
++    int32_t dataObfSeedId, int32_t cmd, int32_t threadNum, aclTensor* fd, uint64_t* workspaceSize,
++    aclOpExecutor** executor)
+ {
+-  OP_CHECK_NULL(fd, return false);
+-  return true;
++    L2_DFX_PHASE_1(
++        aclnnObfuscationSetup,
++        DFX_IN(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId, dataObfSeedId, cmd, threadNum), DFX_OUT(fd));
++    return GetWorkspaceSize(
++        fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId, dataObfSeedId, cmd, threadNum, 1.0F, fd, workspaceSize,
++        executor);
+ }
+ 
+-static bool CheckDtypeValid(const aclTensor* fd)
++aclnnStatus aclnnObfuscationSetupV2GetWorkspaceSize(
++    int32_t fdToClose, int32_t dataType, int32_t hiddenSize, int32_t tpRank, int32_t modelObfSeedId,
++    int32_t dataObfSeedId, int32_t cmd, int32_t threadNum, float obfCoefficient, aclTensor* fd, uint64_t* workspaceSize,
++    aclOpExecutor** executor)
+ {
+-  OP_CHECK_DTYPE_NOT_MATCH(fd, op::DataType::DT_INT32, return false);
+-  return true;
+-}
+-
+-static bool CheckShape(const aclTensor* fd)
+-{
+-  OP_CHECK(fd->GetViewShape().GetDimNum() == 1,
+-          OP_LOGE(ACLNN_ERR_PARAM_INVALID,
+-                  "Shape of fd tensor should be [1], but current is %s.",
+-                  op::ToString(fd->GetViewShape()).GetString()),
+-          return false);
+-  return true;
+-}
+-
+-static aclnnStatus CheckParams(const int32_t fdToClose, const int32_t dataType,
+-                               const int32_t hiddenSize, const int32_t tpRank,
+-                               const int32_t modelObfSeedId, const int32_t dataObfSeedId,
+-                               const int32_t cmd, const int32_t threadNum, const aclTensor* fd)
+-{
+-  // 1. 检查参数是否为空指针
+-  CHECK_RET(CheckNotNull(fd), ACLNN_ERR_PARAM_NULLPTR);
+-
+-  // 2. 检查输入输出数据类型
+-  CHECK_RET(CheckDtypeValid(fd), ACLNN_ERR_PARAM_INVALID);
+-
+-  // 3. 检查输出输出shape
+-  CHECK_RET(CheckShape(fd), ACLNN_ERR_PARAM_INVALID);
+-
+-  return ACLNN_SUCCESS;
+-}
+-
+-aclnnStatus aclnnObfuscationSetupGetWorkspaceSize(int32_t fdToClose, int32_t dataType, 
+-                                                  int32_t hiddenSize, int32_t tpRank,
+-                                                  int32_t modelObfSeedId, int32_t dataObfSeedId, 
+-                                                  int32_t cmd, int32_t threadNum, aclTensor* fd, 
+-                                                  uint64_t* workspaceSize, aclOpExecutor** executor)
+-{
+-  L2_DFX_PHASE_1(aclnnObfuscationSetup, DFX_IN(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId, dataObfSeedId, cmd, threadNum), DFX_OUT(fd));
+-  // 固定写法，创建OpExecutor
+-  auto uniqueExecutor = CREATE_EXECUTOR();
+-  CHECK_RET(uniqueExecutor.get() != nullptr, ACLNN_ERR_INNER_CREATE_EXECUTOR);
+-
+-  // 固定写法，参数检查
+-  auto ret = CheckParams(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId,dataObfSeedId, cmd, threadNum, fd);
+-  CHECK_RET(ret == ACLNN_SUCCESS, ret);
+-
+-  auto fdToCloseTensor = uniqueExecutor.get() -> ConvertToTensor(&fdToClose, 1, op::DataType::DT_INT32);
+-  auto dataTypeTensor = uniqueExecutor.get() -> ConvertToTensor(&dataType, 1, op::DataType::DT_INT32);
+-  auto hiddenSizeTensor = uniqueExecutor.get() -> ConvertToTensor(&hiddenSize, 1, op::DataType::DT_INT32);
+-  auto tpRankTensor = uniqueExecutor.get() -> ConvertToTensor(&tpRank, 1, op::DataType::DT_INT32);
+-  auto modelObfSeedIdTensor = uniqueExecutor.get() -> ConvertToTensor(&modelObfSeedId, 1, op::DataType::DT_INT32);
+-  auto dataObfSeedIdTensor = uniqueExecutor.get() -> ConvertToTensor(&dataObfSeedId, 1, op::DataType::DT_INT32);
+-  float obfCoefficient = 1.0;
+-  auto fdOut = l0op::ObfuscationSetup(fdToCloseTensor, dataTypeTensor, hiddenSizeTensor, tpRankTensor, 
+-                                      modelObfSeedIdTensor,dataObfSeedIdTensor, cmd, threadNum, obfCoefficient, uniqueExecutor.get());
+-
+-  // 固定写法，将计算结果转换成输出fd的数据类型
+-  auto castFd = l0op::Cast(fdOut, fd->GetDataType(), uniqueExecutor.get());
+-  CHECK_RET(castFd != nullptr, ACLNN_ERR_INNER_NULLPTR);
+-
+-  // 固定写法，将计算结果拷贝到输出y上，y可能是非连续的tensor
+-  auto viewCopyFd = l0op::ViewCopy(castFd, fd, uniqueExecutor.get());
+-  CHECK_RET(viewCopyFd != nullptr, ACLNN_ERR_INNER_NULLPTR);
+-
+-  // 固定写法，获取计算过程中需要使用的workspace大小
+-  *workspaceSize = uniqueExecutor->GetWorkspaceSize();
+-  // 需要把 uniqueExecutor持有executor转移给executor
+-  uniqueExecutor.ReleaseTo(executor);
+-  return ACLNN_SUCCESS;
++    L2_DFX_PHASE_1(
++        aclnnObfuscationSetupV2,
++        DFX_IN(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId, dataObfSeedId, cmd, threadNum, obfCoefficient),
++        DFX_OUT(fd));
++    return GetWorkspaceSize(
++        fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId, dataObfSeedId, cmd, threadNum, obfCoefficient, fd,
++        workspaceSize, executor);
+ }
+ 
+ aclnnStatus aclnnObfuscationSetup(void* workspace, uint64_t workspaceSize, aclOpExecutor* executor, aclrtStream stream)
+ {
+-  L2_DFX_PHASE_2(aclnnObfuscationSetup);
+-  // 固定写法，调用框架能力，完成计算
+-  return CommonOpExecutorRun(workspace, workspaceSize, executor, stream);
++    L2_DFX_PHASE_2(aclnnObfuscationSetup);
++    // 固定写法，调用框架能力，完成计算
++    return CommonOpExecutorRun(workspace, workspaceSize, executor, stream);
+ }
+ 
+ #ifdef __cplusplus
+ }
+-#endif
+\ No newline at end of file
++#endif
+
+diff --git a/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.cpp b/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.cpp
+--- a/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.cpp
++++ b/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.cpp
+@@ -4,117 +4,27 @@
+  * This file is a part of the CANN Open Software.
+  * Licensed under CANN Open Software License Agreement Version 2.0 (the "License").
+  * Please refer to the License for details. You may not use this file except in compliance with the License.
+- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+- * See LICENSE in the root of the software repository for the full text of the License.
++ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING
++ * BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. See LICENSE in the root of
++ * the software repository for the full text of the License.
+  */
+ #include "aclnn_obfuscation_setup_v2.h"
+ 
+-#include "aclnn_kernels/cast.h"
+-#include "aclnn_kernels/contiguous.h"
+-#include "obfuscation_setup.h"
+ #include "opdev/op_executor.h"
+-
+-#include "aclnn_kernels/common/op_error_check.h"
+-#include "opdev/common_types.h"
+-#include "opdev/data_type_utils.h"
+-#include "opdev/op_log.h"
+-#include "opdev/format_utils.h"
+ #include "opdev/op_dfx.h"
+-#include "opdev/platform.h"
+-#include "opdev/shape_utils.h"
+-#include "opdev/tensor_view_utils.h"
+-using namespace op;
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+- 
+-// 根据API定义，需要列出所能支持的所有dtype
+-static bool CheckNotNull(const aclTensor* fd)
++
++aclnnStatus aclnnObfuscationSetupV2(
++    void* workspace, uint64_t workspaceSize, aclOpExecutor* executor, aclrtStream stream)
+ {
+-  OP_CHECK_NULL(fd, return false);
+-  return true;
+-}
+-
+-static bool CheckDtypeValid(const aclTensor* fd)
+-{
+-  OP_CHECK_DTYPE_NOT_MATCH(fd, op::DataType::DT_INT32, return false);
+-  return true;
+-}
+-
+-static bool CheckShape(const aclTensor* fd)
+-{
+-  OP_CHECK(fd->GetViewShape().GetDimNum() == 1,
+-          OP_LOGE(ACLNN_ERR_PARAM_INVALID,
+-                  "Shape of fd tensor should be [1], but current is %s.",
+-                  op::ToString(fd->GetViewShape()).GetString()),
+-          return false);
+-  return true;
+-}
+-
+-static aclnnStatus CheckParams(const int32_t fdToClose, const int32_t dataType,
+-                               const int32_t hiddenSize, const int32_t tpRank,
+-                               const int32_t modelObfSeedId, const int32_t dataObfSeedId,
+-                               const int32_t cmd, const int32_t threadNum, float obfCoefficient, const aclTensor* fd)
+-{
+-  // 1. 检查参数是否为空指针
+-  CHECK_RET(CheckNotNull(fd), ACLNN_ERR_PARAM_NULLPTR);
+-
+-  // 2. 检查输入输出数据类型
+-  CHECK_RET(CheckDtypeValid(fd), ACLNN_ERR_PARAM_INVALID);
+-
+-  // 3. 检查输出输出shape
+-  CHECK_RET(CheckShape(fd), ACLNN_ERR_PARAM_INVALID);
+-
+-  return ACLNN_SUCCESS;
+-}
+-
+-aclnnStatus aclnnObfuscationSetupV2GetWorkspaceSize(int32_t fdToClose, int32_t dataType, 
+-                                                  int32_t hiddenSize, int32_t tpRank,
+-                                                  int32_t modelObfSeedId, int32_t dataObfSeedId, 
+-                                                  int32_t cmd, int32_t threadNum, float obfCoefficient, aclTensor* fd, 
+-                                                  uint64_t* workspaceSize, aclOpExecutor** executor)
+-{
+-  L2_DFX_PHASE_1(aclnnObfuscationSetupV2, DFX_IN(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId, dataObfSeedId, cmd, threadNum, obfCoefficient), DFX_OUT(fd));
+-  // 固定写法，创建OpExecutor
+-  auto uniqueExecutor = CREATE_EXECUTOR();
+-  CHECK_RET(uniqueExecutor.get() != nullptr, ACLNN_ERR_INNER_CREATE_EXECUTOR);
+-
+-  // 固定写法，参数检查
+-  auto ret = CheckParams(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId,dataObfSeedId, cmd, threadNum, obfCoefficient, fd);
+-  CHECK_RET(ret == ACLNN_SUCCESS, ret);
+-
+-  auto fdToCloseTensor = uniqueExecutor.get() -> ConvertToTensor(&fdToClose, 1, op::DataType::DT_INT32);
+-  auto dataTypeTensor = uniqueExecutor.get() -> ConvertToTensor(&dataType, 1, op::DataType::DT_INT32);
+-  auto hiddenSizeTensor = uniqueExecutor.get() -> ConvertToTensor(&hiddenSize, 1, op::DataType::DT_INT32);
+-  auto tpRankTensor = uniqueExecutor.get() -> ConvertToTensor(&tpRank, 1, op::DataType::DT_INT32);
+-  auto modelObfSeedIdTensor = uniqueExecutor.get() -> ConvertToTensor(&modelObfSeedId, 1, op::DataType::DT_INT32);
+-  auto dataObfSeedIdTensor = uniqueExecutor.get() -> ConvertToTensor(&dataObfSeedId, 1, op::DataType::DT_INT32);
+-
+-  auto fdOut = l0op::ObfuscationSetup(fdToCloseTensor, dataTypeTensor, hiddenSizeTensor, tpRankTensor, 
+-                                      modelObfSeedIdTensor,dataObfSeedIdTensor, cmd, threadNum, obfCoefficient, uniqueExecutor.get());
+-
+-  // 固定写法，将计算结果转换成输出fd的数据类型
+-  auto castFd = l0op::Cast(fdOut, fd->GetDataType(), uniqueExecutor.get());
+-  CHECK_RET(castFd != nullptr, ACLNN_ERR_INNER_NULLPTR);
+-
+-  // 固定写法，将计算结果拷贝到输出y上，y可能是非连续的tensor
+-  auto viewCopyFd = l0op::ViewCopy(castFd, fd, uniqueExecutor.get());
+-  CHECK_RET(viewCopyFd != nullptr, ACLNN_ERR_INNER_NULLPTR);
+-
+-  // 固定写法，获取计算过程中需要使用的workspace大小
+-  *workspaceSize = uniqueExecutor->GetWorkspaceSize();
+-  // 需要把 uniqueExecutor持有executor转移给executor
+-  uniqueExecutor.ReleaseTo(executor);
+-  return ACLNN_SUCCESS;
+-}
+-
+-aclnnStatus aclnnObfuscationSetupV2(void* workspace, uint64_t workspaceSize, aclOpExecutor* executor, aclrtStream stream)
+-{
+-  L2_DFX_PHASE_2(aclnnObfuscationSetupV2);
+-  // 固定写法，调用框架能力，完成计算
+-  return CommonOpExecutorRun(workspace, workspaceSize, executor, stream);
++    L2_DFX_PHASE_2(aclnnObfuscationSetupV2);
++    // 固定写法，调用框架能力，完成计算
++    return CommonOpExecutorRun(workspace, workspaceSize, executor, stream);
+ }
+ 
+ #ifdef __cplusplus
+ }
+-#endif
+\ No newline at end of file
++#endif
+
+diff --git a/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.h b/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.h
+--- a/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.h
++++ b/reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.h
+@@ -4,11 +4,12 @@
+  * This file is a part of the CANN Open Software.
+  * Licensed under CANN Open Software License Agreement Version 2.0 (the "License").
+  * Please refer to the License for details. You may not use this file except in compliance with the License.
+- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+- * See LICENSE in the root of the software repository for the full text of the License.
++ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING
++ * BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. See LICENSE in the root of
++ * the software repository for the full text of the License.
+  */
+-#ifndef OP_API_INC_OBFUSCATION_SETUP_H_
+-#define OP_API_INC_OBFUSCATION_SETUP_H_
++#ifndef OP_API_INC_OBFUSCATION_SETUP_V2_H_
++#define OP_API_INC_OBFUSCATION_SETUP_V2_H_
+ 
+ #include "aclnn/aclnn_base.h"
+ #include "aclnn_util.h"
+@@ -19,7 +20,7 @@ extern "C" {
+ /**
+  * @brief aclnnObfuscationSetup的第一段接口，根据具体的计算流程，计算workspace大小。
+  * @domain aclnn_ops_infer
+- * 
++ *
+  * 算子功能： PMCC项目初始化。
+  * @param [in] fdToClose: host侧的int32_t，待关闭的socket连接符，cmd为3时填写本算子在cmd为1时返回的fd，否则填0。
+  * @param [in] dataType: host侧的int32_t，代表Tensor数据类型的编号，仅在cmd设置为1或2时需要填写有效值，否则填0。
+@@ -27,23 +28,27 @@ extern "C" {
+  * 昇腾910B AI处理器：在{0, 1, 2, 27}中选择，0表示ACL_FLOAT、1表示ACL_FLOAT16、2表示ACL_INT8、27表示ACL_BF16
+  * @param [in] hiddenSize: host侧的int32_t，隐藏层维度，仅在cmd设置为1或2时需要填写有效值，否则填0。
+  * @param [in] tpRank: host侧的int32_t，TP Rank，仅在cmd设置为1或2时需要填写有效值，否则填0。
+- * @param [in] modelObfSeedId: host侧的int32_t，模型混淆因子id，用于TA从TEE KMC查询模型混淆因子，仅在cmd设置为1或2时需要填写有效值，否则填0。
+- * @param [in] dataObfSeedId: host侧的int32_t，数据混淆因子id，用于TA从TEE KMC查询数据混淆因子，仅在cmd设置为1或2时需要填写有效值，否则填0。
+- * @param [in] cmd: host侧的int32_t，setup指令编号，在{1, 2, 3}中选择，设置为1时进行普通模式资源初始化、为2时进行高精度模式资源初始化，设置为3时进行资源释放。
+- * @param [in] threadNum: host侧的int32_t，CA/TA进行混淆处理使用的线程数。在{1, 2, 3, 4, 5, 6}中选择，仅在cmd设置为1或2时需要填写有效值，否则填0。
+- * @param [in] obfCoefficient: host侧的float，混淆系数，用于对推理数据部分混淆的比例，仅在cmd设置为1或2时需要填写有效值，否则填0。
+- * @param [out] fd: npu device侧的aclTensor，表示socket连接符，在{1, 2, 16}中选择，设置为1时进行普通模式资源初始化、为2时进行高精度模式资源初始化，设置为16时进行资源释放。
++ * @param [in] modelObfSeedId: host侧的int32_t，模型混淆因子id，用于TA从TEE
++ * KMC查询模型混淆因子，仅在cmd设置为1或2时需要填写有效值，否则填0。
++ * @param [in] dataObfSeedId: host侧的int32_t，数据混淆因子id，用于TA从TEE
++ * KMC查询数据混淆因子，仅在cmd设置为1或2时需要填写有效值，否则填0。
++ * @param [in] cmd: host侧的int32_t，setup指令编号，在{1, 2,
++ * 3}中选择，设置为1时进行普通模式资源初始化、为2时进行高精度模式资源初始化，设置为3时进行资源释放。
++ * @param [in] threadNum: host侧的int32_t，CA/TA进行混淆处理使用的线程数。在{1, 2, 3, 4, 5,
++ * 6}中选择，仅在cmd设置为1或2时需要填写有效值，否则填0。
++ * @param [in] obfCoefficient:
++ * host侧的float，混淆系数，用于对推理数据部分混淆的比例，仅在cmd设置为1或2时需要填写有效值，否则填0。
++ * @param [out] fd: npu device侧的aclTensor，表示socket连接符，在{1, 2,
++ * 16}中选择，设置为1时进行普通模式资源初始化、为2时进行高精度模式资源初始化，设置为16时进行资源释放。
+  * shape为(1)。数据格式支持ND。
+  * @param [out] workspaceSize: 返回用户需要在npu device侧申请的workspace大小。
+  * @param [out] executor: 返回op执行器，包含算子计算流程。
+  * @return aclnnStatus: 返回状态码。
+  */
+- ACLNN_API aclnnStatus aclnnObfuscationSetupV2GetWorkspaceSize(int32_t fdToClose, int32_t dataType, 
+-                                                             int32_t hiddenSize, int32_t tpRank, 
+-                                                             int32_t modelObfSeedId, int32_t dataObfSeedId, 
+-                                                             int32_t cmd, int32_t threadNum, float obfCoefficient, 
+-                                                             aclTensor* fd, uint64_t* workspaceSize,
+-                                                             aclOpExecutor** executor);
++ACLNN_API aclnnStatus aclnnObfuscationSetupV2GetWorkspaceSize(
++    int32_t fdToClose, int32_t dataType, int32_t hiddenSize, int32_t tpRank, int32_t modelObfSeedId,
++    int32_t dataObfSeedId, int32_t cmd, int32_t threadNum, float obfCoefficient, aclTensor* fd, uint64_t* workspaceSize,
++    aclOpExecutor** executor);
+ 
+ /**
+  * @brief aclnnObfuscationSetup的第二段接口，用于执行计算
+@@ -53,9 +58,10 @@ extern "C" {
+  * @param [in] stream: acl stream流
+  * @return aclnnStatus: 返回状态码
+  */
+-ACLNN_API aclnnStatus aclnnObfuscationSetupV2(void* workspace, uint64_t workspaceSize, aclOpExecutor* executor, aclrtStream stream);
++ACLNN_API aclnnStatus
++aclnnObfuscationSetupV2(void* workspace, uint64_t workspaceSize, aclOpExecutor* executor, aclrtStream stream);
+ 
+ #ifdef __cplusplus
+ }
+ #endif
+-#endif  // OP_API_INC_OBFUSCATION_SETUP_H_
++#endif // OP_API_INC_OBFUSCATION_SETUP_V2_H_
+
+diff --git a/reliability/obfuscation_setup/tests/ut/op_host/CMakeLists.txt b/reliability/obfuscation_setup/tests/ut/op_host/CMakeLists.txt
+--- a/reliability/obfuscation_setup/tests/ut/op_host/CMakeLists.txt
++++ b/reliability/obfuscation_setup/tests/ut/op_host/CMakeLists.txt
+@@ -10,5 +10,24 @@
+ 
+ file(GLOB CURRENT_DIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/*)
+ if(UT_TEST_ALL OR OP_API_UT)
++    set(_opsras_had_ascend_compute_unit FALSE)
++    if(DEFINED ASCEND_COMPUTE_UNIT)
++        set(_opsras_had_ascend_compute_unit TRUE)
++        set(_opsras_ascend_compute_units "${ASCEND_COMPUTE_UNIT}")
++        set(_opsras_ut_compute_unit "")
++        if(NOT "${_opsras_ascend_compute_units}" STREQUAL "")
++            list(GET _opsras_ascend_compute_units 0 _opsras_ut_compute_unit)
++        endif()
++        if(_opsras_ut_compute_unit STREQUAL "")
++            unset(ASCEND_COMPUTE_UNIT)
++        else()
++            set(ASCEND_COMPUTE_UNIT "${_opsras_ut_compute_unit}")
++        endif()
++    endif()
+     add_modules_ut_sources(HOSTNAME ${OP_API_MODULE_NAME} MODE PRIVATE DIR ${CMAKE_CURRENT_SOURCE_DIR})
+-endif()
+\ No newline at end of file
++    if(_opsras_had_ascend_compute_unit)
++        set(ASCEND_COMPUTE_UNIT "${_opsras_ascend_compute_units}")
++    else()
++        unset(ASCEND_COMPUTE_UNIT)
++    endif()
++endif()
+
+diff --git a/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup.cpp b/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup.cpp
+--- a/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup.cpp
++++ b/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup.cpp
+@@ -4,8 +4,9 @@
+  * This file is a part of the CANN Open Software.
+  * Licensed under CANN Open Software License Agreement Version 2.0 (the "License").
+  * Please refer to the License for details. You may not use this file except in compliance with the License.
+- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+- * See LICENSE in the root of the software repository for the full text of the License.
++ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING
++ * BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. See LICENSE in the root of
++ * the software repository for the full text of the License.
+  */
+ #include <array>
+ #include <vector>
+@@ -19,58 +20,80 @@
+ #include "op_api_ut_common/tensor_desc.h"
+ 
+ using namespace std;
+- 
+-class l2_obfuscation_setup_test : public testing::Test {
+-  protected:
+-    static void SetUpTestCase() {
+-      cout << "obfuscation_setup_test SetUp" << endl; 
+-    }
+ 
+-    static void TearDownTestCase() {
+-      cout << "obfuscation_setup_test TearDown" << endl; 
+-    }
++class L2ObfuscationSetupTest : public testing::Test {
++protected:
++    static void SetUpTestCase() { cout << "obfuscation_setup_test SetUp" << endl; }
++
++    static void TearDownTestCase() { cout << "obfuscation_setup_test TearDown" << endl; }
+ };
+ 
+ // *** nullptr test ***
+ // test nullptr fd
+-TEST_F(l2_obfuscation_setup_test, case_anullptr_y) {
+-  int32_t fdToClose = 35;
+-  int32_t dataType = 1;
+-  int32_t hiddenSize = 4096;
+-  int32_t tpRank = 0;
+-  int32_t modelObfSeedId = 123456789;
+-  int32_t dataObfSeedId = 987654321;
+-  int32_t cmd = 1;
+-  int32_t threadNum = 4;
++TEST_F(L2ObfuscationSetupTest, case_anullptr_y)
++{
++    int32_t fdToClose = 35;
++    int32_t dataType = 1;
++    int32_t hiddenSize = 4096;
++    int32_t tpRank = 0;
++    int32_t modelObfSeedId = 123456789;
++    int32_t dataObfSeedId = 987654321;
++    int32_t cmd = 1;
++    int32_t threadNum = 4;
+ 
+-  auto ut = OP_API_UT(aclnnObfuscationSetup, 
+-                      INPUT(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId, dataObfSeedId, cmd, threadNum), 
+-                      OUTPUT((aclTensor*)nullptr));
++    auto ut = OP_API_UT(
++        aclnnObfuscationSetup,
++        INPUT(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId, dataObfSeedId, cmd, threadNum),
++        OUTPUT((aclTensor*)nullptr));
+ 
+-  uint64_t workspace_size = 0;
+-  aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
+-  EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_NULLPTR);
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_NULLPTR);
+ }
+ 
+ // *** shape test ***
+ // test shape fd != 1
+-TEST_F(l2_obfuscation_setup_test, case_shape_x_equal_y) {
+-  int32_t fdToClose = 35;
+-  int32_t dataType = 1;
+-  int32_t hiddenSize = 4096;
+-  int32_t tpRank = 0;
+-  int32_t modelObfSeedId = 123456789;
+-  int32_t dataObfSeedId = 987654321;
+-  int32_t cmd = 1;
+-  int32_t threadNum = 4;
++TEST_F(L2ObfuscationSetupTest, case_shape_x_equal_y)
++{
++    int32_t fdToClose = 35;
++    int32_t dataType = 1;
++    int32_t hiddenSize = 4096;
++    int32_t tpRank = 0;
++    int32_t modelObfSeedId = 123456789;
++    int32_t dataObfSeedId = 987654321;
++    int32_t cmd = 1;
++    int32_t threadNum = 4;
+ 
+-  auto fd_tensor_desc = TensorDesc({2,3}, ACL_INT32, ACL_FORMAT_ND);
++    auto fd_tensor_desc = TensorDesc({2, 3}, ACL_INT32, ACL_FORMAT_ND);
+ 
+-  auto ut = OP_API_UT(aclnnObfuscationSetup, 
+-                      INPUT(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId,dataObfSeedId, cmd, threadNum), 
+-                      OUTPUT(fd_tensor_desc));
++    auto ut = OP_API_UT(
++        aclnnObfuscationSetup,
++        INPUT(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId, dataObfSeedId, cmd, threadNum),
++        OUTPUT(fd_tensor_desc));
+ 
+-  uint64_t workspace_size = 0;
+-  aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
+-  EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
+-}
+\ No newline at end of file
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
++}
++
++TEST_F(L2ObfuscationSetupTest, case_shape_rank_one_wrong_length)
++{
++    int32_t fdToClose = 35;
++    int32_t dataType = 1;
++    int32_t hiddenSize = 4096;
++    int32_t tpRank = 0;
++    int32_t modelObfSeedId = 123456789;
++    int32_t dataObfSeedId = 987654321;
++    int32_t cmd = 1;
++    int32_t threadNum = 4;
++    auto fd_tensor_desc = TensorDesc({2}, ACL_INT32, ACL_FORMAT_ND);
++
++    auto ut = OP_API_UT(
++        aclnnObfuscationSetup,
++        INPUT(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId, dataObfSeedId, cmd, threadNum),
++        OUTPUT(fd_tensor_desc));
++
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
++}
+
+diff --git a/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup_v2.cpp b/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup_v2.cpp
+--- a/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup_v2.cpp
++++ b/reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup_v2.cpp
+@@ -4,8 +4,9 @@
+  * This file is a part of the CANN Open Software.
+  * Licensed under CANN Open Software License Agreement Version 2.0 (the "License").
+  * Please refer to the License for details. You may not use this file except in compliance with the License.
+- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
+- * See LICENSE in the root of the software repository for the full text of the License.
++ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING
++ * BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE. See LICENSE in the root of
++ * the software repository for the full text of the License.
+  */
+ #include <array>
+ #include <vector>
+@@ -18,83 +19,89 @@
+ #include "op_api_ut_common/scalar_desc.h"
+ #include "op_api_ut_common/tensor_desc.h"
+ 
+- using namespace std;
+- 
+-class l2_obfuscation_setup_v2_test : public testing::Test {
+-  protected:
+-    static void SetUpTestCase() {
+-      cout << "obfuscation_setup_v2_test SetUp" << endl; 
+-    }
++using namespace std;
+ 
+-    static void TearDownTestCase() {
+-      cout << "obfuscation_setup_v2_test TearDown" << endl; 
+-    }
++class L2ObfuscationSetupV2Test : public testing::Test {
++protected:
++    static void SetUpTestCase() { cout << "obfuscation_setup_v2_test SetUp" << endl; }
++
++    static void TearDownTestCase() { cout << "obfuscation_setup_v2_test TearDown" << endl; }
++
++    int32_t fdToClose = 40;
++    int32_t dataType = 0;
++    int32_t hiddenSize = 2048;
++    int32_t tpRank = 0;
++    int32_t modelObfSeedId = 987654321;
++    int32_t dataObfSeedId = 123456789;
++    int32_t cmd = 1;
++    int32_t threadNum = 2;
++    float obfCoefficient = 0.5;
+ };
+ 
+ // test success
+-TEST_F(l2_obfuscation_setup_v2_test, case_success) {
+-  int32_t fdToClose = 35;
+-  int32_t dataType = 1;
+-  int32_t hiddenSize = 4096;
+-  int32_t tpRank = 0;
+-  int32_t modelObfSeedId = 123456789;
+-  int32_t dataObfSeedId = 987654321;
+-  int32_t cmd = 1;
+-  int32_t threadNum = 4;
+-  float obfCoefficient = 0.5;
+-  auto fd_tensor_desc = TensorDesc({1}, ACL_INT32, ACL_FORMAT_ND);
++TEST_F(L2ObfuscationSetupV2Test, case_success)
++{
++    int32_t fdToClose = 35;
++    int32_t dataType = 1;
++    int32_t hiddenSize = 4096;
++    int32_t tpRank = 0;
++    int32_t modelObfSeedId = 123456789;
++    int32_t dataObfSeedId = 987654321;
++    int32_t cmd = 1;
++    int32_t threadNum = 4;
++    float obfCoefficient = 0.5;
++    auto fd_tensor_desc = TensorDesc({1}, ACL_INT32, ACL_FORMAT_ND);
+ 
+-  auto ut = OP_API_UT(aclnnObfuscationSetupV2, 
+-                      INPUT(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId,dataObfSeedId, cmd, threadNum, obfCoefficient), 
+-                      OUTPUT(fd_tensor_desc));
++    auto ut = OP_API_UT(
++        aclnnObfuscationSetupV2,
++        INPUT(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId, dataObfSeedId, cmd, threadNum, obfCoefficient),
++        OUTPUT(fd_tensor_desc));
+ 
+-  uint64_t workspace_size = 0;
+-  aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
+-  EXPECT_EQ(aclRet, ACLNN_SUCCESS);
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_SUCCESS);
+ }
+ 
+ // *** nullptr test ***
+ // test nullptr fd
+-TEST_F(l2_obfuscation_setup_v2_test, case_anullptr_y) {
+-  int32_t fdToClose = 40;
+-  int32_t dataType = 0;
+-  int32_t hiddenSize = 2048;
+-  int32_t tpRank = 0;
+-  int32_t modelObfSeedId = 987654321;
+-  int32_t dataObfSeedId = 123456789;
+-  int32_t cmd = 1;
+-  int32_t threadNum = 2;
+-  float obfCoefficient = 0.5;
++TEST_F(L2ObfuscationSetupV2Test, case_anullptr_y)
++{
++    auto ut = OP_API_UT(
++        aclnnObfuscationSetupV2,
++        INPUT(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId, dataObfSeedId, cmd, threadNum, obfCoefficient),
++        OUTPUT((aclTensor*)nullptr));
+ 
+-  auto ut = OP_API_UT(aclnnObfuscationSetupV2, 
+-                      INPUT(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId,dataObfSeedId, cmd, threadNum, obfCoefficient), 
+-                      OUTPUT((aclTensor*)nullptr));
+-
+-  uint64_t workspace_size = 0;
+-  aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
+-  EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_NULLPTR);
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_NULLPTR);
+ }
+ 
+ // *** shape test ***
+ // test shape fd != 1
+-TEST_F(l2_obfuscation_setup_v2_test, case_shape_x_equal_y) {
+-  int32_t fdToClose = 40;
+-  int32_t dataType = 0;
+-  int32_t hiddenSize = 2048;
+-  int32_t tpRank = 0;
+-  int32_t modelObfSeedId = 987654321;
+-  int32_t dataObfSeedId = 123456789;
+-  int32_t cmd = 1;
+-  int32_t threadNum = 2;
+-  float obfCoefficient = 0.5;
++TEST_F(L2ObfuscationSetupV2Test, case_shape_x_equal_y)
++{
++    auto fd_tensor_desc = TensorDesc({2, 3}, ACL_INT32, ACL_FORMAT_ND);
+ 
+-  auto fd_tensor_desc = TensorDesc({2,3}, ACL_INT32, ACL_FORMAT_ND);
++    auto ut = OP_API_UT(
++        aclnnObfuscationSetupV2,
++        INPUT(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId, dataObfSeedId, cmd, threadNum, obfCoefficient),
++        OUTPUT(fd_tensor_desc));
+ 
+-  auto ut = OP_API_UT(aclnnObfuscationSetupV2, 
+-                      INPUT(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId,dataObfSeedId, cmd, threadNum, obfCoefficient), 
+-                      OUTPUT(fd_tensor_desc));
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
++}
+ 
+-  uint64_t workspace_size = 0;
+-  aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
+-  EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
+-}
+\ No newline at end of file
++TEST_F(L2ObfuscationSetupV2Test, case_shape_rank_one_wrong_length)
++{
++    auto fd_tensor_desc = TensorDesc({2}, ACL_INT32, ACL_FORMAT_ND);
++
++    auto ut = OP_API_UT(
++        aclnnObfuscationSetupV2,
++        INPUT(fdToClose, dataType, hiddenSize, tpRank, modelObfSeedId, dataObfSeedId, cmd, threadNum, obfCoefficient),
++        OUTPUT(fd_tensor_desc));
++
++    uint64_t workspace_size = 0;
++    aclnnStatus aclRet = ut.TestGetWorkspaceSize(&workspace_size);
++    EXPECT_EQ(aclRet, ACLNN_ERR_PARAM_INVALID);
++}
+
+diff --git a/tests/ut/op_api/op_api_ut_common/inc/op_api_ut_common/inner/file_io.h b/tests/ut/op_api/op_api_ut_common/inc/op_api_ut_common/inner/file_io.h
+--- a/tests/ut/op_api/op_api_ut_common/inc/op_api_ut_common/inner/file_io.h
++++ b/tests/ut/op_api/op_api_ut_common/inc/op_api_ut_common/inner/file_io.h
+@@ -1,13 +1,14 @@
+ #ifndef _OP_API_UT_COMMON_FILE_IO_H_
+ #define _OP_API_UT_COMMON_FILE_IO_H_
+ 
++#include <cstdint>
+ #include <string>
+ #include <vector>
+ #include <memory>
+ 
+ using namespace std;
+ 
+-void * ReadBinFile(const string& file_name, size_t& size);
++void* ReadBinFile(const string& file_name, size_t& size);
+ int WriteBinFile(const void* host_mem, const string& file_name, size_t size);
+ bool FileExists(const string& file_name);
+ void DeleteUtTmpFiles(const string& file_prefix);
+@@ -17,6 +18,6 @@ void SetUtTmpFileSwitch();
+ bool GetUtTmpFileSwitch();
+ bool IsDir(const string& path);
+ void GetFilesWithSuffix(const string& path, const string& suffix, vector<string>& files);
+-unique_ptr<char[]> GetBinFromFile(const string& path, uint32_t &data_len);
++unique_ptr<char[]> GetBinFromFile(const string& path, uint32_t& data_len);
+ 
+-#endif
+\ No newline at end of file
++#endif
+

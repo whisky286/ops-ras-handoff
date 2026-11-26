@@ -1,0 +1,115 @@
+{
+  "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+  "link_checks": [
+    {
+      "issue": 45,
+      "file": "docs/en/debug/op_debug_prof.md",
+      "line": 170,
+      "target": "./cann_sim.md",
+      "resolved": "docs/en/debug/cann_sim.md",
+      "exists": true,
+      "anchor": "",
+      "heading_matches": []
+    },
+    {
+      "issue": 45,
+      "file": "docs/en/debug/op_debug_prof.md",
+      "line": 190,
+      "target": "./cann_sim.md#simulation-result-analysis-instructions",
+      "resolved": "docs/en/debug/cann_sim.md",
+      "exists": true,
+      "anchor": "simulation-result-analysis-instructions",
+      "heading_matches": [
+        "Simulation Result Analysis Instructions"
+      ]
+    },
+    {
+      "issue": 45,
+      "file": "docs/zh/debug/op_debug_prof.md",
+      "line": 167,
+      "target": "./cann_sim.md",
+      "resolved": "docs/zh/debug/cann_sim.md",
+      "exists": true,
+      "anchor": "",
+      "heading_matches": []
+    },
+    {
+      "issue": 45,
+      "file": "docs/zh/debug/op_debug_prof.md",
+      "line": 187,
+      "target": "./cann_sim.md#仿真结果解析说明",
+      "resolved": "docs/zh/debug/cann_sim.md",
+      "exists": true,
+      "anchor": "仿真结果解析说明",
+      "heading_matches": [
+        "仿真结果解析说明"
+      ]
+    },
+    {
+      "issue": 51,
+      "file": "docs/en/op_api_list.md",
+      "line": 34,
+      "target": "../../reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify_en.md",
+      "resolved": "reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify_en.md",
+      "exists": true,
+      "anchor": "",
+      "heading_matches": []
+    },
+    {
+      "issue": 51,
+      "file": "docs/zh/op_api_list.md",
+      "line": 34,
+      "target": "../../reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify.md",
+      "resolved": "reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify.md",
+      "exists": true,
+      "anchor": "",
+      "heading_matches": []
+    },
+    {
+      "issue": 116,
+      "file": "docs/en/install/build.md",
+      "line": 11,
+      "target": "./quick_install.md",
+      "resolved": "docs/en/install/quick_install.md",
+      "exists": true,
+      "anchor": "",
+      "heading_matches": []
+    },
+    {
+      "issue": 116,
+      "file": "docs/zh/install/build.md",
+      "line": 11,
+      "target": "../install/quick_install.md",
+      "resolved": "docs/zh/install/quick_install.md",
+      "exists": true,
+      "anchor": "",
+      "heading_matches": []
+    }
+  ],
+  "discussions": [
+    {
+      "issue": 45,
+      "url": "https://gitcode.com/cann/ops-ras/issues/45",
+      "comment_count_at_fetch": 7,
+      "decision": "当前 master 的中英文 Simulator 文件和锚点均存在；!112 已 merged；讨论确认与 #42 重复且已修复。"
+    },
+    {
+      "issue": 49,
+      "url": "https://gitcode.com/cann/ops-ras/issues/49",
+      "comment_count_at_fetch": 6,
+      "decision": "最新讨论已确认误报：把内置包 --full 约束误套到自定义包；!123 closed，不能恢复该修复。"
+    },
+    {
+      "issue": 63,
+      "url": "https://gitcode.com/cann/ops-ras/issues/63",
+      "comment_count_at_fetch": 8,
+      "decision": "最新讨论明确与 #59 重复；按重复准备关闭，#59 / !139 继续跟踪，不能声称主问题已修。"
+    },
+    {
+      "issue": 105,
+      "url": "https://gitcode.com/cann/ops-ras/issues/105",
+      "comment_count_at_fetch": 5,
+      "decision": "与 #64 为同一文件的同四处图片问题；!190 closed，主问题应继续由 #64 / !137 跟踪。"
+    }
+  ]
+}

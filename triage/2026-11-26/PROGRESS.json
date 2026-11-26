@@ -1,0 +1,47 @@
+{
+  "review_date": "2026-11-26",
+  "issues": {
+    "44": {
+      "review_stage": "已审查相关补丁，原报告范围仍需澄清",
+      "reason": "!223 的真实修改只有量化链接一行，已验证该页 12 个链接目标；与 !237 重叠。原报告声称约 6 处但只列部分位置，原 Simulator 问题已在 master 修复，不能据单行 PR 宣称原 6 项全部验收。",
+      "next_action": "按已列明位置和当前文件树补齐范围说明；与 #152 的同一链接修复统一跟踪，避免重复合入。",
+      "evidence_level": "DOC_PR_REVIEW.json + 当前 issue 原文范围对照"
+    },
+    "116": {
+      "review_stage": "补丁已审查，最小静态验证通过，待合入",
+      "reason": "已取得 !188 固定 head 的真实 diff；补丁同时为中英文链接补齐章节 fragment，文件和对应标题均存在，临时基线应用与 diff check 通过；master 尚未包含该变更。",
+      "next_action": "保留 issue 打开，等待 !188 合入；合入后核对章节定位再准备关闭，无需 NPU。",
+      "evidence_level": "DOC_PR_REVIEW.json：!188 固定 head 补丁与文件/锚点实查"
+    },
+    "150": {
+      "review_stage": "补丁已审查，最小主机回归通过，待合入",
+      "reason": "!219 固定 head 的真实补丁已在独立基线验证：9 个版本比较用例中原版 2 个错误相等判断，候选 0 个失败；包括长短版本互换、补零相等及范围比较控制。",
+      "next_action": "复用 HOST_PR_REVIEW.json 的固定 head 证据，等待 !219 合入后核对；不安排 NPU。",
+      "evidence_level": "HOST_PR_REVIEW.json：9 项真实函数调用，原版 2 失败/候选 0 失败"
+    },
+    "151": {
+      "review_stage": "补丁已审查，最小主机回归通过，待合入",
+      "reason": "!220 固定 head 经 4 次真实 CLI 验证：无 tag、短 tag abc/a_b、正常 tag；原版 2 项时间戳格式不符合预期，候选 0 项；正常 tag 输出保持。未覆盖所有三段以上但内容为空的 tag。",
+      "next_action": "等待 !220 合入，保留分段数量回退的验证范围；不把该补丁扩写为完整 tag 格式校验。",
+      "evidence_level": "HOST_PR_REVIEW.json：真实 CLI 输出对照"
+    },
+    "152": {
+      "review_stage": "补丁已审查，链接目标验证通过，待重复PR协调",
+      "reason": "!237 和 !223 均修复同一量化链接，分别应用后 basic_concept 的 12 个相对链接目标均存在；两补丁不能原样依次应用。四空格列表渲染问题仍由 #129 / !201 单独跟踪。",
+      "next_action": "协调 !223 / !237 选一或重放，连同 !201 的同文件改动审查；目标分支合入前保持打开。",
+      "evidence_level": "DOC_PR_REVIEW.json：!223/!237 实际应用、12 个链接和重复 hunk 检查"
+    },
+    "153": {
+      "review_stage": "补丁已审查，最小主机验证通过，待合入",
+      "reason": "已取得 !238 真实 diff；build.sh 的 usage 函数之外字节内容未变，bash -n 通过，执行真实 usage 函数的 7 种帮助模式均显示 CPU 数/上限 32；双语说明同步，未运行完整 Linux CLI 或 CANN 构建。",
+      "next_action": "复用该固定 head 的最小验证，等待 !238 合入后核对文档/help；不为纯帮助修改安排 NPU。",
+      "evidence_level": "DOC_PR_REVIEW.json：!238 应用、语法、函数边界与 7 种真实帮助输出"
+    },
+    "154": {
+      "review_stage": "补丁已审查，最小主机回归通过，待合入",
+      "reason": "新增 #154 / !244 已验证：代表性组合输入在 12 个独立 Python 哈希种子进程中，原版产生 5 种顺序，候选均为同一有序列表；集合成员未变。",
+      "next_action": "等待 !244 合入后核对；当前证据覆盖代表性输入及 12 个种子，不代表全部 C++ 语法解析分支。",
+      "evidence_level": "HOST_PR_REVIEW.json：12 个独立进程的真实输出"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "user_facing_date": "2026-11-26",
+  "retrieved_at_utc": "2026-11-26T01:52:21.387386+00:00",
+  "repository": "cann/ops-ras",
+  "target_branch": "master",
+  "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+  "server_report_commit": "36847ffde3389f0b1b8a1a943e2e84e27ebcc1f3",
+  "open_issue_count": 102,
+  "fetched_pr_count": 244,
+  "classification_scope": "全量关联与状态初筛，不是全部PR补丁审查、CI复跑或修复验收",
+  "counts": {
+    "可准备关闭": 5,
+    "已有PR，待范围审查/合入": 88,
+    "已有PR，需补针对性验证": 5,
+    "缺条件或范围待确认": 4
+  },
+  "source_urls": [
+    "https://gitcode.com/api/v5/repos/cann/ops-ras/issues?state=open&per_page=100&page=1",
+    "https://gitcode.com/api/v5/repos/cann/ops-ras/pulls?state=all&per_page=100&page=1",
+    "https://gitcode.com/api/v5/repos/cann/ops-ras/branches/master"
+  ],
+  "raw_snapshots": "Retained locally; public handoff contains task data, fixed-head patches and minimized evidence only."
+}

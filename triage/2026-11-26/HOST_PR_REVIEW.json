@@ -1,0 +1,406 @@
+{
+  "review_date": "2026-11-26",
+  "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+  "reviews": [
+    {
+      "pr": 219,
+      "head_sha": "9a875963c8aead584ebc06af2b1c86143ef9b527",
+      "before": {
+        "cases": [
+          {
+            "version": "8.1",
+            "constraint": "8.1.3",
+            "expected": false,
+            "actual": true
+          },
+          {
+            "version": "8.1.3",
+            "constraint": "8.1",
+            "expected": false,
+            "actual": true
+          },
+          {
+            "version": "8.1",
+            "constraint": "8.1.0",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "version": "8.1.0",
+            "constraint": "8.1",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "version": "8.1.3",
+            "constraint": "8.1.3",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "version": "8.1.3",
+            "constraint": ">=8.1",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "version": "8.1",
+            "constraint": ">8.1",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "version": "8.1",
+            "constraint": "<8.1.3",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "version": "8.2",
+            "constraint": "<=8.1",
+            "expected": false,
+            "actual": false
+          }
+        ],
+        "mismatches": 2
+      },
+      "after": {
+        "cases": [
+          {
+            "version": "8.1",
+            "constraint": "8.1.3",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "version": "8.1.3",
+            "constraint": "8.1",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "version": "8.1",
+            "constraint": "8.1.0",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "version": "8.1.0",
+            "constraint": "8.1",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "version": "8.1.3",
+            "constraint": "8.1.3",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "version": "8.1.3",
+            "constraint": ">=8.1",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "version": "8.1",
+            "constraint": ">8.1",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "version": "8.1",
+            "constraint": "<8.1.3",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "version": "8.2",
+            "constraint": "<=8.1",
+            "expected": false,
+            "actual": false
+          }
+        ],
+        "mismatches": 0
+      },
+      "validation": "real Python functions/CLI and separate child processes; no subprocess mocks; no CANN/NPU"
+    },
+    {
+      "pr": 220,
+      "head_sha": "9abe293ee4d200181fb6dd9c87733aef284d077e",
+      "before": {
+        "cases": [
+          {
+            "tagInfo": null,
+            "timestamp": "20261126_095508213",
+            "expected": "nonempty timestamp format",
+            "passed": true
+          },
+          {
+            "tagInfo": "abc",
+            "timestamp": "",
+            "expected": "nonempty timestamp format",
+            "passed": false
+          },
+          {
+            "tagInfo": "a_b",
+            "timestamp": "a",
+            "expected": "nonempty timestamp format",
+            "passed": false
+          },
+          {
+            "tagInfo": "tag_20261125_013000000_hash",
+            "timestamp": "20261125_013000000",
+            "expected": "preserve valid tag",
+            "passed": true
+          }
+        ],
+        "mismatches": 2
+      },
+      "after": {
+        "cases": [
+          {
+            "tagInfo": null,
+            "timestamp": "20261126_095508353",
+            "expected": "nonempty timestamp format",
+            "passed": true
+          },
+          {
+            "tagInfo": "abc",
+            "timestamp": "20261126_095508383",
+            "expected": "nonempty timestamp format",
+            "passed": true
+          },
+          {
+            "tagInfo": "a_b",
+            "timestamp": "20261126_095508417",
+            "expected": "nonempty timestamp format",
+            "passed": true
+          },
+          {
+            "tagInfo": "tag_20261125_013000000_hash",
+            "timestamp": "20261125_013000000",
+            "expected": "preserve valid tag",
+            "passed": true
+          }
+        ],
+        "mismatches": 0
+      },
+      "validation": "real Python functions/CLI and separate child processes; no subprocess mocks; no CANN/NPU"
+    },
+    {
+      "pr": 244,
+      "head_sha": "64d38f374a41dea77d605c8b92b5cca528612be3",
+      "before": {
+        "cases": [
+          {
+            "hash_seed": 1,
+            "configs": [
+              "ascend910b",
+              "ascend950",
+              "ascend310p"
+            ]
+          },
+          {
+            "hash_seed": 2,
+            "configs": [
+              "ascend950",
+              "ascend910b",
+              "ascend310p"
+            ]
+          },
+          {
+            "hash_seed": 3,
+            "configs": [
+              "ascend910b",
+              "ascend950",
+              "ascend310p"
+            ]
+          },
+          {
+            "hash_seed": 4,
+            "configs": [
+              "ascend950",
+              "ascend910b",
+              "ascend310p"
+            ]
+          },
+          {
+            "hash_seed": 5,
+            "configs": [
+              "ascend950",
+              "ascend310p",
+              "ascend910b"
+            ]
+          },
+          {
+            "hash_seed": 6,
+            "configs": [
+              "ascend310p",
+              "ascend910b",
+              "ascend950"
+            ]
+          },
+          {
+            "hash_seed": 7,
+            "configs": [
+              "ascend910b",
+              "ascend950",
+              "ascend310p"
+            ]
+          },
+          {
+            "hash_seed": 8,
+            "configs": [
+              "ascend910b",
+              "ascend950",
+              "ascend310p"
+            ]
+          },
+          {
+            "hash_seed": 9,
+            "configs": [
+              "ascend310p",
+              "ascend950",
+              "ascend910b"
+            ]
+          },
+          {
+            "hash_seed": 10,
+            "configs": [
+              "ascend310p",
+              "ascend910b",
+              "ascend950"
+            ]
+          },
+          {
+            "hash_seed": 11,
+            "configs": [
+              "ascend910b",
+              "ascend950",
+              "ascend310p"
+            ]
+          },
+          {
+            "hash_seed": 12,
+            "configs": [
+              "ascend910b",
+              "ascend950",
+              "ascend310p"
+            ]
+          }
+        ],
+        "distinct_orders": 5,
+        "sorted_every_time": false
+      },
+      "after": {
+        "cases": [
+          {
+            "hash_seed": 1,
+            "configs": [
+              "ascend310p",
+              "ascend910b",
+              "ascend950"
+            ]
+          },
+          {
+            "hash_seed": 2,
+            "configs": [
+              "ascend310p",
+              "ascend910b",
+              "ascend950"
+            ]
+          },
+          {
+            "hash_seed": 3,
+            "configs": [
+              "ascend310p",
+              "ascend910b",
+              "ascend950"
+            ]
+          },
+          {
+            "hash_seed": 4,
+            "configs": [
+              "ascend310p",
+              "ascend910b",
+              "ascend950"
+            ]
+          },
+          {
+            "hash_seed": 5,
+            "configs": [
+              "ascend310p",
+              "ascend910b",
+              "ascend950"
+            ]
+          },
+          {
+            "hash_seed": 6,
+            "configs": [
+              "ascend310p",
+              "ascend910b",
+              "ascend950"
+            ]
+          },
+          {
+            "hash_seed": 7,
+            "configs": [
+              "ascend310p",
+              "ascend910b",
+              "ascend950"
+            ]
+          },
+          {
+            "hash_seed": 8,
+            "configs": [
+              "ascend310p",
+              "ascend910b",
+              "ascend950"
+            ]
+          },
+          {
+            "hash_seed": 9,
+            "configs": [
+              "ascend310p",
+              "ascend910b",
+              "ascend950"
+            ]
+          },
+          {
+            "hash_seed": 10,
+            "configs": [
+              "ascend310p",
+              "ascend910b",
+              "ascend950"
+            ]
+          },
+          {
+            "hash_seed": 11,
+            "configs": [
+              "ascend310p",
+              "ascend910b",
+              "ascend950"
+            ]
+          },
+          {
+            "hash_seed": 12,
+            "configs": [
+              "ascend310p",
+              "ascend910b",
+              "ascend950"
+            ]
+          }
+        ],
+        "distinct_orders": 1,
+        "sorted_every_time": true
+      },
+      "validation": "real Python functions/CLI and separate child processes; no subprocess mocks; no CANN/NPU"
+    }
+  ],
+  "limits": [
+    "#154 covers representative combined parser input across 12 hash seeds, not every C++ source syntax.",
+    "#151 checks segment-count fallback and existing valid-tag behavior, not validation of every malformed >=3-segment string.",
+    "Temporary clone only; no original checkout or remote source mutation."
+  ]
+}

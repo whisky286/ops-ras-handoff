@@ -1,0 +1,261 @@
+{
+  "master_sha": "6943b10042266ee3dbee3e17237919a0ded600bf",
+  "patches": [
+    {
+      "pr": 87,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/87",
+      "state": "open",
+      "target": "master",
+      "source_repository": "KaranocaVe/ops-ras",
+      "head_sha": "8689c1143817acf832d73f3220b219730da6887c",
+      "patch": "patches/pr-87.patch",
+      "sha256": "c1f36863911ce56c958e18a4c772ee3f798180b45dc9345eb6e754e62955223d",
+      "files": [
+        "cmake/ut.cmake",
+        "reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate.cpp",
+        "reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.cpp",
+        "reliability/obfuscation_calculate/op_host/op_api/aclnn_obfuscation_calculate_v2.h",
+        "reliability/obfuscation_calculate/tests/ut/op_host/CMakeLists.txt",
+        "reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate.cpp",
+        "reliability/obfuscation_calculate/tests/ut/op_host/test_aclnn_obfuscation_calculate_v2.cpp",
+        "reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup.cpp",
+        "reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.cpp",
+        "reliability/obfuscation_setup/op_host/op_api/aclnn_obfuscation_setup_v2.h",
+        "reliability/obfuscation_setup/tests/ut/op_host/CMakeLists.txt",
+        "reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup.cpp",
+        "reliability/obfuscation_setup/tests/ut/op_host/test_aclnn_obfuscation_setup_v2.cpp",
+        "tests/ut/op_api/op_api_ut_common/inc/op_api_ut_common/inner/file_io.h"
+      ],
+      "applies_to_master": true,
+      "apply_diagnostic": "",
+      "cann_or_npu_execution": false,
+      "scope_note": "Includes shared UT/CMake or stub changes; verify complete diff scope before applying. Not a single-purpose runtime hunk."
+    },
+    {
+      "pr": 126,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/126",
+      "state": "open",
+      "target": "master",
+      "source_repository": "KaranocaVe/ops-ras",
+      "head_sha": "aca186117397ff32b3634fe79987abe29244a28a",
+      "patch": "patches/pr-126.patch",
+      "sha256": "82b7432b8872b25fe947c9997bbe0a5afde3a6cadc2c0cd55a7b40fec045d4cc",
+      "files": [
+        "reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp",
+        "reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp"
+      ],
+      "applies_to_master": true,
+      "apply_diagnostic": "",
+      "cann_or_npu_execution": false
+    },
+    {
+      "pr": 135,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/135",
+      "state": "open",
+      "target": "master",
+      "source_repository": "KaranocaVe/ops-ras",
+      "head_sha": "d61853ffae388a5759d76a8d66aa38e6ce9a8bb1",
+      "patch": "patches/pr-135.patch",
+      "sha256": "459f5fd100cfeaf64b64173456d9f1d55f00bb9217f3f48c237d2b3f67414fb7",
+      "files": [
+        "reliability/matmul_abft_verify/op_host/matmul_abft_verify_infershape.cpp",
+        "reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_infershape.cpp"
+      ],
+      "applies_to_master": true,
+      "apply_diagnostic": "",
+      "cann_or_npu_execution": false
+    },
+    {
+      "pr": 146,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/146",
+      "state": "open",
+      "target": "master",
+      "source_repository": "KaranocaVe/ops-ras",
+      "head_sha": "583244394191b0d3fcd4a9d432410cad5336d589",
+      "patch": "patches/pr-146.patch",
+      "sha256": "36fb6e6a3204610069d560740e0e18a517e43f5b97b6bdb3ee6aa314006a171b",
+      "files": [
+        "cmake/ut.cmake",
+        "reliability/crypto/op_host/op_api/aclnn_crypto.cpp",
+        "tests/ut/op_api/op_api_ut_common/inc/op_api_ut_common/inner/file_io.h"
+      ],
+      "applies_to_master": true,
+      "apply_diagnostic": "",
+      "cann_or_npu_execution": false,
+      "scope_note": "Includes shared UT/CMake or stub changes; verify complete diff scope before applying. Not a single-purpose runtime hunk."
+    },
+    {
+      "pr": 188,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/188",
+      "state": "open",
+      "target": "master",
+      "source_repository": "gxhgxh2475698/ops-ras",
+      "head_sha": "a562d477beb64dbb980ba6cd10062356b8aa99ca",
+      "patch": "patches/pr-188.patch",
+      "sha256": "def0395e5744bcb556ae2b880081e32ea3c4fb8ced9d1389ee8bb5367907b8e8",
+      "files": [
+        "docs/en/install/build.md",
+        "docs/zh/install/build.md"
+      ],
+      "applies_to_master": true,
+      "cann_or_npu_execution": false
+    },
+    {
+      "pr": 219,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/219",
+      "state": "open",
+      "target": "master",
+      "source_repository": "chenge1/ops-ras",
+      "head_sha": "9a875963c8aead584ebc06af2b1c86143ef9b527",
+      "patch": "patches/pr-219.patch",
+      "sha256": "97fb54c058c5f2472f3da1cfb9d59f9201408fa3660b1a5b01b7ba0cda965cfd",
+      "files": [
+        "scripts/check_build_dependencies.py"
+      ],
+      "applies_to_master": true,
+      "apply_diagnostic": "",
+      "cann_or_npu_execution": false
+    },
+    {
+      "pr": 220,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/220",
+      "state": "open",
+      "target": "master",
+      "source_repository": "chenge1/ops-ras",
+      "head_sha": "9abe293ee4d200181fb6dd9c87733aef284d077e",
+      "patch": "patches/pr-220.patch",
+      "sha256": "e2af4cf885671f4f4306454b3765a5c84169ee52d42ad0bbf65bf0ae6aa1bb3c",
+      "files": [
+        "scripts/generate_version_info.py"
+      ],
+      "applies_to_master": true,
+      "apply_diagnostic": "",
+      "cann_or_npu_execution": false
+    },
+    {
+      "pr": 223,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/223",
+      "state": "open",
+      "target": "master",
+      "source_repository": "zWaNg33/ops-ras",
+      "head_sha": "f24d1feafa3e84cdbe254e3f78f159d56ee2cabe",
+      "patch": "patches/pr-223.patch",
+      "sha256": "35c57f7d639fed4139360903cc332669ce1cc84954de45c506fe153c03589e52",
+      "files": [
+        "docs/en/context/basic_concept.md"
+      ],
+      "applies_to_master": true,
+      "cann_or_npu_execution": false
+    },
+    {
+      "pr": 233,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/233",
+      "state": "open",
+      "target": "master",
+      "source_repository": "zWaNg33/ops-ras",
+      "head_sha": "f011358079993584137eb80b34de4a8c815ffd23",
+      "patch": "patches/pr-233.patch",
+      "sha256": "eefdb0d7c24d19eab3b571d2b4f87168784400f47be40e5330d02ccddd4595b8",
+      "files": [
+        "build.sh",
+        "docs/en/install/build.md",
+        "docs/zh/install/build.md"
+      ],
+      "applies_to_master": true,
+      "apply_diagnostic": "",
+      "cann_or_npu_execution": false
+    },
+    {
+      "pr": 235,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/235",
+      "state": "open",
+      "target": "master",
+      "source_repository": "zWaNg33/ops-ras",
+      "head_sha": "8e9e0093180a4cdb1b99b4dd694d1ec777f8c671",
+      "patch": "patches/pr-235.patch",
+      "sha256": "42641094e9ceec2ac8c19d5dae103ae06b8e9553060f58c0f7b619067c7fcdb6",
+      "files": [
+        "reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify.md",
+        "reliability/matmul_abft_verify/docs/aclnnMatmulAbftVerify_en.md",
+        "reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp",
+        "reliability/matmul_abft_verify/op_kernel/matmul_abft_verify.cpp",
+        "reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp"
+      ],
+      "applies_to_master": true,
+      "apply_diagnostic": "",
+      "cann_or_npu_execution": false
+    },
+    {
+      "pr": 236,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/236",
+      "state": "open",
+      "target": "master",
+      "source_repository": "zWaNg33/ops-ras",
+      "head_sha": "5bfea742e29e7f10e16766a32da5896ffc632d95",
+      "patch": "patches/pr-236.patch",
+      "sha256": "0ac0f4da234b76528a2cad692307ff4f3d7ab63cc9259dfef19140ca1db15f55",
+      "files": [
+        "docs/en/develop/aicore_develop_guide.md",
+        "docs/zh/develop/aicore_develop_guide.md",
+        "examples/add_example/README.md",
+        "examples/add_example/README_en.md",
+        "examples/add_example/op_host/add_example_def.cpp",
+        "examples/add_example/op_host/add_example_tiling.cpp",
+        "examples/add_example/op_kernel/add_example.cpp",
+        "examples/add_example/op_kernel/add_example_tiling_key.h"
+      ],
+      "applies_to_master": true,
+      "apply_diagnostic": "",
+      "cann_or_npu_execution": false
+    },
+    {
+      "pr": 237,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/237",
+      "state": "open",
+      "target": "master",
+      "source_repository": "azhiqiu/ops-ras",
+      "head_sha": "1d62d36f60a488a567461d7a393e0472609e7aad",
+      "patch": "patches/pr-237.patch",
+      "sha256": "93d1f6ebb9910d67f5d579805a27676c7aa001c65e1b6b730b7577400969afa1",
+      "files": [
+        "docs/en/context/basic_concept.md"
+      ],
+      "applies_to_master": true,
+      "cann_or_npu_execution": false
+    },
+    {
+      "pr": 238,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/238",
+      "state": "open",
+      "target": "master",
+      "source_repository": "GitCode_xixi/ops-ras",
+      "head_sha": "b8e19faba0eb94c0018ab9adeaa0a32644c9adec",
+      "patch": "patches/pr-238.patch",
+      "sha256": "e689df35539d97e6a33e2895590c9b52a6ddcf12d248522109d505c0b977f2b5",
+      "files": [
+        "build.sh",
+        "docs/en/install/build.md",
+        "docs/zh/install/build.md"
+      ],
+      "applies_to_master": true,
+      "cann_or_npu_execution": false
+    },
+    {
+      "pr": 244,
+      "url": "https://gitcode.com/cann/ops-ras/merge_requests/244",
+      "state": "open",
+      "target": "master",
+      "source_repository": "GitCode_xixi/ops-ras",
+      "head_sha": "64d38f374a41dea77d605c8b92b5cca528612be3",
+      "patch": "patches/pr-244.patch",
+      "sha256": "6da365fc92d7d59d32bbce33232f4dbb69b87316704eaabc4f966721f54f3462",
+      "files": [
+        "scripts/ci/gen_ops_soc.py"
+      ],
+      "applies_to_master": true,
+      "apply_diagnostic": "",
+      "cann_or_npu_execution": false
+    }
+  ],
+  "meaning": "PR patch transport and applicability only; not approval or CANN/NPU validation"
+}

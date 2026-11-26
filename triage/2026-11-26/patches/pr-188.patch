@@ -1,0 +1,26 @@
+diff --git a/docs/en/install/build.md b/docs/en/install/build.md
+--- a/docs/en/install/build.md
++++ b/docs/en/install/build.md
+@@ -8,7 +8,7 @@ build.sh is the build script of this project, located in the project root direct
+ 
+ 1. **Configure Environment Variables**
+ 
+-   Complete the basic environment setup by referring to [Environment Deployment](./quick_install.md).
++   Configure the environment variables by referring to [Environment Variable Configuration](./quick_install.md#environment-variable-configuration).
+ 
+    ```bash
+    # Default path installation, taking root user as an example
+
+diff --git a/docs/zh/install/build.md b/docs/zh/install/build.md
+--- a/docs/zh/install/build.md
++++ b/docs/zh/install/build.md
+@@ -8,7 +8,7 @@ build.sh是本项目的构建脚本，默认在项目根目录下，作用是将
+ 
+ 1. **配置环境变量**
+ 
+-   参考[环境准备](../install/quick_install.md)完成环境变量配置。
++   参考[环境变量配置](./quick_install.md#环境变量配置)完成环境变量配置。
+ 
+    ```bash
+    # 默认路径安装，以root用户为例
+

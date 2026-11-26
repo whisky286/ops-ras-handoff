@@ -1,0 +1,113 @@
+diff --git a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_infershape.cpp b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_infershape.cpp
+--- a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_infershape.cpp
++++ b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_infershape.cpp
+@@ -19,6 +19,7 @@ namespace ops {
+ namespace {
+ constexpr int64_t L1_TILE_N = 256;
+ constexpr int64_t COMP_PACK = 8;
++constexpr int64_t UNKNOWN_DIMENSION = -1;
+ 
+ ge::graphStatus SetVectorShape(gert::InferShapeContext* context, size_t index, int64_t length)
+ {
+@@ -36,18 +37,25 @@ static ge::graphStatus InferShapeMatmulAbftVerify(gert::InferShapeContext* conte
+     const gert::Shape* bShape = context->GetInputShape(1);
+     OP_CHECK_NULL_WITH_CONTEXT(context, aShape);
+     OP_CHECK_NULL_WITH_CONTEXT(context, bShape);
+-    OP_CHECK_IF(aShape->GetDimNum() != 2 || bShape->GetDimNum() != 2,
++    OP_CHECK_IF(
++        aShape->GetDimNum() != 2 || bShape->GetDimNum() != 2,
+         OP_LOGE(context->GetNodeName(), "MatmulAbftVerify expects rank-2 A and B"), return ge::GRAPH_FAILED);
+ 
+     const int64_t m = aShape->GetDim(0);
+     const int64_t k = aShape->GetDim(1);
+     const int64_t bK = bShape->GetDim(0);
+     const int64_t n = bShape->GetDim(1);
+-    OP_CHECK_IF(k != bK, OP_LOGE(context->GetNodeName(), "A.K must equal B.K"), return ge::GRAPH_FAILED);
++    OP_CHECK_IF(
++        k != UNKNOWN_DIMENSION && bK != UNKNOWN_DIMENSION && k != bK,
++        OP_LOGE(context->GetNodeName(), "A.K must equal B.K"), return ge::GRAPH_FAILED);
++
++    if (m == UNKNOWN_DIMENSION || n == UNKNOWN_DIMENSION) {
++        return SetVectorShape(context, 0, UNKNOWN_DIMENSION);
++    }
+ 
+     const int64_t splitN = (n + L1_TILE_N - 1) / L1_TILE_N;
+-    OP_CHECK_IF(SetVectorShape(context, 0, ((m + COMP_PACK - 1) / COMP_PACK) * splitN) !=
+-                    ge::GRAPH_SUCCESS,
++    OP_CHECK_IF(
++        SetVectorShape(context, 0, ((m + COMP_PACK - 1) / COMP_PACK) * splitN) != ge::GRAPH_SUCCESS,
+         OP_LOGE(context->GetNodeName(), "failed to set comp_row shape"), return ge::GRAPH_FAILED);
+     return ge::GRAPH_SUCCESS;
+ }
+@@ -58,5 +66,7 @@ static ge::graphStatus InferDataTypeMatmulAbftVerify(gert::InferDataTypeContext*
+     return ge::GRAPH_SUCCESS;
+ }
+ 
+-IMPL_OP_INFERSHAPE(MatmulAbftVerify).InferShape(InferShapeMatmulAbftVerify).InferDataType(InferDataTypeMatmulAbftVerify);
++IMPL_OP_INFERSHAPE(MatmulAbftVerify)
++    .InferShape(InferShapeMatmulAbftVerify)
++    .InferDataType(InferDataTypeMatmulAbftVerify);
+ } // namespace ops
+
+diff --git a/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_infershape.cpp b/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_infershape.cpp
+--- a/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_infershape.cpp
++++ b/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_infershape.cpp
+@@ -19,9 +19,9 @@ constexpr int64_t L1_TILE_N = 256;
+ constexpr int64_t COMP_PACK = 8;
+ constexpr char OP_TYPE[] = "MatmulAbftVerify";
+ 
+-ge::graphStatus RunInferShape(const std::vector<std::vector<int64_t>>& inputDims,
+-                              const std::vector<ge::DataType>& inputTypes,
+-                              std::vector<int64_t>* outputDims)
++ge::graphStatus RunInferShape(
++    const std::vector<std::vector<int64_t>>& inputDims, const std::vector<ge::DataType>& inputTypes,
++    std::vector<int64_t>* outputDims)
+ {
+     std::vector<gert::Shape> inputShapes;
+     inputShapes.reserve(inputDims.size());
+@@ -84,16 +84,40 @@ TEST(MatmulAbftVerifyInfershape, infer_shape_fp16_single_n_tile)
+     ExpectSuccessfulInfer(64, 128, 128, ge::DT_FLOAT16);
+ }
+ 
+-TEST(MatmulAbftVerifyInfershape, infer_shape_bf16_multi_n_tile)
+-{
+-    ExpectSuccessfulInfer(129, 513, 512, ge::DT_BF16);
+-}
++TEST(MatmulAbftVerifyInfershape, infer_shape_bf16_multi_n_tile) { ExpectSuccessfulInfer(129, 513, 512, ge::DT_BF16); }
+ 
+ TEST(MatmulAbftVerifyInfershape, infer_shape_fp32_large_n_tile)
+ {
+     ExpectSuccessfulInfer(1024, 4097, 1024, ge::DT_FLOAT);
+ }
+ 
++TEST(MatmulAbftVerifyInfershape, infer_shape_propagates_dynamic_m)
++{
++    const std::vector<std::vector<int64_t>> inputs = {{-1, 16}, {16, 256}, {-1, 256}, {256}};
++    const std::vector<ge::DataType> types = {ge::DT_FLOAT16, ge::DT_FLOAT16, ge::DT_FLOAT, ge::DT_FLOAT16};
++    std::vector<int64_t> outputDims;
++    ASSERT_EQ(RunInferShape(inputs, types, &outputDims), ge::GRAPH_SUCCESS);
++    EXPECT_EQ(outputDims, std::vector<int64_t>({-1}));
++}
++
++TEST(MatmulAbftVerifyInfershape, infer_shape_propagates_dynamic_n)
++{
++    const std::vector<std::vector<int64_t>> inputs = {{64, 16}, {16, -1}, {64, -1}, {-1}};
++    const std::vector<ge::DataType> types = {ge::DT_FLOAT16, ge::DT_FLOAT16, ge::DT_FLOAT, ge::DT_FLOAT16};
++    std::vector<int64_t> outputDims;
++    ASSERT_EQ(RunInferShape(inputs, types, &outputDims), ge::GRAPH_SUCCESS);
++    EXPECT_EQ(outputDims, std::vector<int64_t>({-1}));
++}
++
++TEST(MatmulAbftVerifyInfershape, infer_shape_accepts_dynamic_k)
++{
++    const std::vector<std::vector<int64_t>> inputs = {{64, -1}, {-1, 256}, {64, 256}, {256}};
++    const std::vector<ge::DataType> types = {ge::DT_FLOAT16, ge::DT_FLOAT16, ge::DT_FLOAT, ge::DT_FLOAT16};
++    std::vector<int64_t> outputDims;
++    ASSERT_EQ(RunInferShape(inputs, types, &outputDims), ge::GRAPH_SUCCESS);
++    EXPECT_EQ(outputDims, std::vector<int64_t>({8}));
++}
++
+ TEST(MatmulAbftVerifyInfershape, infer_shape_fails_when_k_mismatch)
+ {
+     const std::vector<std::vector<int64_t>> inputs = {{64, 128}, {256, 128}, {64, 128}, {128}};
+

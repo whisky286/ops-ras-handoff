@@ -1,0 +1,101 @@
+diff --git a/build.sh b/build.sh
+--- a/build.sh
++++ b/build.sh
+@@ -139,6 +139,7 @@ CANN_3RD_LIB_PATH="${BUILD_PATH}/third_party"
+ # print usage message
+ usage() {
+   local specific_help="$1"
++  local jobs_help="Number of compilation threads (default: logical CPU count, capped at 32)"
+ 
+   if [[ -n "$specific_help" ]]; then
+     case "$specific_help" in
+@@ -151,7 +152,7 @@ usage() {
+         echo "    --soc=soc_version      Compile for specified Ascend SoC (comma-separated for multiple)"
+         echo "    --vendor_name=name     Specify custom operator pkg vendor name"
+         echo "    --ops=op1,op2,...      Compile specified operators (comma-separated for multiple)"
+-        echo "    -j[n]                  Compile thread nums, default is 8"
++        echo "    -j[n]                  ${jobs_help}"
+         echo "    -O[n]                  Compile optimization options, support [O0 O1 O2 O3]"
+         echo "    --asan                 Enable ASAN (Address Sanitizer) on the host side"
+         echo "    --build-type=<TYPE>    Specify build type (TYPE options: Release/Debug), Default: Release"
+@@ -231,7 +232,7 @@ usage() {
+         echo "Ophost Build Options:"
+         echo $dotted_line
+         echo "    --ophost               Build ophost library"
+-        echo "    -j[n]                  Compile thread nums, default is 8"
++        echo "    -j[n]                  ${jobs_help}"
+         echo "    -O[n]                  Compile optimization options, support [O0 O1 O2 O3]"
+         echo "    --build-type=<TYPE>    Specify build type (TYPE options: Release/Debug), Default: Release"
+         echo $dotted_line
+@@ -244,7 +245,7 @@ usage() {
+         echo "ONNXPlugin Build Options:"
+         echo $dotted_line
+         echo "    --onnxplugin           Build onnxplugin library"
+-        echo "    -j[n]                  Compile thread nums, default is 8, eg: -j8"
++        echo "    -j[n]                  ${jobs_help}, e.g. -j8"
+         echo "    -O[n]                  Compile optimization options, support [O0 O1 O2 O3], eg:-O3"
+         echo "    --debug                Build with debug mode"
+         echo $dotted_line
+@@ -257,7 +258,7 @@ usage() {
+         echo "TensorFlow Plugin Build Options:"
+         echo $dotted_line
+         echo "    --tfplugin             Build TensorFlow plugin library"
+-        echo "    -j[n]                  Compile thread nums, default is 8, eg: -j8"
++        echo "    -j[n]                  ${jobs_help}, e.g. -j8"
+         echo "    -O[n]                  Compile optimization options, support [O0 O1 O2 O3], eg:-O3"
+         echo "    --debug                Build with debug mode"
+         echo $dotted_line
+@@ -270,7 +271,7 @@ usage() {
+         echo "Opgraph Build Options:"
+         echo $dotted_line
+         echo "    --opgraph              Build opgraph library"
+-        echo "    -j[n]                  Compile thread nums, default is 8"
++        echo "    -j[n]                  ${jobs_help}"
+         echo "    -O[n]                  Compile optimization options, support [O0 O1 O2 O3]"
+         echo "    --debug                Build with debug mode"
+         echo $dotted_line
+@@ -283,7 +284,7 @@ usage() {
+         echo "Opapi Build Options:"
+         echo $dotted_line
+         echo "    --opapi                Build opapi library"
+-        echo "    -j[n]                  Compile thread nums, default is 8"
++        echo "    -j[n]                  ${jobs_help}"
+         echo "    -O[n]                  Compile optimization options, support [O0 O1 O2 O3]"
+         echo "    --build-type=<TYPE>    Specify build type (TYPE options: Release/Debug), Default: Release"
+         echo $dotted_line
+@@ -336,7 +337,7 @@ usage() {
+   echo "    Build parameters "
+   echo $dotted_line
+   echo "    --help, -h Print usage"
+-  echo "    -j[n] Compile thread nums, default is 8"
++  echo "    -j[n] ${jobs_help}"
+   echo "    -v Cmake compile verbose"
+   echo "    -O[n] Compile optimization options, support [O0 O1 O2 O3]"
+   echo "    -u Compile all ut, default run ophost opgraph opapi test"
+
+diff --git a/docs/en/install/build.md b/docs/en/install/build.md
+--- a/docs/en/install/build.md
++++ b/docs/en/install/build.md
+@@ -35,7 +35,7 @@ bash build.sh --help
+ 
+ | Parameter Name              | Optional/Required  | Parameter Description                                                                        |
+ |------------------|--------|-----------------------------------------------------------------------------|
+-| -j${n}           | Optional     | Specifies the number of compilation threads. ${n} is the specific number of threads. The default value is 8 (such as -j8). If the number of threads exceeds the number of CPU cores, it will be automatically adjusted to the number of CPU cores.   |
++| -j${n}           | Optional     | Specifies the number of compilation threads, for example -j8. If omitted, the default is the detected logical CPU count, capped at 32. If specified, the supplied value is used.   |
+ | -v               | Optional     | View CMake compilation configuration information.                                                              |
+ | -O${n}           | Optional     | Specifies the compilation optimization level. Supports O0/O1/O2/O3 (such as -O3). ${n} is the optimization level identifier.                                |
+ | -u               | Optional     | Enables unit test (UT) compilation mode and compiles all UT targets.                                                    |
+
+diff --git a/docs/zh/install/build.md b/docs/zh/install/build.md
+--- a/docs/zh/install/build.md
++++ b/docs/zh/install/build.md
+@@ -35,7 +35,7 @@ bash build.sh --help
+ 
+ | 参数名              | 可选/必选  | 参数说明                                                                        |
+ |------------------|--------|-----------------------------------------------------------------------------|
+-| -j${n}           | 可选     | 指定编译线程数，${n}为具体线程数，默认值为8；若线程数超过CPU核心数，会自动调整为CPU核心数。   |
++| -j${n}           | 可选     | 指定编译线程数，例如 -j8。省略时，默认取检测到的逻辑 CPU 数与 32 中的较小值；指定时，使用给定值。   |
+ | -v               | 可选     | 查看CMake编译配置信息。                                                              |
+ | -O${n}          | 可选     | 指定编译优化级别，支持O0/O1/O2/O3（如：-O3），${n}为优化级别标识。                                |
+ | -u               | 可选     | 启用单元测试（UT）编译模式，编译所有UT目标。                                                    |
+
