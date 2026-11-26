@@ -1,0 +1,30 @@
+diff --git a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
+index 72b0ead..95eb808 100644
+--- a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
++++ b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
+@@ -16,6 +16,7 @@
+ #include <cstring>
+ #include <cmath>
+ #include <limits>
++#include <cstdlib>
+ 
+ #include "log/log.h"
+ #include "tiling/platform/platform_ascendc.h"
+@@ -235,6 +236,17 @@ static ge::graphStatus MatmulAbftVerifyTilingFunc(gert::TilingContext* context)
+             static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k),
+             eMax, reduceCores, splitKs);
+     }
++    // EXPERIMENT ONLY (#118): log(k) clamp for K=1 plus ABFT_KMIN threshold scaling.
++    {
++        tiling->compute.stdEstARowRatio =
++            1.0f / std::sqrt(2.0f * std::log(std::max(static_cast<float>(k), 2.0f)));
++        const char* kminEnv = std::getenv("ABFT_KMIN");
++        const float kmin = (kminEnv != nullptr) ? static_cast<float>(std::atof(kminEnv)) : 0.0f;
++        if (kmin > static_cast<float>(k) && tiling->compute.eMax > 0.0f) {
++            tiling->compute.eMax *= std::sqrt(kmin / static_cast<float>(k));
++        }
++    }
++
+     const float aMeanFactor = 1.0f / static_cast<float>(k);
+     if (aDtype == ge::DT_FLOAT16) {
+         tiling->compute.aMeanFactorBits = FloatToFp16Bits(aMeanFactor);
