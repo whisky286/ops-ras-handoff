@@ -25,6 +25,8 @@ GitCode 侧禁止任何写操作（评论/PR/合并/关闭）
 3. 复核 !235：其 FP16 K>=121 的 507015 问题与本修复独立（CE UB 切片按 FP32 重算）。
 4. #109：真实 kernel_template_input 已验证（schMode=0 透传 asc_opc 并编译成功）；Valgrind 仍缺。
 5. 28 条扫描项逐条处置见 `C_SCAN28_DISPOSITION.md`；台账已按 triage 对齐为 102 行并推进 review_stage。
+   其中 buildcheck 12/13 两条失败传播缺陷已修复（`patches/scan28-failure-propagation.patch`，
+   before/after 见 `C_SCAN28_FAILURE_PROPAGATION.md`）；其余多为规范建议/需决策。
 
 ## 环境与操作
 - ssh sg144，先 `. /home/hww/env.sh`（NPU 用 Phy 8，备用 9；程序内逻辑设备 0；跑前 npu-smi 确认无进程）
@@ -43,5 +45,5 @@ GitCode 侧禁止任何写操作（评论/PR/合并/关闭）
 
 ## 快速自检
 1. `ssh sg144`，`cd /home/hww/projects/ops-ras/ops-ras-handoff && git pull`
-2. `. /home/hww/env.sh && npu-smi info`（确认 6 号空闲）
+2. `. /home/hww/env.sh && npu-smi info`（确认 8 号空闲，备用 9）
 3. 阅读 `server-run-2026-11-25/C118_FINAL.md` 与 `RESULTS.md`

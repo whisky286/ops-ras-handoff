@@ -25,8 +25,8 @@
 | 18 | buildcheck | 9 | ops/ops-ras/scripts/util/generate_cpp_cov.sh | script_error_policy_review | 确实缺少显式set -e，但这不足以证明失败会误报成功；需逐条检查关键子命令、显式退出码及已有容错分支。 | **规范建议**：逐条审计关键子命令与已有容错；仅对确认失败不传播的路径加显式非零返回，正常路径不退化。 |
 | 19 | buildcheck | 10 | ops/ops-ras/scripts/kernel/binary_script/get_threadnum_with_op.sh | sourced_helper_error_policy_review | 被source的环境/公共函数脚本，不能机械追加set -e，以免改变调用方错误处理；线程数辅助函数会把正常数值放入非零返回码。 | **规范建议**：被 source 的公共脚本不机械加 set -e；保持函数返回码语义，必要时显式处理。 |
 | 20 | buildcheck | 11 | ops/ops-ras/scripts/package/ops_ras/scripts/opp_common.sh | sourced_helper_error_policy_review | 被source的环境/公共函数脚本，不能机械追加set -e，以免改变调用方错误处理；线程数辅助函数会把正常数值放入非零返回码。 | **规范建议**：被 source 的公共脚本不机械加 set -e；保持函数返回码语义，必要时显式处理。 |
-| 21 | buildcheck | 12 | ops/ops-ras/scripts/util/merge_aicpu_info_json.sh | verified_functional_failure_propagation | 已在主机复现：后续JSON输入不存在时打印ERROR，脚本仍返回0，结果不完整。 | **已主机复现**：失败路径返回 0 已复现；修复为传播失败并加正常控制用例。 |
-| 22 | buildcheck | 13 | ops/ops-ras/scripts/kernel/binary_script/build_binary_opc.sh | verified_functional_failure_propagation | 已用受控子进程复现：生成脚本返回7，包装脚本打印ERROR后仍返回0。正常子进程返回0的控制用例通过。 | **已主机复现**：失败路径返回 0 已复现；修复为传播失败并加正常控制用例。 |
+| 21 | buildcheck | 12 | ops/ops-ras/scripts/util/merge_aicpu_info_json.sh | verified_functional_failure_propagation | 已在主机复现：后续JSON输入不存在时打印ERROR，脚本仍返回0，结果不完整。 | **已修复**：缺输入时 exit 1；before/after 主机验证通过（见 C_SCAN28_FAILURE_PROPAGATION.md）。 |
+| 22 | buildcheck | 13 | ops/ops-ras/scripts/kernel/binary_script/build_binary_opc.sh | verified_functional_failure_propagation | 已用受控子进程复现：生成脚本返回7，包装脚本打印ERROR后仍返回0。正常子进程返回0的控制用例通过。 | **已修复**：生成失败时 return $gen_res 传播真实退出码；before/after 主机验证通过（见 C_SCAN28_FAILURE_PROPAGATION.md）。 |
 | 23 | buildcheck | 14 | ops/ops-ras/scripts/kernel/binary_script/build_binary_gen_opc_info.sh | script_error_policy_review | 确实缺少显式set -e，但这不足以证明失败会误报成功；需逐条检查关键子命令、显式退出码及已有容错分支。 | **规范建议**：逐条审计关键子命令与已有容错；仅对确认失败不传播的路径加显式非零返回，正常路径不退化。 |
 | 24 | buildcheck | 15 | ops/ops-ras/scripts/custom/upgrade.sh | script_error_policy_review | 确实缺少显式set -e，但这不足以证明失败会误报成功；需逐条检查关键子命令、显式退出码及已有容错分支。 | **规范建议**：逐条审计关键子命令与已有容错；仅对确认失败不传播的路径加显式非零返回，正常路径不退化。 |
 | 25 | buildcheck | 16 | ops/ops-ras/scripts/package/ops_ras/scripts/install.sh | script_error_policy_review | 确实缺少显式set -e，但这不足以证明失败会误报成功；需逐条检查关键子命令、显式退出码及已有容错分支。 | **规范建议**：逐条审计关键子命令与已有容错；仅对确认失败不传播的路径加显式非零返回，正常路径不退化。 |
@@ -38,4 +38,4 @@
 - 接口缺文档 8 条：均为公开范围待确认，暂不批量补文档。
 - 参数不一致 1 条：版本对齐后再判，不改签名。
 - 构建检查 19 条：2 条路径层级（规范修正）、16 条缺 set -e（逐条审计，不机械加）、1 条 CMake 占位目录（不移动）。
-- 其中 2 条（merge_aicpu_info_json.sh、build_binary_opc.sh）已在主机复现失败不传播，优先修复并加回归。
+- 其中 2 条（merge_aicpu_info_json.sh、build_binary_opc.sh）已在主机复现并**修复**：补丁 `patches/scan28-failure-propagation.patch`，before/after 验证通过（`C_SCAN28_FAILURE_PROPAGATION.md`）。

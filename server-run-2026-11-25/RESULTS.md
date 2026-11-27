@@ -136,7 +136,11 @@
 
 ## 28 条扫描项处置（2026-11-27）
 - 逐条处置表见 `C_SCAN28_DISPOSITION.md`（接口缺文档 8、参数不一致 1、构建检查 19）。
-- 其中 2 条已在主机复现失败不传播（merge_aicpu_info_json.sh、build_binary_opc.sh），优先修复加回归。
+- 其中 2 条已在主机复现失败不传播并**已修复**（2026-11-27）：
+  `scripts/util/merge_aicpu_info_json.sh` 缺输入改 `exit 1`；
+  `scripts/kernel/binary_script/build_binary_opc.sh` 失败改 `return $gen_res`。
+  补丁 `patches/scan28-failure-propagation.patch`；before/after 主机验证通过
+  （`C_SCAN28_FAILURE_PROPAGATION.md`、`C_scan28-before.json`、`C_scan28-after.json`）。
 
 ## 台账 review_stage 对齐（2026-11-27）
 - `ISSUE_LEDGER.csv` 已按 `triage/2026-11-26/ISSUE_TRIAGE.csv` 对齐为 102 行，新增 review_stage/category/next_action/url 列。
