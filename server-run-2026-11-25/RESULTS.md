@@ -127,3 +127,17 @@
 - 日志：`C1final-nofault.log`、`C1final-rowfault.log`、`C1final-hostut.log`、`B-pkg-pr118-final.log`；
   详见 `C118_FINAL.md`。
 - 阶段 1 的“kmin 候选未采纳”结论已被本轮修复解除。
+
+## #109 真实 kernel_template_input 验证（2026-11-27）
+- 用真实模板键 `schMode=0`（来自 `matmul_abft_verify_tiling_key.h` 的 ASCENDC_TPL_ARGS_DECL）：
+  `bash build.sh --ops=matmul_abft_verify --soc=ascend910_93 --kernel_template_input="schMode=0" -j8`
+- 结果 TPL_EXIT=0，`[SUCCESS] Build binary success!`；asc_opc 命令含 `--kernel-template-input=schMode=0`。
+- 详见 `C109_TEMPLATE_VALIDATION.md`，日志 `C109-template.log`；Valgrind 仍缺。
+
+## 28 条扫描项处置（2026-11-27）
+- 逐条处置表见 `C_SCAN28_DISPOSITION.md`（接口缺文档 8、参数不一致 1、构建检查 19）。
+- 其中 2 条已在主机复现失败不传播（merge_aicpu_info_json.sh、build_binary_opc.sh），优先修复加回归。
+
+## 台账 review_stage 对齐（2026-11-27）
+- `ISSUE_LEDGER.csv` 已按 `triage/2026-11-26/ISSUE_TRIAGE.csv` 对齐为 102 行，新增 review_stage/category/next_action/url 列。
+- 已按服务器证据推进 #118/#109/#117/#56/#57/#53/#65/#23/#88 的 review_stage；#52 记为环境阻塞。

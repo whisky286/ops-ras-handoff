@@ -1,0 +1,648 @@
+[2026-11-27 19:07:09] COMPUTE_UNIT: ascend910_93;
+[2026-11-27 19:07:09] CMAKE_ARGS: -DBUILD_PATH=/home/hww/projects/ops-ras/pr-work/pr233/build -DENABLE_VALGRIND=FALSE -DCMAKE_BUILD_TYPE=Release -DENABLE_MSSANITIZER=FALSE -DENABLE_OOM=FALSE -DENABLE_DUMP_CCE=FALSE -DENABLE_COVERAGE=FALSE -DENABLE_TEST=FALSE -DENABLE_UT_EXEC=TRUE -DENABLE_CUSTOM=TRUE -DENABLE_STATIC=FALSE -DNO_AICPU=FALSE -DNO_ACLNN=FALSE -DMODULE_EXT= -DENABLE_CCACHE=TRUE -DKERNEL_TEMPLATE_INPUT=schMode=0 -DNO_FORCE=TRUE -DASCEND_OP_NAME=matmul_abft_verify -UVENDOR_NAME -DENABLE_BINARY=TRUE -DENABLE_PACKAGE=FALSE -DPACKAGE_TYPE=run -DENABLE_EXPERIMENTAL=FALSE -DNO_FORCE=TRUE -DBUILD_MODE= -DOP_HOST_UT=FALSE -DOP_GRAPH_UT=FALSE -DOP_API_UT=FALSE -DOP_KERNEL_UT=FALSE -DOP_KERNEL_AICPU_UT=FALSE -DUT_TEST_ALL=FALSE -DASCEND_COMPUTE_UNIT=ascend910_93; -DCANN_3RD_LIB_PATH=/home/hww/projects/ops-ras/pr-work/pr233/build/third_party
+[2026-11-27 19:07:09] -- The C compiler identification is GNU 10.3.1
+[2026-11-27 19:07:09] -- The CXX compiler identification is GNU 10.3.1
+[2026-11-27 19:07:09] -- Detecting C compiler ABI info
+[2026-11-27 19:07:09] -- Detecting C compiler ABI info - done
+[2026-11-27 19:07:09] -- Check for working C compiler: /bin/cc - skipped
+[2026-11-27 19:07:09] -- Detecting C compile features
+[2026-11-27 19:07:09] -- Detecting C compile features - done
+[2026-11-27 19:07:09] -- Detecting CXX compiler ABI info
+[2026-11-27 19:07:10] -- Detecting CXX compiler ABI info - done
+[2026-11-27 19:07:10] -- Check for working CXX compiler: /bin/c++ - skipped
+[2026-11-27 19:07:10] -- Detecting CXX compile features
+[2026-11-27 19:07:10] -- Detecting CXX compile features - done
+[2026-11-27 19:07:10] -- compile project with library
+[2026-11-27 19:07:10] -- Find opbase source dir: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/opbase
+[2026-11-27 19:07:10] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-27 19:07:10] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/pr-work/pr233/cmake/modules
+[2026-11-27 19:07:10] -- compile option:  -O2 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-27 19:07:10] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-27 19:07:10] -- Found dlog: /usr/local/Ascend/cann-9.0.0/pkg_inc/base  
+[2026-11-27 19:07:10] -- Variables in dlog module:
+[2026-11-27 19:07:10] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-27 19:07:10] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-27 19:07:10] -- 
+[2026-11-27 19:07:10]  Properties for TARGET dlog:
+[2026-11-27 19:07:10]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-27 19:07:10]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-27 19:07:10]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-27 19:07:10] 
+[2026-11-27 19:07:10] -- 
+[2026-11-27 19:07:10]  Properties for TARGET dlog_headers:
+[2026-11-27 19:07:10]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-27 19:07:10] 
+[2026-11-27 19:07:10] -- Found securec: /usr/local/Ascend/cann-9.0.0/include  
+[2026-11-27 19:07:10] -- Found OPBASE: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/opbase/include  
+[2026-11-27 19:07:10] -- Found OPABSE include:/home/hww/projects/ops-ras/pr-work/pr233/build/third_party/opbase/include
+[2026-11-27 19:07:10] -- Found platform: /usr/local/Ascend/cann-9.0.0/include  
+[2026-11-27 19:07:10] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:10] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-27 19:07:10] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-27 19:07:10] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-27 19:07:10] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-27 19:07:10] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-27 19:07:10] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-27 19:07:10] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-27 19:07:10] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-27 19:07:10] -- Found metadef: /usr/local/Ascend/cann-9.0.0/include  
+[2026-11-27 19:07:10] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-27 19:07:10] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:10] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-27 19:07:10] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:10] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-27 19:07:10] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:10] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-27 19:07:10] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-27 19:07:10] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-27 19:07:10] -- Found json: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/lib_cache/json/include  
+[2026-11-27 19:07:10] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-27 19:07:10] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-27 19:07:10] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-27 19:07:10] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-27 19:07:10] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-27 19:07:10] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-27 19:07:10] -- [ThirdParty][protobuf] protoc build.
+[2026-11-27 19:07:10] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-27 19:07:10] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-27 19:07:10] -- System processor: aarch64
+[2026-11-27 19:07:10] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-27 19:07:10] -- Package dlog has been found.
+[2026-11-27 19:07:10] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-27 19:07:10] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-27 19:07:10] -- Ops for this compilation contains: crypto;matmul_abft_verify;obfuscation_calculate;obfuscation_setup
+[2026-11-27 19:07:10] -- Opbuild generating sources
+[2026-11-27 19:07:11] -- Opbuild generating sources - done
+[2026-11-27 19:07:11] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-27 19:07:11] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-27 19:07:11] -- create aclnn master header file: /home/hww/projects/ops-ras/pr-work/pr233/build/aclnn_ops_ras.h
+[2026-11-27 19:07:11] -- No RAS op_graph proto sources found, skipping opgraph_ras and es_ras.
+[2026-11-27 19:07:11] -- No onnx plugin object target found, skipping oponnx_plugin_ras.
+[2026-11-27 19:07:11] -- No tf plugin object target found, skipping optf_plugin_ras.
+[2026-11-27 19:07:11] -- All host targets: 
+[2026-11-27 19:07:11] -- No builtin host aicpu targets found, skipping.
+[2026-11-27 19:07:11] -- Configuring done
+[2026-11-27 19:07:11] -- Generating done
+[2026-11-27 19:07:11] -- Build files have been written to: /home/hww/projects/ops-ras/pr-work/pr233/build
+[2026-11-27 19:07:11] ----------------------------------------------------------------
+[2026-11-27 19:07:11] Start to parse op dependencies for matmul_abft_verify
+[2026-11-27 19:07:11] INFO:root:op_dependencies:matmul_abft_verify, reverse_op_dependencies:matmul_abft_verify
+[2026-11-27 19:07:11] -- compile project with library
+[2026-11-27 19:07:11] -- Find opbase source dir: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/opbase
+[2026-11-27 19:07:11] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-27 19:07:11] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/pr-work/pr233/cmake/modules
+[2026-11-27 19:07:11] -- compile option:  -O2 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-27 19:07:11] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-27 19:07:11] -- Variables in dlog module:
+[2026-11-27 19:07:11] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-27 19:07:11] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-27 19:07:11] -- 
+[2026-11-27 19:07:11]  Properties for TARGET dlog:
+[2026-11-27 19:07:11]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-27 19:07:11]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-27 19:07:11]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-27 19:07:11] 
+[2026-11-27 19:07:11] -- 
+[2026-11-27 19:07:11]  Properties for TARGET dlog_headers:
+[2026-11-27 19:07:11]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-27 19:07:11] 
+[2026-11-27 19:07:11] -- Found OPABSE include:/home/hww/projects/ops-ras/pr-work/pr233/build/third_party/opbase/include
+[2026-11-27 19:07:11] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:11] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-27 19:07:11] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-27 19:07:11] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-27 19:07:11] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-27 19:07:11] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-27 19:07:11] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-27 19:07:11] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-27 19:07:11] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-27 19:07:11] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-27 19:07:11] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:11] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-27 19:07:11] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:11] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-27 19:07:11] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:11] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-27 19:07:11] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-27 19:07:11] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-27 19:07:11] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-27 19:07:11] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-27 19:07:11] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-27 19:07:11] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-27 19:07:11] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-27 19:07:11] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-27 19:07:11] -- [ThirdParty][protobuf] protoc build.
+[2026-11-27 19:07:11] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-27 19:07:11] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-27 19:07:11] -- System processor: aarch64
+[2026-11-27 19:07:11] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-27 19:07:11] -- Package dlog has been found.
+[2026-11-27 19:07:11] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-27 19:07:11] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-27 19:07:11] -- Ops for this compilation contains: crypto;matmul_abft_verify;obfuscation_calculate;obfuscation_setup
+[2026-11-27 19:07:11] -- Opbuild generating sources
+[2026-11-27 19:07:12] -- Opbuild generating sources - done
+[2026-11-27 19:07:12] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-27 19:07:12] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-27 19:07:12] -- create aclnn master header file: /home/hww/projects/ops-ras/pr-work/pr233/build/aclnn_ops_ras.h
+[2026-11-27 19:07:12] -- No RAS op_graph proto sources found, skipping opgraph_ras and es_ras.
+[2026-11-27 19:07:12] -- No onnx plugin object target found, skipping oponnx_plugin_ras.
+[2026-11-27 19:07:12] -- No tf plugin object target found, skipping optf_plugin_ras.
+[2026-11-27 19:07:12] -- All host targets: 
+[2026-11-27 19:07:12] -- No builtin host aicpu targets found, skipping.
+[2026-11-27 19:07:12] -- Configuring done
+[2026-11-27 19:07:12] -- Generating done
+[2026-11-27 19:07:12] -- Build files have been written to: /home/hww/projects/ops-ras/pr-work/pr233/build
+[2026-11-27 19:07:12] ----------------------------------------------------------------
+[2026-11-27 19:07:12] End to parse op dependencies
+[2026-11-27 19:07:12] -- compile project with library
+[2026-11-27 19:07:12] -- Find opbase source dir: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/opbase
+[2026-11-27 19:07:12] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-27 19:07:12] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/pr-work/pr233/cmake/modules
+[2026-11-27 19:07:12] -- compile option:  -O2 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-27 19:07:12] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-27 19:07:12] -- Variables in dlog module:
+[2026-11-27 19:07:12] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-27 19:07:12] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-27 19:07:12] -- 
+[2026-11-27 19:07:12]  Properties for TARGET dlog:
+[2026-11-27 19:07:12]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-27 19:07:12]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-27 19:07:12]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-27 19:07:12] 
+[2026-11-27 19:07:12] -- 
+[2026-11-27 19:07:12]  Properties for TARGET dlog_headers:
+[2026-11-27 19:07:12]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-27 19:07:12] 
+[2026-11-27 19:07:12] -- Found OPABSE include:/home/hww/projects/ops-ras/pr-work/pr233/build/third_party/opbase/include
+[2026-11-27 19:07:12] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:12] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-27 19:07:12] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-27 19:07:12] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-27 19:07:12] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-27 19:07:12] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-27 19:07:12] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-27 19:07:12] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-27 19:07:12] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-27 19:07:12] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-27 19:07:12] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:12] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-27 19:07:12] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:12] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-27 19:07:12] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:12] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-liCMake Warning:
+  Manually-specified variables were not used by the project:
+
+    BUILD_PATH
+    MODULE_EXT
+
+
+nux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-27 19:07:12] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-27 19:07:12] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-27 19:07:12] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-27 19:07:12] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-27 19:07:12] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-27 19:07:12] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-27 19:07:12] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-27 19:07:12] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-27 19:07:12] -- [ThirdParty][protobuf] protoc build.
+[2026-11-27 19:07:12] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-27 19:07:13] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-27 19:07:13] -- System processor: aarch64
+[2026-11-27 19:07:13] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-27 19:07:13] -- Package dlog has been found.
+[2026-11-27 19:07:13] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-27 19:07:13] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-27 19:07:13] -- Ops for this compilation contains: matmul_abft_verify
+[2026-11-27 19:07:13] -- Opbuild generating sources
+[2026-11-27 19:07:14] -- Opbuild generating sources - done
+[2026-11-27 19:07:14] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-27 19:07:14] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-27 19:07:14] -- create aclnn master header file: /home/hww/projects/ops-ras/pr-work/pr233/build/aclnn_ops_ras_custom.h
+[2026-11-27 19:07:14] -- [INFO] On [ascend910_93], [matmul_abft_verify] compile binary with def config.
+[2026-11-27 19:07:14] -- start generate_bin_scripts for op: matmul_abft_verify
+[2026-11-27 19:07:14] -- start to compile op: matmul_abft_verify, op_type: MatmulAbftVerify
+[2026-11-27 19:07:14] -- No RAS op_graph proto sources found, skipping cust_proto and es_ras.
+[2026-11-27 19:07:14] -- No aicpu opdef/json files to merge, skipping.
+[2026-11-27 19:07:14] -- No aicpu cust obj targets found, skipping.
+[2026-11-27 19:07:14] -- Configuring done
+[2026-11-27 19:07:14] -- Generating done
+[2026-11-27 19:07:14] -- Build files have been written to: /home/hww/projects/ops-ras/pr-work/pr233/build
+[2026-11-27 19:07:14] ----------------------------------------------------------------
+[2026-11-27 19:07:14] Start to build binary
+[2026-11-27 19:07:14] --------------- build tiling start ---------------
+[2026-11-27 19:07:14] ----------------------------------------------------------------
+[2026-11-27 19:07:14] Start to build libs ophost_ras
+[2026-11-27 19:07:14] -- compile project with library
+[2026-11-27 19:07:14] -- Find opbase source dir: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/opbase
+[2026-11-27 19:07:14] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-27 19:07:14] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/pr-work/pr233/cmake/modules
+[2026-11-27 19:07:14] -- compile option:  -O2 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-27 19:07:14] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-27 19:07:14] -- Variables in dlog module:
+[2026-11-27 19:07:14] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-27 19:07:14] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-27 19:07:14] -- 
+[2026-11-27 19:07:14]  Properties for TARGET dlog:
+[2026-11-27 19:07:14]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-27 19:07:14]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-27 19:07:14]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-27 19:07:14] 
+[2026-11-27 19:07:14] -- 
+[2026-11-27 19:07:14]  Properties for TARGET dlog_headers:
+[2026-11-27 19:07:14]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-27 19:07:14] 
+[2026-11-27 19:07:14] -- Found OPABSE include:/home/hww/projects/ops-ras/pr-work/pr233/build/third_party/opbase/include
+[2026-11-27 19:07:14] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:14] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-27 19:07:14] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-27 19:07:14] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-27 19:07:14] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-27 19:07:14] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-27 19:07:14] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-27 19:07:14] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-27 19:07:14] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-27 19:07:14] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-27 19:07:14] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:14] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-27 19:07:14] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:14] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-27 19:07:14] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:14] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-27 19:07:14] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-27 19:07:14] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-27 19:07:14] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-27 19:07:14] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-27 19:07:14] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-27 19:07:14] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-27 19:07:14] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-27 19:07:14] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-27 19:07:14] -- [ThirdParty][protobuf] protoc build.
+[2026-11-27 19:07:14] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-27 19:07:14] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-27 19:07:14] -- System processor: aarch64
+[2026-11-27 19:07:14] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-27 19:07:14] -- Package dlog has been found.
+[2026-11-27 19:07:14] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-27 19:07:14] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-27 19:07:14] -- Ops for this compilation contains: matmul_abft_verify
+[2026-11-27 19:07:14] -- Opbuild generating sources
+[2026-11-27 19:07:15] -- Opbuild generating sources - done
+[2026-11-27 19:07:15] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-27 19:07:15] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-27 19:07:15] -- create aclnn master header file: /home/hww/projects/ops-ras/pr-work/pr233/build/aclnn_ops_ras.h
+[2026-11-27 19:07:15] -- start generate_bin_scripts for op: matmul_abft_verify
+[2026-11-27 19:07:15] -- start to compile op: matmul_abft_verify, op_type: MatmulAbftVerify
+[2026-11-27 19:07:15] -- No RAS op_graph proto sources found, skipping opgraph_ras and es_ras.
+[2026-11-27 19:07:15] -- No onnx plugin object target found, skipping oponnx_plugin_ras.
+[2026-11-27 19:07:15] -- No tf plugin object target found, skipping optf_plugin_ras.
+[2026-11-27 19:07:15] -- All host targets: 
+[2026-11-27 19:07:15] -- No builtin host aicpu targets found, skipping.
+[2026-11-27 19:07:15] -- Configuring done
+[2026-11-27 19:07:15] -- Generating done
+[2026-11-27 19:07:15] -- Build files have been written to: /home/hww/projects/ops-ras/pr-work/pr233/build
+[2026-11-27 19:07:15] Building target ophost_ras
+[2026-11-27 19:07:15] Consolidate compiler generated dependencies of target opbase_util_objs
+[2026-11-27 19:07:15] Consolidate compiler generated dependencies of target opbase_infer_objs
+[2026-11-27 19:07:15] Consolidate compiler generated dependencies of target opbase_tiling_objs
+[2026-11-27 19:07:16] [ 26%] Built target opbase_util_objs
+[2026-11-27 19:07:16] [ 73%] Built target opbase_tiling_objs
+[2026-11-27 19:07:16] [ 60%] Built target opbase_infer_objs
+[2026-11-27 19:07:16] Consolidate compiler generated dependencies of target ophost_ras_infer_obj
+[2026-11-27 19:07:16] Consolidate compiler generated dependencies of target ophost_ras_tiling_obj
+[2026-11-27 19:07:16] [ 80%] Built target ophost_ras_infer_obj
+[2026-11-27 19:07:16] [ 93%] Built target ophost_ras_tiling_obj
+[2026-11-27 19:07:16] [ 93%] Built target ophost_ras_obj
+[2026-11-27 19:07:16] [100%] Linking CXX shared library libophost_ras.so
+[2026-11-27 19:07:16] [100%] Built target ophost_ras
+[2026-11-27 19:07:16] 
+[2026-11-27 19:07:16] ----------------------------------------------------------------
+[2026-11-27 19:07:16] [32m[SUCCESS] Build libs ophost_ras success![0m
+[2026-11-27 19:07:16] ----------------------------------------------------------------
+[2026-11-27 19:07:16] 
+[2026-11-27 19:07:16] --------------- build tiling end ---------------
+[2026-11-27 19:07:16] -- compile project with library
+[2026-11-27 19:07:16] -- Find opbase source dir: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/opbase
+[2026-11-27 19:07:16] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-27 19:07:16] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/pr-work/pr233/cmake/modules
+[2026-11-27 19:07:16] -- compile option:  -O2 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-27 19:07:16] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-27 19:07:16] -- Variables in dlog module:
+[2026-11-27 19:07:16] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-27 19:07:16] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-27 19:07:16] -- 
+[2026-11-27 19:07:16]  Properties for TARGET dlog:
+[2026-11-27 19:07:16]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-27 19:07:16]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-27 19:07:16]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-27 19:07:16] 
+[2026-11-27 19:07:16] -- 
+[2026-11-27 19:07:16]  Properties for TARGET dlog_headers:
+[2026-11-27 19:07:16]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-27 19:07:16] 
+[2026-11-27 19:07:16] -- Found OPABSE include:/home/hww/projects/ops-ras/pr-work/pr233/build/third_party/opbase/include
+[2026-11-27 19:07:16] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:16] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-27 19:07:16] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-27 19:07:16] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-27 19:07:16] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-27 19:07:16] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-27 19:07:16] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-27 19:07:16] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-27 19:07:16] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-27 19:07:16] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-27 19:07:16] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:16] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-27 19:07:16] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:16] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-27 19:07:16] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:16] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-27 19:07:16] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-27 19:07:16] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-27 19:07:16] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-27 19:07:16] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-27 19:07:16] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-27 19:07:16] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-27 19:07:16] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-27 19:07:16] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-27 19:07:16] -- [ThirdParty][protobuf] protoc build.
+[2026-11-27 19:07:16] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-27 19:07:16] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-27 19:07:16] -- System processor: aarch64
+[2026-11-27 19:07:16] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-27 19:07:16] -- Package dlog has been found.
+[2026-11-27 19:07:16] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-27 19:07:16] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-27 19:07:16] -- Ops for this compilation contains: matmul_abft_verify
+[2026-11-27 19:07:16] -- Opbuild generating sources
+[2026-11-27 19:07:17] -- Opbuild generating sources - done
+[2026-11-27 19:07:17] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-27 19:07:17] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-27 19:07:17] -- create aclnn master header file: /home/hww/projects/ops-ras/pr-work/pr233/build/aclnn_ops_ras_custom.h
+[2026-11-27 19:07:17] -- start generate_bin_scripts for op: matmul_abft_verify
+[2026-11-27 19:07:17] -- start to compile op: matmul_abft_verify, op_type: MatmulAbftVerify
+[2026-11-27 19:07:17] -- No RAS op_graph proto sources found, skipping cust_proto and es_ras.
+[2026-11-27 19:07:17] -- No aicpu opdef/json files to merge, skipping.
+[2026-11-27 19:07:17] -- No aicpu cust obj targets found, skipping.
+[2026-11-27 19:07:17] -- Configuring done
+[2026-11-27 19:07:17] -- Generating done
+[2026-11-27 19:07:17] -- Build files have been written to: /home/hww/projects/ops-ras/pr-work/pr233/build
+[2026-11-27 19:07:17] --------------- prepare build start ---------------
+[2026-11-27 19:07:17] [  6%] Built target merge_ini_ascend910_93
+[2026-11-27 19:07:17] [ 13%] Generating tbe/op_info_cfg/ai_core/ascend310p/aic-ascend310p-ops-info.json
+[2026-11-27 19:07:17] [ 26%] Built target ops_info_gen_ascend910b
+[2026-11-27 19:07:17] [ 26%] Generating tbe/op_info_cfg/ai_core/ascend910/aic-ascend910-ops-info.json
+[2026-11-27 19:07:17] [ 26%] Built target ops_info_gen_ascend910_93
+[2026-11-27 19:07:17] [ 26%] Built target atvoss_src_copy
+[2026-11-27 19:07:17] [ 26%] Built target gen_kernel_options
+[2026-11-27 19:07:17] [ 26%] Built target matmul_abft_verify_src_copy
+[2026-11-27 19:07:17] [ 33%] Generating tbe/op_info_cfg/ai_core/ascend950/aic-ascend950-ops-info.json
+[2026-11-27 19:07:17] [ 40%] Generating tbe/op_info_cfg/ai_core/ascend960dt/aic-ascend960dt-ops-info.json
+[2026-11-27 19:07:17] [ 46%] Generating tbe/op_info_cfg/ai_core/ascend350/aic-ascend350-ops-info.json
+[2026-11-27 19:07:17] [ 46%] Built target ops_info_gen_ascend310p
+[2026-11-27 19:07:17] [ 46%] Built target ops_info_gen_ascend910
+[2026-11-27 19:07:17] [ 53%] Generating tbe/op_info_cfg/ai_core/ascend960pr/aic-ascend960pr-ops-info.json
+[2026-11-27 19:07:17] [ 66%] Generating tbe/op_info_cfg/ai_core/ascend035/aic-ascend035-ops-info.json
+[2026-11-27 19:07:17] [ 66%] Generating tbe/op_info_cfg/ai_core/ascend031/aic-ascend031-ops-info.json
+[2026-11-27 19:07:17] [ 66%] Generating tbe/op_info_cfg/ai_core/ascend310b/aic-ascend310b-ops-info.json
+[2026-11-27 19:07:17] [ 66%] Built target ops_info_gen_ascend950
+[2026-11-27 19:07:17] [ 73%] Generating tbe/op_info_cfg/ai_core/ascend910_55/aic-ascend910_55-ops-info.json
+[2026-11-27 19:07:17] [ 73%] Built target ops_info_gen_ascend350
+[2026-11-27 19:07:17] [ 73%] Built target ops_info_gen_ascend960dt
+[2026-11-27 19:07:17] [ 73%] Built target ops_info_gen_ascend960pr
+[2026-11-27 19:07:17] [ 73%] Built target ops_info_gen_ascend035
+[2026-11-27 19:07:17] [ 73%] Built target ops_info_gen_ascend031
+[2026-11-27 19:07:17] [ 80%] Generating tbe/op_info_cfg/ai_core/mc62cm12a/aic-mc62cm12a-ops-info.json
+[2026-11-27 19:07:17] [ 80%] Generating tbe/op_info_cfg/ai_core/kirinx90/aic-kirinx90-ops-info.json
+[2026-11-27 19:07:17] [ 86%] Generating tbe/op_info_cfg/ai_core/kirin9030/aic-kirin9030-ops-info.json
+[2026-11-27 19:07:17] [ 86%] Built target ops_info_gen_ascend310b
+[2026-11-27 19:07:17] [ 86%] Built target ops_info_gen_ascend910_55
+[2026-11-27 19:07:17] [ 86%] Built target ascendc_kernel_src_copy
+[2026-11-27 19:07:17] [ 86%] Built target ops_info_gen_mc62cm12a
+[2026-11-27 19:07:17] [ 86%] Built target ops_info_gen_kirinx90
+[2026-11-27 19:07:17] [100%] Built target gen_compile_options_ascend910_93
+[2026-11-27 19:07:17] [100%] Built target ops_info_gen_kirin9030
+[2026-11-27 19:07:17] [100%] Built target ascendc_impl_gen
+[2026-11-27 19:07:18] [ 26%] Generating tbe/op_info_cfg/ai_core/ascend910/aic-ascend910-ops-info.json
+[2026-11-27 19:07:18] [ 26%] Built target merge_ini_ascend910_93
+[2026-11-27 19:07:18] [ 26%] Generating tbe/op_info_cfg/ai_core/ascend310p/aic-ascend310p-ops-info.json
+[2026-11-27 19:07:18] [ 20%] Built target ops_info_gen_ascend910_93
+[2026-11-27 19:07:18] [ 26%] Built target ops_info_gen_ascend910b
+[2026-11-27 19:07:18] [ 26%] Built target gen_kernel_options
+[2026-11-27 19:07:18] [ 33%] Generating tbe/op_info_cfg/ai_core/ascend950/aic-ascend950-ops-info.json
+[2026-11-27 19:07:18] [ 40%] Generating tbe/op_info_cfg/ai_core/ascend350/aic-ascend350-ops-info.json
+[2026-11-27 19:07:18] [ 40%] Built target matmul_abft_verify_src_copy
+[2026-11-27 19:07:18] [ 40%] Built target atvoss_src_copy
+[2026-11-27 19:07:18] [ 46%] Generating tbe/op_info_cfg/ai_core/ascend960dt/aic-ascend960dt-ops-info.json
+[2026-11-27 19:07:18] [ 46%] Built target ops_info_gen_ascend310p
+[2026-11-27 19:07:18] [ 46%] Built target ops_info_gen_ascend910
+[2026-11-27 19:07:18] [ 66%] Generating tbe/op_info_cfg/ai_core/ascend960pr/aic-ascend960pr-ops-info.json
+[2026-11-27 19:07:18] [ 66%] Generating tbe/op_info_cfg/ai_core/ascend031/aic-ascend031-ops-info.json
+[2026-11-27 19:07:18] [ 66%] Generating tbe/op_info_cfg/ai_core/ascend035/aic-ascend035-ops-info.json
+[2026-11-27 19:07:18] [ 66%] Built target ops_info_gen_ascend950
+[2026-11-27 19:07:18] [ 66%] Built target ops_info_gen_ascend350
+[2026-11-27 19:07:18] [ 66%] Generating tbe/op_info_cfg/ai_core/ascend310b/aic-ascend310b-ops-info.json
+[2026-11-27 19:07:18] [ 66%] Built target ops_info_gen_ascend960dt
+[2026-11-27 19:07:18] [ 73%] Generating tbe/op_info_cfg/ai_core/ascend910_55/aic-ascend910_55-ops-info.json
+[2026-11-27 19:07:18] [ 80%] Generating tbe/op_info_cfg/ai_core/kirinx90/aic-kirinx90-ops-info.json
+[2026-11-27 19:07:18] [ 80%] Generating tbe/op_info_cfg/ai_core/mc62cm12a/aic-mc62cm12a-ops-info.json
+[2026-11-27 19:07:18] [ 86%] Generating tbe/op_info_cfg/ai_core/kirin9030/aic-kirin9030-ops-info.json
+[2026-11-27 19:07:18] [ 86%] Built target ops_info_gen_ascend960pr
+[2026-11-27 19:07:18] [ 86%] Built target ops_info_gen_ascend035
+[2026-11-27 19:07:18] [ 86%] Built target ops_info_gen_ascend031
+[2026-11-27 19:07:18] [ 86%] Built target ops_info_gen_ascend310b
+[2026-11-27 19:07:18] [ 86%] Built target ops_info_gen_ascend910_55
+[2026-11-27 19:07:18] [ 86%] Built target ascendc_kernel_src_copy
+[2026-11-27 19:07:18] [ 86%] Built target ops_info_gen_kirinx90
+[2026-11-27 19:07:18] [ 86%] Built target ops_info_gen_mc62cm12a
+[2026-11-27 19:07:18] [ 86%] Built target ops_info_gen_kirin9030
+[2026-11-27 19:07:18] [100%] Built target gen_compile_options_ascend910_93
+[2026-11-27 19:07:18] [100%] Built target ascendc_impl_gen
+[2026-11-27 19:07:18] INFO: /home/hww/projects/ops-ras/pr-work/pr233/build/autogen/inner/aic-ascend910_93-ops-info.ini does not exists in this project, skip generating compile commands.
+[2026-11-27 19:07:18] INFO: /home/hww/projects/ops-ras/pr-work/pr233/build/autogen/exc/aic-ascend910_93-ops-info.ini does not exists in this project, skip generating compile commands.
+[2026-11-27 19:07:18] ops config files: /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/gen/matmul_abft_verify/matmul_abft_verify_binary.json
+[2026-11-27 19:07:18] [100%] Built target generate_bin_scripts_ascend910_93_matmul_abft_verify
+[2026-11-27 19:07:18] [100%] Built target gen_bin_scripts
+[2026-11-27 19:07:18] --------------- prepare build end ---------------
+[2026-11-27 19:07:18] --------------- binary build start ---------------
+[2026-11-27 19:07:18] [  5%] Built target merge_ini_ascend910_93
+[2026-11-27 19:07:18] [  5%] Built target atvoss_src_copy
+[2026-11-27 19:07:18] [  5%] Built target matmul_abft_verify_src_copy
+[2026-11-27 19:07:18] [  5%] Built target ascendc_kernel_src_copy
+[2026-11-27 19:07:18] [ 16%] Built target gen_compile_options_ascend910_93
+[2026-11-27 19:07:18] [ 16%] Built target gen_kernel_options
+[2026-11-27 19:07:18] [ 22%] Generating tbe/op_info_cfg/ai_core/ascend310p/aic-ascend310p-ops-info.json
+[2026-11-27 19:07:18] [ 22%] Built target ops_info_gen_ascend310p
+[2026-11-27 19:07:18] [ 27%] Generating tbe/op_info_cfg/ai_core/ascend910/aic-ascend910-ops-info.json
+[2026-11-27 19:07:18] [ 27%] Built target ops_info_gen_ascend910
+[2026-11-27 19:07:18] [ 33%] Built target ops_info_gen_ascend910b
+[2026-11-27 19:07:18] [ 33%] Built target ops_info_gen_ascend910_93
+[2026-11-27 19:07:18] [ 38%] Generating tbe/op_info_cfg/ai_core/ascend950/aic-ascend950-ops-info.json
+[2026-11-27 19:07:18] [ 38%] Built target ops_info_gen_ascend950
+[2026-11-27 19:07:18] [ 44%] Generating tbe/op_info_cfg/ai_core/ascend350/aic-ascend350-ops-info.json
+[2026-11-27 19:07:18] [ 44%] Built target ops_info_gen_ascend350
+[2026-11-27 19:07:18] [ 50%] Generating tbe/op_info_cfg/ai_core/ascend960dt/aic-ascend960dt-ops-info.json
+[2026-11-27 19:07:18] [ 50%] Built target ops_info_gen_ascend960dt
+[2026-11-27 19:07:18] [ 55%] Generating tbe/op_info_cfg/ai_core/ascend960pr/aic-ascend960pr-ops-info.json
+[2026-11-27 19:07:18] [ 55%] Built target ops_info_gen_ascend960pr
+[2026-11-27 19:07:18] [ 61%] Generating tbe/op_info_cfg/ai_core/ascend031/aic-ascend031-ops-info.json
+[2026-11-27 19:07:19] [ 61%] Built target ops_info_gen_ascend031
+[2026-11-27 19:07:19] [ 66%] Generating tbe/op_info_cfg/ai_core/ascend035/aic-ascend035-ops-info.json
+[2026-11-27 19:07:19] [ 66%] Built target ops_info_gen_ascend035
+[2026-11-27 19:07:19] [ 66%] Generating tbe/op_info_cfg/ai_core/ascend310b/aic-ascend310b-ops-info.json
+[2026-11-27 19:07:19] [ 66%] Built target ops_info_gen_ascend310b
+[2026-11-27 19:07:19] [ 72%] Generating tbe/op_info_cfg/ai_core/ascend910_55/aic-ascend910_55-ops-info.json
+[2026-11-27 19:07:19] [ 72%] Built target ops_info_gen_ascend910_55
+[2026-11-27 19:07:19] [ 77%] Generating tbe/op_info_cfg/ai_core/mc62cm12a/aic-mc62cm12a-ops-info.json
+[2026-11-27 19:07:19] [ 77%] Built target ops_info_gen_mc62cm12a
+[2026-11-27 19:07:19] [ 77%] Generating tbe/op_info_cfg/ai_core/kirinx90/aic-kirinx90-ops-info.json
+[2026-11-27 19:07:19] [ 77%] Built target ops_info_gen_kirinx90
+[2026-11-27 19:07:19] [ 83%] Generating tbe/op_info_cfg/ai_core/kirin9030/aic-kirin9030-ops-info.json
+[2026-11-27 19:07:19] [ 83%] Built target ops_info_gen_kirin9030
+[2026-11-27 19:07:19] [ 83%] Built target ascendc_impl_gen
+[2026-11-27 19:07:19] INFO: /home/hww/projects/ops-ras/pr-work/pr233/build/autogen/inner/aic-ascend910_93-ops-info.ini does not exists in this project, skip generating compile commands.
+[2026-11-27 19:07:19] INFO: /home/hww/projects/ops-ras/pr-work/pr233/build/autogen/exc/aic-ascend910_93-ops-info.ini does not exists in this project, skip generating compile commands.
+[2026-11-27 19:07:19] ops config files: /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/gen/matmul_abft_verify/matmul_abft_verify_binary.json
+[2026-11-27 19:07:19] [ 83%] Built target generate_bin_scripts_ascend910_93_matmul_abft_verify
+[2026-11-27 19:07:19] [ 83%] Built target gen_bin_scripts
+[2026-11-27 19:07:19] [ 83%] Built target ascendc_bin_ascend910_93_matmul_abft_verify
+[2026-11-27 19:07:19] [INFO] excute file: /home/hww/projects/ops-ras/pr-work/pr233/scripts/kernel/binary_script/build_binary_gen_opc_info.sh
+[2026-11-27 19:07:19] [INFO] excute file: /home/hww/projects/ops-ras/pr-work/pr233/scripts/kernel/binary_script/gen_opcinfo_for_socversion.sh
+[2026-11-27 19:07:19] [INFO] gen_opcinfo_for_socversion.sh: soc_version: ascend910_93
+[2026-11-27 19:07:19] [INFO] gen_opcinfo_for_socversion.sh: out_opcinfo_csv_file: /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/temp/_ascend910_93_tmp.csv
+[2026-11-27 19:07:19] [INFO] gen_opcinfo_for_socversion.sh: gen opinfo script path: /home/hww/projects/ops-ras/pr-work/pr233/scripts/kernel/binary_script/gen_opinfo_json_from_ini.sh
+[2026-11-27 19:07:19] [INFO] gen opcinfo script path: /home/hww/projects/ops-ras/pr-work/pr233/scripts/kernel/binary_script/gen_opcinfo_from_opinfo.py
+[2026-11-27 19:07:19] [2026-11-27 19:07:19] [INFO] excute file: /home/hww/projects/ops-ras/pr-work/pr233/scripts/kernel/binary_script/gen_opinfo_json_from_ini.sh
+[2026-11-27 19:07:19] [2026-11-27 19:07:19] [INFO] gen_opinfo_json_from_ini.sh: soc_version: ascend910_93
+[2026-11-27 19:07:19] [2026-11-27 19:07:19] [INFO] gen_opinfo_json_from_ini.sh: output_file: /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/temp/_ascend910_93.json
+[2026-11-27 19:07:19] [2026-11-27 19:07:19] [INFO] op ini path: /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/aic-ascend910_93-ops-info.ini
+[2026-11-27 19:07:19] [2026-11-27 19:07:19] [INFO] parser cmd: python3 /home/hww/projects/ops-ras/pr-work/pr233/scripts/kernel/binary_script/parser_ini.py /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/aic-ascend910_93-ops-info.ini /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/temp/_ascend910_93.json
+[2026-11-27 19:07:19] [2026-11-27 19:07:19] 
+[2026-11-27 19:07:19] [2026-11-27 19:07:19] 
+[2026-11-27 19:07:19] [2026-11-27 19:07:19] ==============check valid for ops info start==============
+[2026-11-27 19:07:19] [2026-11-27 19:07:19] ==============check valid for ops info end================
+[2026-11-27 19:07:19] [2026-11-27 19:07:19] 
+[2026-11-27 19:07:19] [2026-11-27 19:07:19] 
+[2026-11-27 19:07:19] [2026-11-27 19:07:19] Compile op info cfg successfully.
+[2026-11-27 19:07:19] [INFO] parser cmd: python3 /home/hww/projects/ops-ras/pr-work/pr233/scripts/kernel/binary_script/gen_opcinfo_from_opinfo.py /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/temp/_ascend910_93.json  /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/temp/_ascend910_93_tmp.csv
+[2026-11-27 19:07:19] [INFO] end to gen opcinfo use gen_opcinfo_for_socversion.sh
+[2026-11-27 19:07:19] [ 88%] Built target gen_opc_info_ascend910_93
+[2026-11-27 19:07:19] [ 94%] cp /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/gen/matmul_abft_verify/matmul_abft_verify_binary.json  /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/ascend910_93/matmul_abft_verify
+[2026-11-27 19:07:19] [ 94%] Built target bin_conf_matmul_abft_verify_ascend910_93_copy
+[2026-11-27 19:07:19] [INFO] excute file: /home/hww/projects/ops-ras/pr-work/pr233/scripts/kernel/binary_script/build_binary_opc.sh
+[2026-11-27 19:07:19] [INFO] excute file: build_binary_opc_gen_task.sh
+[2026-11-27 19:07:19] [INFO] op:MatmulAbftVerify: opc_task_cmd_file=/home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/opc_cmd/opc_cmd.sh
+[2026-11-27 19:07:19] [INFO] op:MatmulAbftVerify: out_task_cmd_file=/home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/opc_cmd/out_cmd.sh
+[2026-11-27 19:07:19] [INFO] op:MatmulAbftVerify get the opc info from /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/temp/_ascend910_93_tmp.csv is MatmulAbftVerify,dynamic/matmul_abft_verify.py,matmul_abft_verify
+[2026-11-27 19:07:19] [INFO] op:MatmulAbftVerify python path is /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/dynamic/matmul_abft_verify.py
+[2026-11-27 19:07:19] [INFO] op:MatmulAbftVerify python func is matmul_abft_verify
+[2026-11-27 19:07:19] [INFO] op:MatmulAbftVerify binary config path is /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/ascend910_93/matmul_abft_verify/matmul_abft_verify_binary.json
+[2026-11-27 19:07:19] [INFO] op:MatmulAbftVerify binary bin path is /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/ascend910_93/matmul_abft_verify/
+[2026-11-27 19:07:19] [INFO] op:MatmulAbftVerify binary json file path is /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/config/ascend910_93/matmul_abft_verify.json
+[2026-11-27 19:07:19] [INFO] op:MatmulAbftVerify will clean /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/config/ascend910_93/matmul_abft_verify.json
+[2026-11-27 19:07:19] [INFO] No simplified_key_file found. Using default key_mode_default=0
+[2026-11-27 19:07:19] kernel_template_input is: schMode=0
+[2026-11-27 19:07:19] [INFO] op:MatmulAbftVerify do opc cmd is asc_opc /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/dynamic/matmul_abft_verify.py --main_func=matmul_abft_verify --input_param=/home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/ascend910_93/matmul_abft_verify/matmul_abft_verify_binary_high_performance.json_0 --soc_version=Ascend910_9391 --output=/home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/ascend910_93/matmul_abft_verify/ --impl_mode=high_performance,optional --simplified_key_mode=0 --op_mode=dynamic --kernel-template-input=schMode=0
+[2026-11-27 19:07:19] [INFO] op:MatmulAbftVerify gen compile json cmd is python3 gen_output_json.py /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/ascend910_93/matmul_abft_verify/matmul_abft_verify_binary_high_performance.json_0 /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/ascend910_93/matmul_abft_verify/ /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/config/ascend910_93/matmul_abft_verify.json
+[2026-11-27 19:07:19] kernel_template_input is: schMode=0
+[2026-11-27 19:07:19] [INFO] op:MatmulAbftVerify do opc cmd is asc_opc /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/dynamic/matmul_abft_verify.py --main_func=matmul_abft_verify --input_param=/home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/ascend910_93/matmul_abft_verify/matmul_abft_verify_binary_high_performance.json_1 --soc_version=Ascend910_9391 --output=/home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/ascend910_93/matmul_abft_verify/ --impl_mode=high_performance,optional --simplified_key_mode=0 --op_mode=dynamic --kernel-template-input=schMode=0
+[2026-11-27 19:07:19] [INFO] op:MatmulAbftVerify gen compile json cmd is python3 gen_output_json.py /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/ascend910_93/matmul_abft_verify/matmul_abft_verify_binary_high_performance.json_1 /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/ascend910_93/matmul_abft_verify/ /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/config/ascend910_93/matmul_abft_verify.json
+[2026-11-27 19:07:19] kernel_template_input is: schMode=0
+[2026-11-27 19:07:19] [INFO] op:MatmulAbftVerify do opc cmd is asc_opc /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/dynamic/matmul_abft_verify.py --main_func=matmul_abft_verify --input_param=/home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/ascend910_93/matmul_abft_verify/matmul_abft_verify_binary_high_performance.json_2 --soc_version=Ascend910_9391 --output=/home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/ascend910_93/matmul_abft_verify/ --impl_mode=high_performance,optional --simplified_key_mode=0 --op_mode=dynamic --kernel-template-input=schMode=0
+[2026-11-27 19:07:19] [INFO] op:MatmulAbftVerify gen compile json cmd is python3 gen_output_json.py /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/ascend910_93/matmul_abft_verify/matmul_abft_verify_binary_high_performance.json_2 /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/ascend910_93/matmul_abft_verify/ /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/config/ascend910_93/matmul_abft_verify.json
+[2026-11-27 19:07:19] [100%] Built target config_compile_ascend910_93_matmul_abft_verify
+[2026-11-27 19:07:19] [100%] Built target prepare_binary_compile_ascend910_93
+[2026-11-27 19:07:19] -- compile project with library
+[2026-11-27 19:07:19] -- Find opbase source dir: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/opbase
+[2026-11-27 19:07:19] -- Search libs under install path /usr/local/Ascend/cann-9.0.0
+[2026-11-27 19:07:19] -- CMAKE_MODULE_PATH            :/home/hww/projects/ops-ras/pr-work/pr233/cmake/modules
+[2026-11-27 19:07:19] -- compile option:  -O2 -Wall -Wextra -Wshadow -Wformat=2 -fno-common -fPIC -Wformat-signedness
+[2026-11-27 19:07:19] -- [add_es_library] Module loaded from: /usr/local/Ascend/cann-9.0.0/include/ge/cmake
+[2026-11-27 19:07:19] -- Variables in dlog module:
+[2026-11-27 19:07:19] -- dlog_INCLUDE_DIR="/usr/local/Ascend/cann-9.0.0/pkg_inc/base"
+[2026-11-27 19:07:19] -- dlog_SHARED_LIBRARY="/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-27 19:07:19] -- 
+[2026-11-27 19:07:19]  Properties for TARGET dlog:
+[2026-11-27 19:07:19]    dlog.INTERFACE_COMPILE_DEFINITIONS = "LOG_CPP;PROCESS_LOG"
+[2026-11-27 19:07:19]    dlog.INTERFACE_LINK_LIBRARIES = "dlog_headers"
+[2026-11-27 19:07:19]    dlog.IMPORTED_LOCATION = "/usr/local/Ascend/cann-9.0.0/lib64/libascendalog.so"
+[2026-11-27 19:07:19] 
+[2026-11-27 19:07:19] -- 
+[2026-11-27 19:07:19]  Properties for TARGET dlog_headers:
+[2026-11-27 19:07:19]    dlog_headers.INTERFACE_INCLUDE_DIRECTORIES = "/usr/local/Ascend/cann-9.0.0/pkg_inc/base;/usr/local/Ascend/cann-9.0.0/pkg_inc/base/../"
+[2026-11-27 19:07:19] 
+[2026-11-27 19:07:19] -- Found OPABSE include:/home/hww/projects/ops-ras/pr-work/pr233/build/third_party/opbase/include
+[2026-11-27 19:07:19] -- Found platform include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:19] -- Found register library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libregister.so
+[2026-11-27 19:07:19] -- Found opp_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libopp_registry.so
+[2026-11-27 19:07:19] -- Found exe_graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libexe_graph.so
+[2026-11-27 19:07:19] -- Found error_manager library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/liberror_manager.so
+[2026-11-27 19:07:19] -- Found metadef library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libmetadef.so
+[2026-11-27 19:07:19] -- Found graph library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph.so
+[2026-11-27 19:07:19] -- Found graph_base library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libgraph_base.so
+[2026-11-27 19:07:19] -- Found rt2_registry library:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/librt2_registry.a
+[2026-11-27 19:07:19] -- Found source metadef include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/exe_graph
+[2026-11-27 19:07:19] -- Found source acl include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:19] -- [ras]Found source npuruntime include dir: /usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/runtime
+[2026-11-27 19:07:19] -- Found aclnn include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:19] -- Found opdev include dir:  /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aclnn
+[2026-11-27 19:07:19] -- Found tilingapi include:/usr/local/Ascend/cann-9.0.0/aarch64-linux/include
+[2026-11-27 19:07:19] -- TILINGAPI_INC_DIRS: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/lib;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/impl;/usr/local/Ascend/cann-9.0.0/aarch64-linux/ascendc/include/highlevel_api/tiling
+[2026-11-27 19:07:19] -- Found tilingapi lib:/usr/local/Ascend/cann-9.0.0/aarch64-linux/lib64/libtiling_api.a
+[2026-11-27 19:07:19] -- Using AICPU include dirs: /usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/msprof;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/cpu_proto;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/aicpu_common/context/utils;/usr/local/Ascend/cann-9.0.0/aarch64-linux/include/experiment/datagw/aicpu/common;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc;/usr/local/Ascend/cann-9.0.0/aarch64-linux/pkg_inc/aicpu
+[2026-11-27 19:07:19] -- Could NOT find abseil-cpp (missing: ABSL_SOURCE_DIR) 
+[2026-11-27 19:07:19] -- [ThirdParty][abseil-cpp] not found, need download.
+[2026-11-27 19:07:19] -- [ThirdParty][abseil-cpp] cve patch need download to: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-27 19:07:19] -- [ThirdParty][abseil-cpp] cve patch use cache: /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/pkg/backport-CVE-2025-0838.patch
+[2026-11-27 19:07:19] -- [ThirdParty][protobuf] /home/hww/projects/ops-ras/pr-work/pr233/build/third_party/protobuf/protobuf-25.1.tar.gz not found, need download.
+[2026-11-27 19:07:19] -- [ThirdParty][protobuf] protobuf_shared build.
+[2026-11-27 19:07:19] -- [ThirdParty][protobuf] protoc build.
+[2026-11-27 19:07:19] -- [ThirdParty][protobuf] protobuf_static build.
+[2026-11-27 19:07:19] -- [ThirdParty][protobuf] protobuf_host_static build.
+[2026-11-27 19:07:19] -- System processor: aarch64
+[2026-11-27 19:07:19] -- [ThirdParty][eigen] package needs to be downloaded.
+[2026-11-27 19:07:19] -- Package dlog has been found.
+[2026-11-27 19:07:19] -- Initialization summary: Ccache not found, TARGET_ARCH: aarch64
+[2026-11-27 19:07:19] -- ONNX_PLUGIN_SRCS is empty
+[2026-11-27 19:07:19] -- Ops for this compilation contains: matmul_abft_verify
+[2026-11-27 19:07:19] -- Opbuild generating sources
+[2026-11-27 19:07:21] -- Opbuild generating sources - done
+[2026-11-27 19:07:21] -- No aclnnInner srcs, skip aclnnInner
+[2026-11-27 19:07:21] -- No aclnnExc srcs, skip aclnnExc
+[2026-11-27 19:07:21] -- create aclnn master header file: /home/hww/projects/ops-ras/pr-work/pr233/build/aclnn_ops_ras_custom.h
+[2026-11-27 19:07:21] -- start generate_bin_scripts for op: matmul_abft_verify
+[2026-11-27 19:07:21] -- start to compile op: matmul_abft_verify, op_type: MatmulAbftVerify
+[2026-11-27 19:07:21] -- No RAS op_graph proto sources found, skipping cust_proto and es_ras.
+[2026-11-27 19:07:21] -- No aicpu opdef/json files to merge, skipping.
+[2026-11-27 19:07:21] -- No aicpu cust obj targets found, skipping.
+[2026-11-27 19:07:21] -- Configuring done
+[2026-11-27 19:07:21] -- Generating done
+[2026-11-27 19:07:21] -- Build files have been written to: /home/hww/projects/ops-ras/pr-work/pr233/build
+[2026-11-27 19:07:21] [INFO] exe_task: begin to build kernel with cmd: asc_opc /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/dynamic/matmul_abft_verify.py --main_func=matmul_abft_verify --input_param=/home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/ascend910_93/matmul_abft_verify/matmul_abft_verify_binary_high_performance.json_2 --soc_version=Ascend910_9391 --output=/home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/ascend910_93/matmul_abft_verify/ --impl_mode=high_performance,optional --simplified_key_mode=0 --op_mode=dynamic --kernel-template-input=schMode=0
+[2026-11-27 19:07:21] [INFO] exe_task: begin to build kernel with cmd: asc_opc /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/dynamic/matmul_abft_verify.py --main_func=matmul_abft_verify --input_param=/home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/ascend910_93/matmul_abft_verify/matmul_abft_verify_binary_high_performance.json_0 --soc_version=Ascend910_9391 --output=/home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/ascend910_93/matmul_abft_verify/ --impl_mode=high_performance,optional --simplified_key_mode=0 --op_mode=dynamic --kernel-template-input=schMode=0
+[2026-11-27 19:07:21] [INFO] exe_task: begin to build kernel with cmd: asc_opc /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/dynamic/matmul_abft_verify.py --main_func=matmul_abft_verify --input_param=/home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/ascend910_93/matmul_abft_verify/matmul_abft_verify_binary_high_performance.json_1 --soc_version=Ascend910_9391 --output=/home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/ascend910_93/matmul_abft_verify/ --impl_mode=high_performance,optional --simplified_key_mode=0 --op_mode=dynamic --kernel-template-input=schMode=0
+[2026-11-27 19:07:32] [INFO] exe_task: end to build kernel: matmul_abft_verify_binary_high_performance.json_2 --exe_time=11
+[2026-11-27 19:07:32] /bin/gmake
+[2026-11-27 19:07:32] Built target exe_compile_ascend910_93_3
+[2026-11-27 19:07:32] [INFO] exe_task: end to build kernel: matmul_abft_verify_binary_high_performance.json_1 --exe_time=11
+[2026-11-27 19:07:32] /bin/gmake
+[2026-11-27 19:07:32] Built target exe_compile_ascend910_93_2
+[2026-11-27 19:07:32] [INFO] exe_task: end to build kernel: matmul_abft_verify_binary_high_performance.json_0 --exe_time=11
+[2026-11-27 19:07:32] /bin/gmake
+[2026-11-27 19:07:32] Built target exe_compile_ascend910_93_1
+[2026-11-27 19:07:32] [INFO] excute file: /home/hww/projects/ops-ras/pr-work/pr233/scripts/kernel/binary_script/build_binary_op_exe_task_out.sh
+[2026-11-27 19:07:32] [INFO]exe_task: begin to gen kernel list with cmd: python3 gen_output_json.py /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/ascend910_93/matmul_abft_verify/matmul_abft_verify_binary_high_performance.json_0 /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/ascend910_93/matmul_abft_verify/ /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/config/ascend910_93/matmul_abft_verify.json.
+[2026-11-27 19:07:32] [INFO]exe_task: begin to gen kernel list with cmd: python3 gen_output_json.py /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/ascend910_93/matmul_abft_verify/matmul_abft_verify_binary_high_performance.json_1 /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/ascend910_93/matmul_abft_verify/ /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/config/ascend910_93/matmul_abft_verify.json.
+[2026-11-27 19:07:32] [INFO]exe_task: begin to gen kernel list with cmd: python3 gen_output_json.py /home/hww/projects/ops-ras/pr-work/pr233/build/tbe/config/ascend910_93/matmul_abft_verify/matmul_abft_verify_binary_high_performance.json_2 /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/ascend910_93/matmul_abft_verify/ /home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/config/ascend910_93/matmul_abft_verify.json.
+[2026-11-27 19:07:32] Built target exe_compile_ascend910_93_out
+[2026-11-27 19:07:32] Executing cleanup: rm -f '/home/hww/projects/ops-ras/pr-work/pr233/build/binary/ascend910_93/bin/.*.cleaned.lock'
+[2026-11-27 19:07:32] Built target binary
+[2026-11-27 19:07:32] [100%] Built target gen_bin_info_config_ascend910_93
+[2026-11-27 19:07:32] [100%] Built target gen_bin_info_config
+[2026-11-27 19:07:32] 
+[2026-11-27 19:07:32] ----------------------------------------------------------------
+[2026-11-27 19:07:32] [32m[SUCCESS] Build binary success![0m
+[2026-11-27 19:07:32] ----------------------------------------------------------------
+[2026-11-27 19:07:32] 
+TPL_EXIT=0

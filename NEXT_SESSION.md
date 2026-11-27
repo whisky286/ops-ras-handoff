@@ -23,7 +23,8 @@ GitCode 侧禁止任何写操作（评论/PR/合并/关闭）
 2. 跟进 A 侧 extrema 归约对 `1 < n_actual < repeat_size` 的 padding 读取：
    建议在 `TileFaultSum<MAX_MIN>` 入口统一按 `n_actual` 钳位并补 UT。
 3. 复核 !235：其 FP16 K>=121 的 507015 问题与本修复独立（CE UB 切片按 FP32 重算）。
-4. #109：真实 kernel_template_input 验证；28 条扫描项处置；台账 review_stage 对齐。
+4. #109：真实 kernel_template_input 已验证（schMode=0 透传 asc_opc 并编译成功）；Valgrind 仍缺。
+5. 28 条扫描项逐条处置见 `C_SCAN28_DISPOSITION.md`；台账已按 triage 对齐为 102 行并推进 review_stage。
 
 ## 环境与操作
 - ssh sg144，先 `. /home/hww/env.sh`（NPU 用 Phy 8，备用 9；程序内逻辑设备 0；跑前 npu-smi 确认无进程）
