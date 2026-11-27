@@ -5,27 +5,28 @@
 GitCode 侧禁止任何写操作（评论/PR/合并/关闭）
 
 ## 当前任务
-#118 MatmulAbftVerify FP16/BF16 小 K 误报。
+#118 MatmulAbftVerify FP16/BF16 小 K 误报 —— **已修复并固化为可交付补丁（2026-11-27）**。
 
-**K=1 残余已定位并修复（2026-11-27）**，详见 `C118_K1_DIAGNOSIS.md`：
+详见 `server-run-2026-11-25/C118_FINAL.md`：
 - 根因：K=1 时 AIV 的 A 侧 max/min 归约对部分行未取到唯一元素，读到未初始化 UB，
   产生 aMax/aMin = NaN -> threshold = NaN -> 结果位 0（并非比较逻辑问题）。
-- 修复：CE block 增加 kActual 参数；`k == 1` 时令 aMax = aMin = aMean（严格成立）。
-- 与阶段 1 的 log-clamp + kmin=512 组合，117 用例全矩阵：**无故障 0 误报、行和故障 117/117 检出**。
-- 补丁：`patches/draft-issue118-k1-extrema-fix.patch`
-- 日志：`C1k1final-nofault.log`、`C1k1final-rowfault.log`
-- 诊断 harness：`harness/abft_verify_probe_cmp.cpp`
+- 正式修复 = 两个独立补丁（基线 `6943b10`，可单独回滚）：
+  1. `patches/issue118-tiling-threshold-scaling.patch`：log(k) 钳位 + `kMin=512` 编译期常量
+     的小 K 阈值缩放（已去掉 `ABFT_KMIN` 环境变量），含 UT 期望更新。
+  2. `patches/issue118-k1-extrema-fix.patch`：CE block 增加 kActual，`k==1` 时 aMax=aMin=aMean。
+- 固化后 Phy 8 重跑 117 用例：**无故障 0 误报、行和故障 117/117 检出、internal_failures=0**。
+- Host UT：12/12 PASSED。
+- 日志：`C1final-nofault.log`、`C1final-rowfault.log`、`C1final-hostut.log`、`B-pkg-pr118-final.log.gz`。
 
 ## 下一步（按优先级）
-1. 把 tiling 钩子里的 `kmin=512` 固化为常量（去掉 `ABFT_KMIN` 环境变量依赖），
-   复核 117 矩阵仍为 0 误报 / 117 检出。
-2. 给上游提交：#118 的正式修复 = tiling 阈值缩放 + K=1 extrema 修复（补丁可直接复用）。
-3. 跟进 A 侧 extrema 归约对 `1 < n_actual < repeat_size` 的 padding 读取：
+1. 给上游提交 #118 的两个补丁（可直接复用，已 `git apply --check` 验证）。
+2. 跟进 A 侧 extrema 归约对 `1 < n_actual < repeat_size` 的 padding 读取：
    建议在 `TileFaultSum<MAX_MIN>` 入口统一按 `n_actual` 钳位并补 UT。
-4. 复核 !235：其 FP16 K>=121 的 507015 问题与本修复独立（CE UB 切片按 FP32 重算）。
+3. 复核 !235：其 FP16 K>=121 的 507015 问题与本修复独立（CE UB 切片按 FP32 重算）。
+4. #109：真实 kernel_template_input 验证；28 条扫描项处置；台账 review_stage 对齐。
 
 ## 环境与操作
-- ssh sg144，先 `. /home/hww/env.sh`（NPU 用 Phy 6，备用 7；程序内逻辑设备 0）
+- ssh sg144，先 `. /home/hww/env.sh`（NPU 用 Phy 8，备用 9；程序内逻辑设备 0；跑前 npu-smi 确认无进程）
 - 工作树：`/home/hww/projects/ops-ras/pr-work/pr118`（阶段1 + K=1 修复，含 tiling 钩子）
 - OPP：`opp/abft-dbg-install`（vendor `verifyrasdbg`，含本次修复）；
   其他：pr118-install、abft-kmin-install、candidate-fix-install、baseline-install、candidate-install
@@ -42,4 +43,4 @@ GitCode 侧禁止任何写操作（评论/PR/合并/关闭）
 ## 快速自检
 1. `ssh sg144`，`cd /home/hww/projects/ops-ras/ops-ras-handoff && git pull`
 2. `. /home/hww/env.sh && npu-smi info`（确认 6 号空闲）
-3. 阅读 `server-run-2026-11-25/C118_K1_DIAGNOSIS.md` 与 `RESULTS.md`
+3. 阅读 `server-run-2026-11-25/C118_FINAL.md` 与 `RESULTS.md`

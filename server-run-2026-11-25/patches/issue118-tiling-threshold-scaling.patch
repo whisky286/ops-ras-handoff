@@ -1,0 +1,43 @@
+diff --git a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
+index 72b0ead..eb711e9 100644
+--- a/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
++++ b/reliability/matmul_abft_verify/op_host/matmul_abft_verify_tiling.cpp
+@@ -235,6 +235,19 @@ static ge::graphStatus MatmulAbftVerifyTilingFunc(gert::TilingContext* context)
+             static_cast<uint32_t>(m), static_cast<uint32_t>(n), static_cast<uint32_t>(k),
+             eMax, reduceCores, splitKs);
+     }
++    // FIX (#118): log(k) clamp for K=1 and small-K threshold scaling.
++    // For K < kMin the threshold is scaled by sqrt(kMin / k) to compensate the
++    // underestimated statistical threshold. kMin is a fixed compile-time constant
++    // (no runtime environment knob).
++    {
++        constexpr float kMin = 512.0f;
++        tiling->compute.stdEstARowRatio =
++            1.0f / std::sqrt(2.0f * std::log(std::max(static_cast<float>(k), 2.0f)));
++        if (kMin > static_cast<float>(k) && tiling->compute.eMax > 0.0f) {
++            tiling->compute.eMax *= std::sqrt(kMin / static_cast<float>(k));
++        }
++    }
++
+     const float aMeanFactor = 1.0f / static_cast<float>(k);
+     if (aDtype == ge::DT_FLOAT16) {
+         tiling->compute.aMeanFactorBits = FloatToFp16Bits(aMeanFactor);
+diff --git a/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp b/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
+index 69c59a9..39f0947 100644
+--- a/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
++++ b/reliability/matmul_abft_verify/tests/ut/op_host/test_matmul_abft_verify_tiling.cpp
+@@ -156,7 +156,13 @@ void ExpectTilingFields(const MatmulAbftVerifyCase& param)
+     EXPECT_EQ(compute.outputThre, 1);
+     EXPECT_EQ(compute.outputCE, 1);
+     EXPECT_EQ(compute.outputWorkspace, 0);
+-    EXPECT_NEAR(compute.eMax, param.eMax * 6.0f * std::sqrt(static_cast<float>(param.k) / 1024.0f), 1e-6f);
++    // #118: small-K threshold scaling clamps the effective K at kMin=512.
++    constexpr float kMin = 512.0f;
++    const float kEff = std::max(static_cast<float>(param.k), kMin);
++    EXPECT_NEAR(compute.eMax, param.eMax * 6.0f * std::sqrt(kEff / 1024.0f), 1e-6f);
++    // #118: log(k) clamp so K=1 uses log(2).
++    const float kLog = std::max(static_cast<float>(param.k), 2.0f);
++    EXPECT_NEAR(compute.stdEstARowRatio, 1.0f / std::sqrt(2.0f * std::log(kLog)), 1e-6f);
+ }
+ } // namespace
+ 

@@ -1,0 +1,49 @@
+diff --git a/reliability/matmul_abft_verify/op_kernel/FT_self/gemv/block/block_sum_aiv_ceft_no_splitk_thre_robust_preload.hpp b/reliability/matmul_abft_verify/op_kernel/FT_self/gemv/block/block_sum_aiv_ceft_no_splitk_thre_robust_preload.hpp
+index 6fb758a..35c97c2 100644
+--- a/reliability/matmul_abft_verify/op_kernel/FT_self/gemv/block/block_sum_aiv_ceft_no_splitk_thre_robust_preload.hpp
++++ b/reliability/matmul_abft_verify/op_kernel/FT_self/gemv/block/block_sum_aiv_ceft_no_splitk_thre_robust_preload.hpp
+@@ -278,7 +278,8 @@ public:
+         float n_square_ratio_factor,
+         float e_max,
+         bool outputThre, bool outputCE,
+-        uint32_t aiv_part_num, bool isFirstBlock, bool hasNextBlock)
++        uint32_t aiv_part_num, bool isFirstBlock, bool hasNextBlock,
++        uint32_t kActual)
+     {
+         aiv_part_num = aiv_part_num == 0 ? 1 : aiv_part_num;
+         // , AscendC::GlobalTensor<ElementY> const &gmABeOut
+@@ -425,6 +426,20 @@ public:
+             auto layoutStdInUb = layoutThre.GetTileLayout(MakeCoord(m_actual));
+             auto layoutTileStd = layoutThre.GetTileLayout(MakeCoord(m_actual));
+ 
++            // FIX (#118 K=1): with a single K element, row min == row max == row mean.
++            // The AIV extrema reduce can miss the single element for some rows (it then
++            // consumes uninitialized UB padding, giving NaN/inf thresholds), so derive
++            // both extrema from the AIC-computed mean instead.
++            if (kActual == 1) {
++                FTSelf::Gemv::helper::SetCounterMask<ElementY>(m_actual);
++                AscendC::Muls<ElementY, false>(UbAMaxTensor, UbAMeanTensor, (ElementY)1.0f,
++                    AscendC::MASK_PLACEHOLDER, 1, AscendC::UnaryRepeatParams{});
++                AscendC::Muls<ElementY, false>(UbAMinTensor, UbAMeanTensor, (ElementY)1.0f,
++                    AscendC::MASK_PLACEHOLDER, 1, AscendC::UnaryRepeatParams{});
++                FTSelf::Gemv::helper::ResetCounterMask();
++                FTSelf::Gemv::helper::VectorBarrier();
++            }
++
+             tileStdEst(UbAMaxTensor, UbAMeanTensor, UbAMaxTensor, UbAMinTensor,
+                 layoutStdInUb, layoutTileStd);
+ 
+diff --git a/reliability/matmul_abft_verify/op_kernel/matmul_abft_verify.h b/reliability/matmul_abft_verify/op_kernel/matmul_abft_verify.h
+index dbe25a4..968bb41 100644
+--- a/reliability/matmul_abft_verify/op_kernel/matmul_abft_verify.h
++++ b/reliability/matmul_abft_verify/op_kernel/matmul_abft_verify.h
+@@ -1406,7 +1406,8 @@ GM_ADDR ptrOutputCOMP)
+             actualBlockShape, nextActualBlockShape,
+             n_ratio_factor, n_sqrt_ratio_factor,
+             n_square_ratio_factor, params.e_max, params.outputThre, params.outputCE,
+-            aiv_part_num, isFirstBlock, hasNextBlock);
++            aiv_part_num, isFirstBlock, hasNextBlock,
++            static_cast<uint32_t>(params.problemGemmShape.k()));
+ 
+     }
+ 

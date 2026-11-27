@@ -117,3 +117,13 @@
 - 详见 `C118_K1_DIAGNOSIS.md`；补丁 `patches/draft-issue118-k1-extrema-fix.patch`；
   日志 `C1k1final-nofault.log`、`C1k1final-rowfault.log`。
 - 阶段 1 的 "kmin 候选未采纳（因 K=1 残余）" 结论已被本轮修复解除；剩余工作是固化 kmin 常量并走上游。
+
+## #118 最终修复与固化验收（2026-11-27）
+- 交付两个独立补丁（基线 6943b10）：`patches/issue118-tiling-threshold-scaling.patch`（Host + UT）、
+  `patches/issue118-k1-extrema-fix.patch`（Kernel CE block）；均通过 `git apply --check`（单独/合并）。
+- tiling 已把 `kMin=512` 固化为编译期常量，移除 `ABFT_KMIN` 环境变量。
+- Phy 8（无进程）重跑 117 用例：无故障误报 0、行和故障检出 117/117、internal_failures=0。
+- Host UT 12/12 PASSED。
+- 日志：`C1final-nofault.log`、`C1final-rowfault.log`、`C1final-hostut.log`、`B-pkg-pr118-final.log`；
+  详见 `C118_FINAL.md`。
+- 阶段 1 的“kmin 候选未采纳”结论已被本轮修复解除。
